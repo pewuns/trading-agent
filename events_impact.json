@@ -1,0 +1,6 @@
+{
+  "war": {"impact": -0.05, "instruments": ["OIL WTI", "GOLD"]},
+  "blockade": {"impact": 0.1, "instruments": ["OIL WTI"]},
+  "rate_hike": {"impact": -0.02, "instruments": ["S&P500", "NASDAQ"]},
+  "pandemic": {"impact": -0.03, "instruments": ["BITCOIN", "APPLE"]}
+}
