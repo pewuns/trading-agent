@@ -1,10 +1,9 @@
-
 name: Trading Agent
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Co 5 minut
-  workflow_dispatch:  # Ręczne uruchomienie
+    - cron: '*/30 * * * *'  # Co 30 minut
+  workflow_dispatch:
 
 jobs:
   run-agent:
@@ -19,10 +18,18 @@ jobs:
         python-version: '3.10'
     
     - name: Install dependencies
-      run: pip install -r requirements.txt
+      run: pip install requests
     
     - name: Run agent
       env:
         TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: python agent.py
+    
+    - name: Commit signal history
+      run: |
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+        git add signals_history.json
+        git commit -m 'Update signal history' || echo "No changes"
+        git push || echo "No changes to push"
