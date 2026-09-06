@@ -113,6 +113,12 @@ MAX_REAL_SPREAD_PERCENT = {
     'stock': 0.0015,
 }
 
+# Kody interwałów dla getChartLastRequest (w minutach, zgodnie z dokumentacją xAPI).
+XTB_PERIODS = {
+    'M1': 1, 'M5': 5, 'M15': 15, 'M30': 30,
+    'H1': 60, 'H4': 240, 'D1': 1440, 'W1': 10080, 'MN1': 43200,
+}
+
 
 class XTBClient:
     """Minimalny klient do XTB xAPI (protokół JSON po TCP+SSL).
@@ -192,6 +198,57 @@ class XTBClient:
             logger.warning(f"Błąd komunikacji z XTB dla {symbol}: {e}")
             return None
 
+    def get_chart_history(self, symbol, period_minutes, start_ms):
+        """
+        Pobiera świece historyczne przez getChartLastRequest (dane od `start_ms`
+        do teraz, w interwale `period_minutes`).
+
+        UWAGA - WAŻNE ZASTRZEŻENIE: wg mojej pamięci dokumentacji xAPI pola
+        `close`/`high`/`low` w odpowiedzi NIE są cenami bezwzględnymi, tylko
+        PRZESUNIĘCIEM W PUNKTACH względem `open` tej samej świecy - trzeba je
+        przeliczyć jako (open + offset) / 10**digits. Nie mogłem tego
+        zweryfikować na żywym połączeniu (brak sieci w środowisku, w którym
+        to piszę). Jeśli po pobraniu zobaczysz nierealistyczne świece (np.
+        high < low, albo ceny o rzędy wielkości różne od rzeczywistych),
+        sprawdź aktualny format w http://developers.xstore.pro/documentation
+        i popraw konwersję poniżej - to jedyne miejsce, którego to dotyczy.
+        """
+        try:
+            self._send({
+                "command": "getChartLastRequest",
+                "arguments": {"info": {"period": period_minutes, "start": start_ms, "symbol": symbol}}
+            })
+            resp = self._receive(buffer_size=65536, timeout=30)
+            if not resp or not resp.get('status'):
+                logger.warning(f"XTB getChartLastRequest({symbol}) nieudane: {resp}")
+                return None
+            data = resp.get('returnData', {})
+            digits = data.get('digits', 4)
+            scale = 10 ** digits
+            rate_infos = data.get('rateInfos', [])
+            bars = []
+            for r in rate_infos:
+                try:
+                    open_p = r['open'] / scale
+                    close_p = (r['open'] + r['close']) / scale
+                    high_p = (r['open'] + r['high']) / scale
+                    low_p = (r['open'] + r['low']) / scale
+                    bars.append({
+                        'timestamp': r.get('ctm'),
+                        'open': open_p,
+                        'high': high_p,
+                        'low': low_p,
+                        'close': close_p,
+                        'volume': r.get('vol', 0),
+                    })
+                except (KeyError, TypeError, ZeroDivisionError):
+                    continue
+            bars.sort(key=lambda b: b['timestamp'] or 0)
+            return bars if bars else None
+        except (socket.timeout, socket.error, json.JSONDecodeError) as e:
+            logger.warning(f"Błąd pobierania historii XTB dla {symbol}: {e}")
+            return None
+
     def logout(self):
         try:
             self._send({"command": "logout"})
@@ -204,6 +261,41 @@ class XTBClient:
                     self.sock.close()
                 except Exception:
                     pass
+
+
+def fetch_xtb_historical(symbol, period='H1', months_back=12):
+    """Loguje się do XTB, pobiera świece historyczne dla JEDNEGO symbolu na
+    potrzeby backtestu, wylogowuje się. Zwraca listę słowników
+    {'timestamp','open','high','low','close','volume'} w kolejności
+    chronologicznej, albo None przy niepowodzeniu.
+
+    Dostępna głębokość historii zależy od interwału i konta - dla niskich
+    interwałów (M1/M5) XTB zwykle udostępnia dane tylko z ostatnich
+    kilku-kilkunastu miesięcy, dla D1 znacznie dłużej. Jeśli dostaniesz
+    pustą listę, spróbuj mniejszego `months_back` albo wyższego `period`.
+    """
+    if not (XTB_LOGIN and XTB_PASSWORD):
+        logger.error("Brak XTB_LOGIN/XTB_PASSWORD - nie można pobrać danych historycznych z XTB.")
+        return None
+    period_minutes = XTB_PERIODS.get(period)
+    if period_minutes is None:
+        logger.error(f"Nieznany okres '{period}'. Dostępne: {list(XTB_PERIODS.keys())}")
+        return None
+
+    start_dt = datetime.now(pytz.utc) - timedelta(days=int(months_back * 30.44))
+    start_ms = int(start_dt.timestamp() * 1000)
+
+    client = XTBClient(XTB_LOGIN, XTB_PASSWORD, XTB_ACCOUNT_TYPE)
+    bars = None
+    try:
+        if not client.login_session():
+            return None
+        bars = client.get_chart_history(symbol, period_minutes, start_ms)
+    except Exception as e:
+        logger.error(f"Błąd sesji XTB przy pobieraniu historii: {e}")
+    finally:
+        client.logout()
+    return bars
 
 
 def fetch_xtb_spreads():
