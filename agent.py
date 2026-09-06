@@ -83,7 +83,6 @@ GLOBAL_NEWS_QUERIES = {
 # ============================================
 
 def check_spread(market_type):
-    """Sprawdź czy spread jest akceptowalny"""
     spread_thresholds = {
         'forex': 0.0002,
         'index': 0.001,
@@ -101,7 +100,6 @@ def check_spread(market_type):
     return actual_spreads.get(market_type, 0.001) <= spread_thresholds.get(market_type, 0.001)
 
 def check_extreme_volatility(atr_percent, market_type):
-    """Sprawdź czy zmienność nie jest ekstremalna"""
     volatility_limits = {
         'forex': 1.5,
         'index': 3.0,
@@ -112,7 +110,6 @@ def check_extreme_volatility(atr_percent, market_type):
     return atr_percent <= volatility_limits.get(market_type, 3.0)
 
 def check_liquidity(volume, market_type):
-    """Sprawdź czy jest wystarczająca płynność"""
     min_volume = {
         'forex': 1000000,
         'index': 100000,
@@ -121,6 +118,123 @@ def check_liquidity(volume, market_type):
         'stock': 1000000,
     }
     return volume >= min_volume.get(market_type, 100000)
+
+# ============================================
+# WSKAŹNIKI TECHNICZNE
+# ============================================
+
+def calculate_vwap(prices, volumes):
+    """Volume Weighted Average Price"""
+    if not prices or not volumes or len(volumes) < len(prices):
+        return None
+    total_volume = sum(volumes)
+    if total_volume == 0:
+        return None
+    return sum(p * v for p, v in zip(prices, volumes)) / total_volume
+
+def calculate_support_resistance(prices, lookback=20):
+    """Wsparcia i opory"""
+    if len(prices) < lookback:
+        return {'support': None, 'resistance': None, 'nearest_level': None}
+    recent = prices[-lookback:]
+    support = min(recent)
+    resistance = max(recent)
+    current = prices[-1]
+    distance_to_support = current - support
+    distance_to_resistance = resistance - current
+    nearest = 'SUPPORT' if distance_to_support < distance_to_resistance else 'RESISTANCE'
+    return {
+        'support': support,
+        'resistance': resistance,
+        'nearest_level': nearest,
+    }
+
+def detect_candlestick_patterns(opens, highs, lows, closes):
+    """Wykryj formacje świecowe"""
+    patterns = []
+    if len(closes) < 3 or not opens:
+        return patterns
+    
+    o1, c1 = opens[-1], closes[-1]
+    h1, l1 = highs[-1], lows[-1]
+    o2, c2 = opens[-2], closes[-2]
+    
+    body = abs(c1 - o1)
+    lower_shadow = min(o1, c1) - l1
+    upper_shadow = h1 - max(o1, c1)
+    total_range = h1 - l1 if h1 != l1 else 1
+    
+    # Młot
+    if lower_shadow > 2 * body and upper_shadow < body:
+        patterns.append('MŁOT (byczy)')
+    
+    # Spadająca gwiazda
+    if upper_shadow > 2 * body and lower_shadow < body:
+        patterns.append('SPADAJĄCA GWIAZDA (niedźwiedzi)')
+    
+    # Objęcie hossy
+    if c2 < o2 and c1 > o1 and c1 > o2 and o1 < c2:
+        patterns.append('OBJĘCIE HOSSY (bycze)')
+    
+    # Objęcie bessy
+    if c2 > o2 and c1 < o1 and c1 < o2 and o1 > c2:
+        patterns.append('OBJĘCIE BESSY (niedźwiedzie)')
+    
+    # Doji
+    if body < total_range * 0.1:
+        patterns.append('DOJI (niezdecydowanie)')
+    
+    return patterns
+
+def calculate_order_flow(closes, volumes):
+    """Order Flow (Delta)"""
+    if len(closes) < 2 or not volumes:
+        return {'delta': 0, 'delta_percent': 0}
+    
+    buy_volume = 0
+    sell_volume = 0
+    
+    for i in range(1, len(closes)):
+        if i < len(volumes):
+            if closes[i] > closes[i-1]:
+                buy_volume += volumes[i]
+            elif closes[i] < closes[i-1]:
+                sell_volume += volumes[i]
+    
+    delta = buy_volume - sell_volume
+    total = buy_volume + sell_volume
+    
+    return {
+        'delta': delta,
+        'delta_percent': (delta / total * 100) if total > 0 else 0,
+    }
+
+def calculate_volume_profile(prices, volumes, bins=10):
+    """Volume Profile - POC (Point of Control)"""
+    if len(prices) < 10 or not volumes:
+        return None
+    
+    min_price = min(prices)
+    max_price = max(prices)
+    price_range = max_price - min_price
+    
+    if price_range == 0:
+        return None
+    
+    bin_size = price_range / bins
+    profile = {}
+    
+    for i in range(bins):
+        bin_low = min_price + i * bin_size
+        bin_high = min_price + (i + 1) * bin_size
+        bin_volume = 0
+        for j in range(len(prices)):
+            if bin_low <= prices[j] < bin_high and j < len(volumes):
+                bin_volume += volumes[j]
+        profile[f"{bin_low:.2f}"] = bin_volume
+    
+    poc = max(profile, key=profile.get)
+    return {'poc': float(poc), 'profile': profile}
 
 # ============================================
 # KLASY
@@ -267,13 +381,13 @@ def get_market_data(symbol, interval='15m', range_period='1d'):
         print(f"Błąd pobierania {symbol}: {e}")
         return None
 
-def calculate_indicators(data):
+def calculate_base_indicators(data):
+    """Podstawowe wskaźniki"""
     if not data or len(data['prices']) < 50:
         return None
     prices = data['prices']
     highs = data['highs']
     lows = data['lows']
-    volumes = data.get('volumes', [])
     current_price = prices[-1]
     
     def sma(arr, period):
@@ -305,8 +419,7 @@ def calculate_indicators(data):
     rsi_val = rsi(prices)
     atr_val = atr(highs, lows, prices)
     atr_percent = (atr_val/current_price)*100 if current_price else 0
-    
-    avg_volume = sum(volumes[-20:]) / min(len(volumes), 20) if volumes else 0
+    avg_volume = sum(data['volumes'][-20:]) / min(len(data['volumes']), 20) if data.get('volumes') else 0
     
     return {
         'price': current_price,
@@ -316,7 +429,40 @@ def calculate_indicators(data):
         'atr': atr_val,
         'atr_percent': atr_percent,
         'avg_volume': avg_volume,
+        'highs': highs,
+        'lows': lows,
+        'opens': data.get('opens', []),
+        'volumes': data.get('volumes', []),
     }
+
+def calculate_full_indicators(data):
+    """Oblicz wszystkie wskaźniki (podstawowe + zaawansowane)"""
+    base = calculate_base_indicators(data)
+    if not base:
+        return None
+    
+    prices = data['prices']
+    volumes = data.get('volumes', [])
+    highs = data['highs']
+    lows = data['lows']
+    opens = data.get('opens', [])
+    
+    # Zaawansowane wskaźniki
+    vwap = calculate_vwap(prices, volumes)
+    sr_levels = calculate_support_resistance(prices)
+    patterns = detect_candlestick_patterns(opens, highs, lows, prices)
+    order_flow = calculate_order_flow(prices, volumes)
+    volume_profile = calculate_volume_profile(prices, volumes)
+    
+    base['vwap'] = vwap
+    base['support'] = sr_levels.get('support')
+    base['resistance'] = sr_levels.get('resistance')
+    base['nearest_level'] = sr_levels.get('nearest_level')
+    base['candlestick_patterns'] = patterns
+    base['order_flow'] = order_flow
+    base['volume_profile'] = volume_profile
+    
+    return base
 
 # ============================================
 # ANALIZA WIELOINTERWAŁOWA
@@ -327,7 +473,7 @@ def analyze_timeframes(symbol, timeframe_weights):
     for tf_name, tf_config in TIMEFRAMES.items():
         data = get_market_data(symbol, tf_config['interval'], tf_config['range'])
         if data:
-            ind = calculate_indicators(data)
+            ind = calculate_base_indicators(data)
             if ind:
                 ind['weight'] = timeframe_weights.get(tf_name, tf_config['default_weight'])
                 ind['trend'] = determine_trend(ind)
@@ -500,12 +646,13 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights):
     if session == 'EU' and not (9 <= hour < 17):
         return None
     
-    # Pobierz dane główne (15m)
+    # Pobierz dane główne
     main_data = get_market_data(market_info['symbol'], '15m', '1d')
     if not main_data:
         return None
     
-    ind = calculate_indicators(main_data)
+    # Oblicz WSZYSTKIE wskaźniki
+    ind = calculate_full_indicators(main_data)
     if not ind:
         return None
     
@@ -514,9 +661,7 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights):
     atr_percent = ind['atr_percent']
     avg_volume = ind['avg_volume']
     
-    # ============================================
     # FILTRY BEZPIECZEŃSTWA
-    # ============================================
     if not check_spread(market_type):
         print(f"❌ {name}: Spread za duży")
         return None
@@ -546,7 +691,7 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights):
     
     p = ind['price']
     
-    # Oblicz pewność
+    # OBLICZ PEWNOŚĆ
     long_score = 0
     short_score = 0
     
@@ -560,6 +705,37 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights):
     if p < ind['sma50']: short_score += 1
     if 30 < ind['rsi'] < 70: short_score += 1
     if ind['rsi'] < 50: short_score += 1
+    
+    # VWAP
+    if ind['vwap']:
+        if p > ind['vwap']: long_score += 1
+        else: short_score += 1
+    
+    # Wsparcia/opory
+    if ind['nearest_level'] == 'SUPPORT':
+        long_score += 0.5
+    elif ind['nearest_level'] == 'RESISTANCE':
+        short_score += 0.5
+    
+    # Formacje świecowe
+    if ind['candlestick_patterns']:
+        for pattern in ind['candlestick_patterns']:
+            if 'bycz' in pattern.lower() or 'hossy' in pattern.lower():
+                long_score += 0.5
+            elif 'niedźwiedzi' in pattern.lower() or 'bessy' in pattern.lower():
+                short_score += 0.5
+    
+    # Order Flow
+    if ind['order_flow'] and ind['order_flow']['delta_percent'] > 0:
+        long_score += 0.5
+    elif ind['order_flow'] and ind['order_flow']['delta_percent'] < 0:
+        short_score += 0.5
+    
+    # Volume Profile (POC)
+    if ind['volume_profile']:
+        poc = ind['volume_profile']['poc']
+        if p > poc: long_score += 0.5
+        else: short_score += 0.5
     
     # MTF
     if combined['trend_score'] > 0.6: long_score += 2
@@ -577,7 +753,7 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights):
             long_score += sentiment * 2
             short_score -= sentiment * 2
     
-    total = 8
+    total = 14
     long_conf = max(0, long_score / total)
     short_conf = max(0, short_score / total)
     
@@ -595,10 +771,15 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights):
             'take_profit': p + 2.5 * ind['atr'] if direction == 'LONG' else p - 2.5 * ind['atr'],
             'confidence': confidence,
             'rsi': ind['rsi'],
+            'vwap': ind['vwap'],
+            'support': ind['support'],
+            'resistance': ind['resistance'],
+            'candlestick_patterns': ind['candlestick_patterns'],
+            'order_flow_delta': ind['order_flow']['delta_percent'] if ind['order_flow'] else 0,
+            'volume_profile_poc': ind['volume_profile']['poc'] if ind['volume_profile'] else None,
             'news_sentiment': news_analysis.get('sentiment', 0),
             'news_impact': news_analysis.get('impact', 'low'),
             'news_reasoning': news_analysis.get('reasoning', ''),
-            'chart_pattern': combined['trend_score'],
             'timeframe_alignment': combined['trend_score'],
             'divergences': divergences,
             'heatmap': create_heatmap(timeframe_results),
@@ -694,6 +875,19 @@ def main():
             emoji = '🟢' if s['direction'] == 'LONG' else '🔴'
             msg += f"{i}. {emoji} {s['name']} ({s['direction']})\n"
             msg += f"   Pewność: {s['confidence']:.0%}\n"
+            msg += f"   RSI: {s['rsi']:.1f}\n"
+            if s['vwap']:
+                msg += f"   VWAP: {s['vwap']:.4f}\n"
+            if s['support']:
+                msg += f"   Wsparcie: {s['support']:.4f}\n"
+            if s['resistance']:
+                msg += f"   Opór: {s['resistance']:.4f}\n"
+            if s['candlestick_patterns']:
+                msg += f"   Formacje: {', '.join(s['candlestick_patterns'][:3])}\n"
+            if s['order_flow_delta']:
+                msg += f"   Order Flow: {s['order_flow_delta']:.1f}%\n"
+            if s['volume_profile_poc']:
+                msg += f"   POC: {s['volume_profile_poc']:.4f}\n"
             msg += f"   Sentyment: {s['news_sentiment']:.2f}\n"
             if s['divergences']:
                 msg += f"   ⚠️ Dywergencje: {len(s['divergences'])}\n"
