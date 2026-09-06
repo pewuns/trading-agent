@@ -6,7 +6,7 @@ import ssl
 import logging
 import requests
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 import re
 import xml.etree.ElementTree as ET
@@ -29,6 +29,12 @@ GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '')
 SIGNALS_FILE = 'signals_history.json'
 AI_MEMORY_FILE = 'ai_memory.json'
 TIMEFRAME_WEIGHTS_FILE = 'timeframe_weights.json'
+FEATURE_WEIGHTS_FILE = 'feature_weights.json'
+FEATURE_STORE_FILE = 'feature_store.jsonl'
+ADAPTIVE_THRESHOLD_FILE = 'adaptive_thresholds.json'
+PERFORMANCE_STATS_FILE = 'performance_stats.json'
+CIRCUIT_BREAKER_FILE = 'circuit_breaker_state.json'
+SHADOW_LOG_FILE = 'shadow_scoring_log.jsonl'
 
 TIMEZONE = pytz.timezone('Europe/Warsaw')
 
@@ -37,6 +43,18 @@ ACCOUNT_SIZE = float(os.environ.get('ACCOUNT_SIZE', 10000))
 RISK_PER_TRADE_PERCENT = float(os.environ.get('RISK_PER_TRADE_PERCENT', 1.0))
 MAX_PER_CLUSTER = int(os.environ.get('MAX_PER_CLUSTER', 2))
 SIGNAL_TIMEOUT_HOURS = float(os.environ.get('SIGNAL_TIMEOUT_HOURS', 48))
+
+# --- Uczenie się (punkt A) ---
+MIN_SAMPLES_FOR_LEARNED_MODEL = int(os.environ.get('MIN_SAMPLES_FOR_LEARNED_MODEL', 30))
+MIN_SAMPLES_FOR_ADAPTIVE_THRESHOLD = int(os.environ.get('MIN_SAMPLES_FOR_ADAPTIVE_THRESHOLD', 15))
+MIN_SAMPLES_FOR_KELLY = int(os.environ.get('MIN_SAMPLES_FOR_KELLY', 20))
+
+# --- Zarządzanie ryzykiem / circuit breaker (punkt B) ---
+KELLY_FRACTION = float(os.environ.get('KELLY_FRACTION', 0.5))  # domyślnie "pół-Kelly" - bezpieczniej niż pełny Kelly
+MAX_RISK_PERCENT_CAP = float(os.environ.get('MAX_RISK_PERCENT_CAP', 2.0))
+DAILY_LOSS_LIMIT_R = float(os.environ.get('DAILY_LOSS_LIMIT_R', -3.0))    # w jednostkach R (wielokrotność ryzyka)
+WEEKLY_LOSS_LIMIT_R = float(os.environ.get('WEEKLY_LOSS_LIMIT_R', -6.0))
+REGIME_ADX_TREND_THRESHOLD = float(os.environ.get('REGIME_ADX_TREND_THRESHOLD', 25))
 
 DISCLAIMER = (
     "\n\n⚠️ _To automatyczny, niebacktestowany system analityczny. "
@@ -509,6 +527,55 @@ def calculate_volume_profile(prices, volumes, bins=10):
     poc = max(profile, key=profile.get)
     return {'poc': float(poc), 'profile': profile}
 
+
+def calculate_adx(highs, lows, closes, period=14):
+    """ADX (Average Directional Index) - siła trendu, niezależnie od kierunku.
+    Używane do rozróżnienia reżimu TREND (warto podążać za trendem) od RANGE
+    (rynek się konsoliduje, lepiej sprawdza się mean-reversion od wsparć/oporów)."""
+    if len(closes) < period * 2:
+        return None
+
+    plus_dm, minus_dm, trs = [], [], []
+    for i in range(1, len(closes)):
+        up_move = highs[i] - highs[i - 1]
+        down_move = lows[i - 1] - lows[i]
+        plus_dm.append(up_move if (up_move > down_move and up_move > 0) else 0)
+        minus_dm.append(down_move if (down_move > up_move and down_move > 0) else 0)
+        tr = max(highs[i] - lows[i], abs(highs[i] - closes[i - 1]), abs(lows[i] - closes[i - 1]))
+        trs.append(tr)
+
+    def wilder_smooth(arr, period):
+        if len(arr) < period:
+            return []
+        smoothed = [sum(arr[:period])]
+        for x in arr[period:]:
+            smoothed.append(smoothed[-1] - (smoothed[-1] / period) + x)
+        return smoothed
+
+    tr_s = wilder_smooth(trs, period)
+    plus_dm_s = wilder_smooth(plus_dm, period)
+    minus_dm_s = wilder_smooth(minus_dm, period)
+    if not tr_s or not plus_dm_s or not minus_dm_s:
+        return None
+
+    n = min(len(tr_s), len(plus_dm_s), len(minus_dm_s))
+    plus_di = [100 * (plus_dm_s[i] / tr_s[i]) if tr_s[i] else 0 for i in range(n)]
+    minus_di = [100 * (minus_dm_s[i] / tr_s[i]) if tr_s[i] else 0 for i in range(n)]
+    dx = [100 * abs(plus_di[i] - minus_di[i]) / (plus_di[i] + minus_di[i])
+          if (plus_di[i] + minus_di[i]) else 0 for i in range(n)]
+
+    if len(dx) < period:
+        return sum(dx) / len(dx) if dx else None
+    return sum(dx[-period:]) / period
+
+
+def detect_market_regime(highs, lows, closes, trend_threshold=REGIME_ADX_TREND_THRESHOLD):
+    """Zwraca 'TREND', 'RANGE' albo 'UNKNOWN' (za mało danych)."""
+    adx = calculate_adx(highs, lows, closes)
+    if adx is None:
+        return 'UNKNOWN', None
+    return ('TREND' if adx >= trend_threshold else 'RANGE'), adx
+
 # ============================================
 # KLASY
 # ============================================
@@ -551,37 +618,50 @@ class AIMemory:
 
 class TimeframeWeights:
     """
-    Wagi interwałów, które teraz REALNIE się uczą: po zamknięciu sygnału
+    Wagi interwałów, które REALNIE się uczą: po zamknięciu sygnału
     (TP/SL/timeout) update_from_outcome() wzmacnia wagi tych interwałów,
     których trend zgadzał się z trafnym kierunkiem, i osłabia te, które
-    się myliły. Wagi są znormalizowane do sumy 1 i przycięte do [0.05, 0.5],
-    żeby żaden interwał nie zdominował ani nie zniknął całkowicie.
+    się myliły. Wagi są znormalizowane do sumy 1 i przycięte do [0.05, 0.5].
+
+    NOWOŚĆ: learning rate maleje wraz z liczbą dotychczasowych aktualizacji
+    danego interwału (LEARNING_RATE / sqrt(1+n)) - dzięki temu pojedynczy
+    zamknięty sygnał na starcie (mała próbka) nie przesuwa wagi drastycznie,
+    a wagi stabilizują się dopiero po wielu obserwacjach (EWMA-podobne
+    wygładzanie zamiast gonienia szumu).
     """
     MIN_WEIGHT = 0.05
     MAX_WEIGHT = 0.5
-    LEARNING_RATE = 0.02
+    LEARNING_RATE = 0.03
 
     def __init__(self, file_path=TIMEFRAME_WEIGHTS_FILE):
         self.file_path = file_path
-        self.weights = self.load()
+        state = self.load()
+        self.weights = state['weights']
+        self.update_counts = state['update_counts']
 
     def load(self):
         try:
             if os.path.exists(self.file_path):
                 with open(self.file_path, 'r') as f:
                     loaded = json.load(f)
-                    # upewnij się, że wszystkie znane interwały mają wagę
+                    # kompatybilność wsteczna: stary format to płaski dict wag
+                    if 'weights' not in loaded:
+                        loaded = {'weights': loaded, 'update_counts': {}}
                     for tf, cfg in TIMEFRAMES.items():
-                        loaded.setdefault(tf, cfg['default_weight'])
+                        loaded['weights'].setdefault(tf, cfg['default_weight'])
+                        loaded['update_counts'].setdefault(tf, 0)
                     return loaded
         except Exception as e:
             logger.warning(f"Nie udało się wczytać {self.file_path}: {e}")
-        return {tf: config['default_weight'] for tf, config in TIMEFRAMES.items()}
+        return {
+            'weights': {tf: config['default_weight'] for tf, config in TIMEFRAMES.items()},
+            'update_counts': {tf: 0 for tf in TIMEFRAMES},
+        }
 
     def save(self):
         try:
             with open(self.file_path, 'w') as f:
-                json.dump(self.weights, f, indent=2)
+                json.dump({'weights': self.weights, 'update_counts': self.update_counts}, f, indent=2)
         except Exception as e:
             logger.error(f"Nie udało się zapisać {self.file_path}: {e}")
 
@@ -599,11 +679,14 @@ class TimeframeWeights:
         for tf, trend in tf_trends.items():
             if tf not in self.weights:
                 continue
+            n = self.update_counts.get(tf, 0)
+            effective_lr = self.LEARNING_RATE / np.sqrt(1 + n)
             if trend == expected_trend:
-                delta = sign * self.LEARNING_RATE
+                delta = sign * effective_lr
             else:
-                delta = -sign * self.LEARNING_RATE * 0.5
+                delta = -sign * effective_lr * 0.5
             self.weights[tf] = max(self.MIN_WEIGHT, min(self.MAX_WEIGHT, self.weights[tf] + delta))
+            self.update_counts[tf] = n + 1
 
         total = sum(self.weights.values())
         if total > 0:
@@ -611,6 +694,272 @@ class TimeframeWeights:
                 self.weights[tf] /= total
         self.save()
         logger.info(f"Wagi interwałów zaktualizowane po sygnale {signal.get('name')} ({outcome}): {self.weights}")
+
+
+class FeatureWeights:
+    """
+    Regresja logistyczna online (SGD) ucząca się wag POSZCZEGÓLNYCH CECH
+    technicznych (nie tylko interwałów) na podstawie wyników zamkniętych
+    sygnałów. Przewiduje P(ruch w górę) na podstawie wektora cech; dla
+    sygnału LONG to jest wprost P(sukces), dla SHORT: 1 - P(ruch w górę).
+
+    Dopóki liczba próbek < MIN_SAMPLES_FOR_LEARNED_MODEL, model NIE jest
+    używany do podejmowania decyzji (patrz is_ready()) - do tego czasu
+    scoring bazowy ze stałymi wagami pozostaje jedynym źródłem confidence,
+    żeby nie uczyć się (i nie ufać) garści przypadkowych wyników.
+    """
+    FEATURE_NAMES = [
+        'sma20', 'sma50', 'rsi', 'vwap', 'support_resistance',
+        'pattern', 'order_flow', 'poc', 'mtf_trend', 'news_sentiment',
+    ]
+
+    def __init__(self, file_path=FEATURE_WEIGHTS_FILE):
+        self.file_path = file_path
+        state = self.load()
+        self.weights = state['weights']
+        self.bias = state['bias']
+        self.n_samples = state['n_samples']
+        self.base_learning_rate = 0.05
+
+    def load(self):
+        try:
+            if os.path.exists(self.file_path):
+                with open(self.file_path, 'r') as f:
+                    return json.load(f)
+        except Exception as e:
+            logger.warning(f"Nie udało się wczytać {self.file_path}: {e}")
+        return {'weights': {f: 0.0 for f in self.FEATURE_NAMES}, 'bias': 0.0, 'n_samples': 0}
+
+    def save(self):
+        try:
+            with open(self.file_path, 'w') as f:
+                json.dump({'weights': self.weights, 'bias': self.bias, 'n_samples': self.n_samples}, f, indent=2)
+        except Exception as e:
+            logger.error(f"Nie udało się zapisać {self.file_path}: {e}")
+
+    def is_ready(self):
+        return self.n_samples >= MIN_SAMPLES_FOR_LEARNED_MODEL
+
+    def predict_proba_up(self, features):
+        z = self.bias + sum(self.weights.get(k, 0.0) * v for k, v in features.items())
+        z = max(-30.0, min(30.0, z))  # zabezpieczenie przed przepełnieniem exp()
+        return 1.0 / (1.0 + np.exp(-z))
+
+    def update(self, features, went_up):
+        """went_up: True jeśli faktyczny ruch rynku był w górę, False jeśli w dół.
+        (Ustalane z outcome + direction sygnału - patrz SignalManager.evaluate_open_signals)."""
+        y = 1.0 if went_up else 0.0
+        p = self.predict_proba_up(features)
+        error = p - y
+        # learning rate maleje z liczbą próbek - mniej gwałtowne zmiany z czasem
+        lr = self.base_learning_rate / (1 + self.n_samples / 50)
+        for k, v in features.items():
+            self.weights[k] = self.weights.get(k, 0.0) - lr * error * v
+        self.bias -= lr * error
+        self.n_samples += 1
+        self.save()
+
+
+def build_feature_vector(ind, combined, news_analysis, divergences):
+    """Cechy w konwencji ZNAKOWANEJ: dodatnie = przechylenie w górę (byczo),
+    ujemne = w dół (niedźwiedzio), 0 = brak/neutralne. Dzięki temu ta sama
+    regresja logistyczna przewiduje P(ruch w górę) niezależnie od tego, czy
+    ostatecznie interesuje nas sygnał LONG czy SHORT."""
+    bias_pattern = patterns_directional_bias(ind.get('candlestick_patterns', []))
+    pattern_val = 1.0 if bias_pattern == 'bull' else (-1.0 if bias_pattern == 'bear' else 0.0)
+
+    sr_val = 0.0
+    if ind.get('nearest_level') == 'SUPPORT':
+        sr_val = 0.5  # blisko wsparcia = raczej byczo (odbicie w górę)
+    elif ind.get('nearest_level') == 'RESISTANCE':
+        sr_val = -0.5
+
+    order_flow_val = 0.0
+    if ind.get('order_flow'):
+        order_flow_val = max(-1.0, min(1.0, ind['order_flow'].get('delta_percent', 0) / 100))
+
+    news_val = 0.0
+    if news_analysis and news_analysis.get('impact') == 'high':
+        news_val = max(-1.0, min(1.0, news_analysis.get('sentiment', 0)))
+
+    return {
+        'sma20': 1.0 if (ind.get('sma20') and ind['price'] > ind['sma20']) else (
+            -1.0 if ind.get('sma20') else 0.0),
+        'sma50': 1.0 if (ind.get('sma50') and ind['price'] > ind['sma50']) else (
+            -1.0 if ind.get('sma50') else 0.0),
+        'rsi': (ind.get('rsi', 50) - 50) / 50.0,
+        'vwap': 1.0 if (ind.get('vwap') and ind['price'] > ind['vwap']) else (
+            -1.0 if ind.get('vwap') else 0.0),
+        'support_resistance': sr_val,
+        'pattern': pattern_val,
+        'order_flow': order_flow_val,
+        'poc': 1.0 if (ind.get('volume_profile') and ind['price'] > ind['volume_profile']['poc']) else (
+            -1.0 if ind.get('volume_profile') else 0.0),
+        'mtf_trend': (combined.get('trend_score', 0.5) - 0.5) * 2 if combined else 0.0,
+        'news_sentiment': news_val,
+    }
+
+
+class AdaptiveThreshold:
+    """
+    Próg pewności (domyślnie 0.7) kalibrowany OSOBNO dla każdego rynku na
+    podstawie historii jego sygnałów: dla każdego rynku szuka najniższego
+    progu, przy którym win-rate sygnałów >= tego progu utrzymuje się na
+    poziomie >= target_win_rate. Dopóki rynek ma mniej niż
+    MIN_SAMPLES_FOR_ADAPTIVE_THRESHOLD zamkniętych sygnałów, używany jest
+    bezpieczny domyślny próg 0.7.
+    """
+    DEFAULT = 0.7
+    TARGET_WIN_RATE = 0.55
+    HISTORY_WINDOW = 200
+
+    def __init__(self, file_path=ADAPTIVE_THRESHOLD_FILE):
+        self.file_path = file_path
+        self.data = self.load()
+
+    def load(self):
+        try:
+            if os.path.exists(self.file_path):
+                with open(self.file_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except Exception as e:
+            logger.warning(f"Nie udało się wczytać {self.file_path}: {e}")
+        return {}
+
+    def save(self):
+        try:
+            with open(self.file_path, 'w', encoding='utf-8') as f:
+                json.dump(self.data, f, indent=2)
+        except Exception as e:
+            logger.error(f"Nie udało się zapisać {self.file_path}: {e}")
+
+    def get_threshold(self, market_name):
+        entry = self.data.get(market_name)
+        if not entry or len(entry.get('history', [])) < MIN_SAMPLES_FOR_ADAPTIVE_THRESHOLD:
+            return self.DEFAULT
+        return entry.get('threshold', self.DEFAULT)
+
+    def record_outcome(self, market_name, confidence, outcome):
+        if outcome not in ('win', 'loss'):
+            return
+        entry = self.data.setdefault(market_name, {'threshold': self.DEFAULT, 'history': []})
+        entry['history'].append([confidence, outcome == 'win'])
+        entry['history'] = entry['history'][-self.HISTORY_WINDOW:]
+        if len(entry['history']) >= MIN_SAMPLES_FOR_ADAPTIVE_THRESHOLD:
+            entry['threshold'] = self._recalibrate(entry['history'])
+        self.save()
+
+    def _recalibrate(self, history):
+        candidates = sorted(set(round(c, 2) for c, _ in history))
+        best = self.DEFAULT
+        for th in candidates:
+            subset = [w for c, w in history if c >= th]
+            if len(subset) < 5:
+                continue
+            win_rate = sum(subset) / len(subset)
+            if win_rate >= self.TARGET_WIN_RATE:
+                best = th
+                break
+        return best
+
+
+class PerformanceStats:
+    """Śledzi win-rate i średnie R (zysk/strata w jednostkach ryzyka) - dane
+    wejściowe do position sizingu metodą fractional Kelly."""
+
+    def __init__(self, file_path=PERFORMANCE_STATS_FILE):
+        self.file_path = file_path
+        self.records = self.load()
+
+    def load(self):
+        try:
+            if os.path.exists(self.file_path):
+                with open(self.file_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except Exception as e:
+            logger.warning(f"Nie udało się wczytać {self.file_path}: {e}")
+        return []
+
+    def save(self):
+        try:
+            with open(self.file_path, 'w', encoding='utf-8') as f:
+                json.dump(self.records[-1000:], f, indent=2)
+        except Exception as e:
+            logger.error(f"Nie udało się zapisać {self.file_path}: {e}")
+
+    def record(self, outcome, r_multiple):
+        if outcome not in ('win', 'loss'):
+            return
+        self.records.append({'outcome': outcome, 'r_multiple': r_multiple})
+        self.save()
+
+    def get_stats(self, min_samples=MIN_SAMPLES_FOR_KELLY):
+        if len(self.records) < min_samples:
+            return None
+        wins = [r['r_multiple'] for r in self.records if r['outcome'] == 'win']
+        losses = [abs(r['r_multiple']) for r in self.records if r['outcome'] == 'loss']
+        if not wins or not losses:
+            return None
+        win_rate = len(wins) / (len(wins) + len(losses))
+        avg_win_r = sum(wins) / len(wins)
+        avg_loss_r = sum(losses) / len(losses)
+        return win_rate, avg_win_r, avg_loss_r
+
+
+class CircuitBreaker:
+    """Wstrzymuje generowanie NOWYCH sygnałów, gdy skumulowana strata
+    (w jednostkach R) w ciągu dnia lub tygodnia przekroczy zdefiniowany limit.
+    Otwarte pozycje nadal są monitorowane (evaluate_open_signals) - blokowane
+    jest tylko otwieranie nowych."""
+
+    def __init__(self, file_path=CIRCUIT_BREAKER_FILE):
+        self.file_path = file_path
+        self.state = self.load()
+
+    def load(self):
+        try:
+            if os.path.exists(self.file_path):
+                with open(self.file_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except Exception as e:
+            logger.warning(f"Nie udało się wczytać {self.file_path}: {e}")
+        return {'trades': []}
+
+    def save(self):
+        try:
+            cutoff = (datetime.now(pytz.utc) - timedelta(days=90)).isoformat()
+            self.state['trades'] = [t for t in self.state['trades'] if t['timestamp'] >= cutoff]
+            with open(self.file_path, 'w', encoding='utf-8') as f:
+                json.dump(self.state, f, indent=2)
+        except Exception as e:
+            logger.error(f"Nie udało się zapisać {self.file_path}: {e}")
+
+    def record_trade(self, r_multiple, timestamp=None):
+        ts = timestamp or datetime.now(pytz.utc).isoformat()
+        self.state['trades'].append({'timestamp': ts, 'r_multiple': r_multiple})
+        self.save()
+
+    def _sum_r_since(self, since_dt):
+        total = 0.0
+        for t in self.state['trades']:
+            try:
+                if datetime.fromisoformat(t['timestamp']) >= since_dt:
+                    total += t['r_multiple']
+            except Exception:
+                continue
+        return total
+
+    def is_tripped(self):
+        now = datetime.now(pytz.utc)
+        day_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        week_start = day_start - timedelta(days=now.weekday())
+        daily_r = self._sum_r_since(day_start)
+        weekly_r = self._sum_r_since(week_start)
+        if daily_r <= DAILY_LOSS_LIMIT_R:
+            return True, f"Dzienny limit strat osiągnięty ({daily_r:.2f}R <= {DAILY_LOSS_LIMIT_R}R)"
+        if weekly_r <= WEEKLY_LOSS_LIMIT_R:
+            return True, f"Tygodniowy limit strat osiągnięty ({weekly_r:.2f}R <= {WEEKLY_LOSS_LIMIT_R}R)"
+        return False, None
 
 
 class SignalManager:
@@ -654,12 +1003,21 @@ class SignalManager:
         signal = dict(signal)
         signal['timestamp'] = datetime.now(pytz.utc).isoformat()
         signal['status'] = 'open'
+        signal['risk_distance'] = abs(signal['entry'] - signal['stop_loss'])
+        signal['mae_percent'] = 0.0  # najgorszy dotychczasowy ruch przeciwko pozycji (Maximum Adverse Excursion)
+        signal['mfe_percent'] = 0.0  # najlepszy dotychczasowy ruch na korzyść (Maximum Favorable Excursion)
         self.signals[key] = signal
         self.save_signals()
+        append_feature_store(key, signal.get('features', {}), signal['name'],
+                              signal['direction'], signal['confidence'], signal['timestamp'])
 
-    def evaluate_open_signals(self, tf_weights, max_age_hours=SIGNAL_TIMEOUT_HOURS):
-        """Sprawdza otwarte sygnały: czy trafiły TP, SL, albo wygasły.
-        Zamyka je i karmi wynikiem TimeframeWeights, żeby wagi realnie się uczyły."""
+    def evaluate_open_signals(self, tf_weights, feature_weights=None, adaptive_threshold=None,
+                               performance_stats=None, circuit_breaker=None,
+                               max_age_hours=SIGNAL_TIMEOUT_HOURS):
+        """Sprawdza otwarte sygnały: aktualizuje MAE/MFE, a gdy trafią TP/SL/timeout
+        - zamyka je i karmi wynikiem WSZYSTKIE komponenty uczące się:
+        TimeframeWeights, FeatureWeights, AdaptiveThreshold, PerformanceStats
+        i CircuitBreaker (żeby limit strat dziennych/tygodniowych był aktualny)."""
         now = datetime.now(pytz.utc)
         any_update = False
         for key, sig in list(self.signals.items()):
@@ -679,6 +1037,14 @@ class SignalManager:
                 continue
             current_price = data['prices'][-1]
             direction = sig['direction']
+            entry = sig['entry']
+
+            # --- MAE/MFE: aktualizowane KAŻDY cykl, nie tylko przy zamknięciu ---
+            move_percent = ((current_price - entry) / entry * 100 if direction == 'LONG'
+                             else (entry - current_price) / entry * 100)
+            sig['mfe_percent'] = max(sig.get('mfe_percent', 0.0), move_percent)
+            sig['mae_percent'] = min(sig.get('mae_percent', 0.0), move_percent)
+            any_update = True
 
             hit_tp = (direction == 'LONG' and current_price >= sig['take_profit']) or \
                      (direction == 'SHORT' and current_price <= sig['take_profit'])
@@ -698,8 +1064,34 @@ class SignalManager:
                 sig['outcome'] = outcome
                 sig['closed_price'] = current_price
                 sig['closed_at'] = now.isoformat()
+
+                # R-multiple: ruch faktyczny / dystans do SL, ze znakiem zgodnym z kierunkiem
+                if sig.get('risk_distance'):
+                    raw_move = (current_price - entry) if direction == 'LONG' else (entry - current_price)
+                    sig['r_multiple'] = raw_move / sig['risk_distance']
+                else:
+                    sig['r_multiple'] = 0.0
+
                 tf_weights.update_from_outcome(sig, outcome)
-                any_update = True
+
+                if outcome in ('win', 'loss') and feature_weights is not None and sig.get('features'):
+                    went_up = (direction == 'LONG' and outcome == 'win') or \
+                              (direction == 'SHORT' and outcome == 'loss')
+                    feature_weights.update(sig['features'], went_up)
+
+                if adaptive_threshold is not None:
+                    adaptive_threshold.record_outcome(sig['name'], sig.get('confidence', 0), outcome)
+
+                if outcome in ('win', 'loss') and performance_stats is not None:
+                    performance_stats.record(outcome, sig['r_multiple'])
+
+                if outcome in ('win', 'loss') and circuit_breaker is not None:
+                    circuit_breaker.record_trade(sig['r_multiple'])
+
+                logger.info(
+                    f"Zamknięto sygnał {sig['name']} {direction} - {outcome} "
+                    f"(R={sig.get('r_multiple', 0):.2f}, MAE={sig['mae_percent']:.2f}%, MFE={sig['mfe_percent']:.2f}%)"
+                )
 
         if any_update:
             self.save_signals()
@@ -707,6 +1099,57 @@ class SignalManager:
 # ============================================
 # FUNKCJE POMOCNICZE
 # ============================================
+
+def append_feature_store(signal_key, features, name, direction, confidence, timestamp):
+    """Zapisuje pełny wektor cech każdego wysłanego sygnału do osobnego pliku
+    JSONL (punkt C - feature store). Nie jest to potrzebne do bieżącego
+    działania bota - służy do OFFLINE retreningu/analizy (np. wytrenowania
+    pełnoprawnego modelu ML na historii, zamiast prostej regresji online)."""
+    try:
+        with open(FEATURE_STORE_FILE, 'a', encoding='utf-8') as f:
+            f.write(json.dumps({
+                'key': signal_key,
+                'name': name,
+                'direction': direction,
+                'confidence': confidence,
+                'features': features,
+                'timestamp': timestamp,
+            }, ensure_ascii=False) + "\n")
+    except Exception as e:
+        logger.error(f"Nie udało się zapisać do {FEATURE_STORE_FILE}: {e}")
+
+
+def compute_shadow_score(ind, combined):
+    """Prosty, celowo NIEZALEŻNY model 'cieniowy' oparty tylko o RSI i trend
+    wielointerwałowy (bez newsów, formacji świecowych, order flow itd.).
+    Nie wpływa na decyzje - loguje się go obok produkcyjnego scoringu, żeby
+    porównać oba podejścia w czasie i sprawdzić, czy produkcyjny model faktycznie
+    dokłada wartość ponad prostszy baseline (punkt C - shadow scoring)."""
+    score = 0
+    if ind['rsi'] > 55:
+        score += 1
+    elif ind['rsi'] < 45:
+        score -= 1
+    if combined and combined.get('trend_score', 0.5) > 0.6:
+        score += 1
+    elif combined and combined.get('trend_score', 0.5) < 0.4:
+        score -= 1
+    return score  # zakres -2..2
+
+
+def log_shadow_comparison(name, production_confidence, production_direction, shadow_score):
+    try:
+        with open(SHADOW_LOG_FILE, 'a', encoding='utf-8') as f:
+            f.write(json.dumps({
+                'name': name,
+                'timestamp': datetime.now(pytz.utc).isoformat(),
+                'production_confidence': production_confidence,
+                'production_direction': production_direction,
+                'shadow_score': shadow_score,
+            }, ensure_ascii=False) + "\n")
+    except Exception as e:
+        logger.error(f"Nie udało się zapisać do {SHADOW_LOG_FILE}: {e}")
+
 
 def is_weekend():
     return datetime.now(TIMEZONE).weekday() >= 5
@@ -1121,18 +1564,68 @@ Odpowiedz w JSON:
 # ============================================
 
 def calculate_position_size(entry, stop_loss, account_size=ACCOUNT_SIZE, risk_percent=RISK_PER_TRADE_PERCENT):
-    """Wielkość pozycji tak, by strata przy SL = risk_percent% kapitału."""
+    """Stała wielkość pozycji (ryzyko = risk_percent% kapitału) - używana jako
+    bezpieczny fallback, dopóki nie ma wystarczających danych historycznych
+    dla fractional Kelly (patrz calculate_position_size_kelly)."""
     risk_amount = account_size * (risk_percent / 100)
     stop_distance = abs(entry - stop_loss)
     if stop_distance == 0:
         return 0, risk_amount
     return risk_amount / stop_distance, risk_amount
 
+
+def calculate_position_size_kelly(confidence, performance_stats, entry, stop_loss,
+                                   account_size=ACCOUNT_SIZE,
+                                   max_risk_percent=MAX_RISK_PERCENT_CAP,
+                                   kelly_fraction=KELLY_FRACTION):
+    """
+    Position sizing metodą FRACTIONAL KELLY, dodatkowo skalowany pewnością
+    sygnału (punkt B). Kelly f* = W - (1-W)/R, gdzie W = win-rate, R = średni
+    zysk/średnia strata w jednostkach R - liczone z faktycznej historii
+    zamkniętych sygnałów (PerformanceStats), NIE z założeń.
+
+    Dopóki nie ma wystarczających danych historycznych (patrz
+    MIN_SAMPLES_FOR_KELLY), spada na stały % ryzyka (calculate_position_size)
+    - bo Kelly liczony na garści przykładów jest bardziej szkodliwy niż
+    pomocny.
+
+    kelly_fraction < 1 (domyślnie 0.5, czyli "pół-Kelly") to standardowe
+    zabezpieczenie - pełny Kelly jest teoretycznie optymalny, ale w praktyce
+    bardzo wrażliwy na błędy oszacowania W i R i generuje duże obsunięcia.
+    """
+    stop_distance = abs(entry - stop_loss)
+    if stop_distance == 0:
+        return 0, 0, 'brak_danych'
+
+    stats = performance_stats.get_stats() if performance_stats else None
+    if stats is None:
+        size, risk_amount = calculate_position_size(entry, stop_loss, account_size)
+        return size, risk_amount, 'stały_procent_ryzyka (za mało historii na Kelly)'
+
+    win_rate, avg_win_r, avg_loss_r = stats
+    if avg_loss_r <= 0:
+        size, risk_amount = calculate_position_size(entry, stop_loss, account_size)
+        return size, risk_amount, 'stały_procent_ryzyka (nieprawidłowe dane historyczne)'
+
+    b = avg_win_r / avg_loss_r
+    kelly_f = win_rate - (1 - win_rate) / b if b > 0 else 0
+    kelly_f = max(0.0, kelly_f) * kelly_fraction
+
+    # dodatkowe skalowanie pewnością sygnału (0.7 confidence -> mniejsza pozycja niż 0.95)
+    scaled_risk_percent = min(max_risk_percent, kelly_f * 100) * confidence
+    if scaled_risk_percent <= 0:
+        # Kelly sugeruje brak krawędzi - i tak wchodzimy minimalną, ostrożną wielkością
+        scaled_risk_percent = RISK_PER_TRADE_PERCENT * 0.25
+
+    risk_amount = account_size * (scaled_risk_percent / 100)
+    return risk_amount / stop_distance, risk_amount, 'fractional_kelly'
+
 # ============================================
 # GŁÓWNA ANALIZA RYNKU
 # ============================================
 
-def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=None):
+def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=None,
+                    feature_weights=None, adaptive_threshold=None, performance_stats=None):
     session = market_info.get('session', '24_7')
     if not is_session_active(session):
         return None
@@ -1175,10 +1668,20 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
 
     divergences = detect_divergences(timeframe_results)
 
+    # --- Reżim rynku (punkt B): TREND vs RANGE, na bazie ADX z danych 15m ---
+    regime, adx_value = detect_market_regime(main_data['highs'], main_data['lows'], main_data['prices'])
+
     articles = fetch_market_news(name)
     news_analysis = analyze_news_with_ai(articles, name, ai_memory.get_context())
 
+    # --- Cena "na żywo": jeśli mamy bid/ask z XTB, użyj mid-price zamiast
+    # ostatniego (delikatnie opóźnionego) zamknięcia z Yahoo do entry/SL/TP.
+    # UWAGA: to wciąż jest odpytywanie request/response raz na cykl, nie
+    # prawdziwy streaming - patrz zastrzeżenie w opisie funkcji fetch_xtb_spreads. ---
     p = ind['price']
+    if xtb_info and xtb_info.get('bid') is not None and xtb_info.get('ask') is not None:
+        p = (xtb_info['bid'] + xtb_info['ask']) / 2
+
     long_score = 0.0
     short_score = 0.0
 
@@ -1203,11 +1706,13 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
         else:
             short_score += 1
 
-    # --- Wsparcia/opory (0.5 do jednej strony) ---
+    # --- Wsparcia/opory. W reżimie RANGE wzmacniamy tę wagę (mean-reversion
+    # sprawdza się lepiej niż podążanie za trendem, gdy rynek się konsoliduje). ---
+    sr_weight = 1.0 if regime == 'RANGE' else 0.5
     if ind['nearest_level'] == 'SUPPORT':
-        long_score += 0.5
+        long_score += sr_weight
     elif ind['nearest_level'] == 'RESISTANCE':
-        short_score += 0.5
+        short_score += sr_weight
 
     # --- Formacje świecowe (liczone RAZ, nie per formacja) ---
     bias = patterns_directional_bias(ind['candlestick_patterns'])
@@ -1231,11 +1736,14 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
         else:
             short_score += 0.5
 
-    # --- MTF (multi-timeframe trend) ---
+    # --- MTF (multi-timeframe trend). W reżimie RANGE ten bonus jest mniej
+    # wiarygodny (trend na wyższych interwałach częściej się załamuje w
+    # konsolidacji) - zmniejszamy go zamiast ufać mu tak samo jak w TREND. ---
+    mtf_bonus = 2.0 if regime != 'RANGE' else 1.0
     if combined['trend_score'] > 0.6:
-        long_score += 2
+        long_score += mtf_bonus
     elif combined['trend_score'] < 0.4:
-        short_score += 2
+        short_score += mtf_bonus
 
     # --- Kara za dywergencje (obniża obie strony - sygnał mniej pewny) ---
     if divergences:
@@ -1248,19 +1756,43 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
         long_score += max(0, sentiment) * 2
         short_score += max(0, -sentiment) * 2
 
-    # Confidence teraz jest jawnie ograniczone do [0, 1] - wcześniej mogło
-    # przekroczyć 100% przy sprzyjających bonusach.
+    # Confidence bazowe, jawnie ograniczone do [0, 1]
     long_conf = min(1.0, max(0.0, long_score / TOTAL_SCORE_POINTS))
     short_conf = min(1.0, max(0.0, short_score / TOTAL_SCORE_POINTS))
 
-    threshold = 0.7
+    # --- Punkt A: model uczący się (regresja logistyczna na cechach).
+    # Dopóki nie ma wystarczająco zamkniętych sygnałów (is_ready()==False),
+    # NIE wpływa na confidence - baseline działa samodzielnie. ---
+    features = build_feature_vector(ind, combined, news_analysis, divergences)
+    model_used = False
+    if feature_weights is not None and feature_weights.is_ready():
+        p_up = feature_weights.predict_proba_up(features)
+        model_long_conf = p_up
+        model_short_conf = 1 - p_up
+        # Blend 50/50 z baseline - model nie przejmuje pełnej kontroli od razu,
+        # tylko stopniowo koryguje, w miarę jak zbiera więcej doświadczenia.
+        long_conf = 0.5 * long_conf + 0.5 * model_long_conf
+        short_conf = 0.5 * short_conf + 0.5 * model_short_conf
+        model_used = True
+
+    # --- Punkt C: shadow scoring - logowane zawsze, nigdy nie wpływa na decyzję ---
+    shadow_score = compute_shadow_score(ind, combined)
+    log_shadow_comparison(name, max(long_conf, short_conf),
+                           'LONG' if long_conf >= short_conf else 'SHORT', shadow_score)
+
+    # --- Punkt B: próg pewności skalibrowany per rynek zamiast sztywnego 0.7 ---
+    threshold = adaptive_threshold.get_threshold(name) if adaptive_threshold else 0.7
+
     if long_conf >= threshold or short_conf >= threshold:
         direction = 'LONG' if long_conf >= short_conf else 'SHORT'
         confidence = max(long_conf, short_conf)
 
         stop_loss = p - 1.5 * ind['atr'] if direction == 'LONG' else p + 1.5 * ind['atr']
         take_profit = p + 2.5 * ind['atr'] if direction == 'LONG' else p - 2.5 * ind['atr']
-        position_size, risk_amount = calculate_position_size(p, stop_loss)
+
+        position_size, risk_amount, sizing_method = calculate_position_size_kelly(
+            confidence, performance_stats, p, stop_loss
+        )
 
         return {
             'name': name,
@@ -1270,7 +1802,13 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
             'take_profit': take_profit,
             'position_size': position_size,
             'risk_amount': risk_amount,
+            'sizing_method': sizing_method,
             'confidence': confidence,
+            'threshold_used': threshold,
+            'regime': regime,
+            'adx': adx_value,
+            'model_used': model_used,
+            'features': features,
             'rsi': ind['rsi'],
             'vwap': ind['vwap'],
             'support': ind['support'],
@@ -1399,10 +1937,24 @@ def main():
     sm = SignalManager()
     ai_memory = AIMemory()
     tf_weights = TimeframeWeights()
+    feature_weights = FeatureWeights()
+    adaptive_threshold = AdaptiveThreshold()
+    performance_stats = PerformanceStats()
+    circuit_breaker = CircuitBreaker()
 
-    # Najpierw ocena wcześniej wysłanych, wciąż otwartych sygnałów -
-    # to jest to, co realnie zasila naukę wag interwałów.
-    sm.evaluate_open_signals(tf_weights)
+    # Najpierw ocena wcześniej wysłanych, wciąż otwartych sygnałów - to jest to,
+    # co realnie zasila naukę wag interwałów, wag cech, progu i statystyk Kelly.
+    sm.evaluate_open_signals(tf_weights, feature_weights, adaptive_threshold,
+                              performance_stats, circuit_breaker)
+
+    # --- Circuit breaker (punkt B): jeśli dzienny/tygodniowy limit strat
+    # w R jest przekroczony, NIE generujemy nowych sygnałów w tym cyklu.
+    # Otwarte pozycje nadal są monitorowane (patrz evaluate_open_signals wyżej). ---
+    tripped, reason = circuit_breaker.is_tripped()
+    if tripped:
+        logger.warning(f"⛔ Circuit breaker aktywny: {reason}. Pomijam generowanie nowych sygnałów.")
+        send_telegram(f"⛔ *CIRCUIT BREAKER*\n\n{reason}\n\nNowe sygnały wstrzymane do końca okresu.")
+        return
 
     # Jedno logowanie do XTB na cały cykl (nie per rynek) - taniej i szybciej.
     # Jeśli XTB_LOGIN/XTB_PASSWORD nie są ustawione albo logowanie się nie
@@ -1415,7 +1967,8 @@ def main():
 
     potential = []
     for name, info in MARKETS.items():
-        signal = analyze_market(name, info, ai_memory, tf_weights.get_weights(), xtb_spreads)
+        signal = analyze_market(name, info, ai_memory, tf_weights.get_weights(), xtb_spreads,
+                                 feature_weights, adaptive_threshold, performance_stats)
         if signal and sm.should_send_signal(signal):
             potential.append(signal)
 
@@ -1427,11 +1980,14 @@ def main():
         for i, s in enumerate(final_sigs, 1):
             emoji = '🟢' if s['direction'] == 'LONG' else '🔴'
             msg += f"{i}. {emoji} {s['name']} ({s['direction']})\n"
-            msg += f"   Pewność: {s['confidence']:.0%}\n"
+            msg += f"   Pewność: {s['confidence']:.0%} (próg: {s['threshold_used']:.0%})\n"
+            msg += f"   Reżim rynku: {s['regime']}" + (f" (ADX {s['adx']:.1f})" if s['adx'] else "") + "\n"
+            if s['model_used']:
+                msg += f"   ℹ️ Uwzględniono nauczony model cech\n"
             msg += f"   Wejście: {s['entry']:.4f} | SL: {s['stop_loss']:.4f} | TP: {s['take_profit']:.4f}\n"
             spread_label = "spread XTB (realny)" if s['spread_source'] == 'xtb_real' else "proxy zmienności (przybliżenie)"
             msg += f"   Spread: {s['spread_value']*100:.3f}% [{spread_label}]\n"
-            msg += f"   Sugerowana wielkość pozycji: {s['position_size']:.4f} jedn. (ryzyko ~{s['risk_amount']:.2f})\n"
+            msg += f"   Pozycja: {s['position_size']:.4f} jedn. (ryzyko ~{s['risk_amount']:.2f}, metoda: {s['sizing_method']})\n"
             msg += f"   RSI: {s['rsi']:.1f}\n"
             if s['vwap']:
                 msg += f"   VWAP: {s['vwap']:.4f}\n"
