@@ -2,7 +2,7 @@ name: Trading Agent
 
 on:
   schedule:
-    - cron: '*/10 * * * 1-5'   # Co 10 minut, pon-pt
+    - cron: '*/10 * * * 1-5'
   workflow_dispatch:
 
 jobs:
@@ -24,15 +24,13 @@ jobs:
       env:
         TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+        GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
       run: python agent.py
 
     - name: Commit changes
       run: |
         git config --global user.name 'GitHub Actions Bot'
         git config --global user.email 'actions@github.com'
-        # Dodaj wszystkie zmiany, ale nie przerywaj na błędzie
         git add -A
-        # Jeśli nie ma zmian, commit się nie powiedzie – to OK
-        git commit -m 'Auto-update data' || echo "No changes to commit"
+        git commit -m 'Auto-update data' || echo "No changes"
         git push || echo "Push failed"
