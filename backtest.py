@@ -212,6 +212,76 @@ def print_report(results):
               f"{r['expectancy_r']:>7.2f} | {r['total_r']:>8.2f}")
 
 
+def fetch_and_backtest_xtb(market_name, period='H1', months_back=12,
+                            thresholds=(0.5, 0.6, 0.7, 0.8, 0.9), **run_backtest_kwargs):
+    """
+    Pobiera REALNĄ historię świec z XTB dla rynku o nazwie `market_name`
+    (klucz z trading_bot.MARKETS, np. 'APPLE', 'EUR/USD', 'BITCOIN') i
+    automatycznie odpala na niej run_backtest().
+
+    Wymaga ustawionych zmiennych środowiskowych XTB_LOGIN i XTB_PASSWORD
+    (patrz trading_bot.py - domyślnie konto DEMO).
+
+    UWAGA: konwersja świec XTB (open + offset punktowy -> cena bezwzględna)
+    w trading_bot.XTBClient.get_chart_history() nie została zweryfikowana na
+    żywym połączeniu - zanim zaufasz wynikom, sprawdź na kilku pierwszych
+    świecach z `bars`, że ceny wyglądają realistycznie (np. porównaj z
+    wykresem w aplikacji XTB dla tego samego okresu).
+
+    Zwraca (results, bars) - `bars` przydaje się do ręcznej weryfikacji.
+    """
+    xtb_symbol = tb.XTB_SYMBOLS.get(market_name)
+    if not xtb_symbol:
+        raise ValueError(
+            f"Brak mapowania XTB dla '{market_name}'. Dostępne rynki: {list(tb.XTB_SYMBOLS.keys())}"
+        )
+
+    print(f"Pobieram historię {market_name} ({xtb_symbol}) z XTB, interwał {period}, ~{months_back} mies. wstecz...")
+    bars = tb.fetch_xtb_historical(xtb_symbol, period=period, months_back=months_back)
+    if not bars:
+        raise RuntimeError(
+            "Nie udało się pobrać danych z XTB. Sprawdź: (1) czy XTB_LOGIN/XTB_PASSWORD są "
+            "ustawione, (2) połączenie sieciowe, (3) czy symbol istnieje na Twoim koncie "
+            "(sprawdź w xStation5 -> Narzędzia -> Specyfikacja instrumentów), (4) czy "
+            "months_back nie przekracza dostępnej głębokości historii dla tego interwału."
+        )
+
+    print(f"Pobrano {len(bars)} świec"
+          f" (od {bars[0].get('timestamp', '?')} do {bars[-1].get('timestamp', '?')}).")
+    print("Pierwsze 3 świece (zweryfikuj ręcznie, że wyglądają realistycznie):")
+    for b in bars[:3]:
+        print(f"  O={b['open']:.5f} H={b['high']:.5f} L={b['low']:.5f} C={b['close']:.5f} V={b['volume']}")
+
+    print("\nUruchamiam backtest...")
+    results = run_backtest(bars, thresholds=thresholds, **run_backtest_kwargs)
+    print_report(results)
+    return results, bars
+
+
+def fetch_and_backtest_yahoo(market_name, interval='60m', range_period='2y',
+                              thresholds=(0.5, 0.6, 0.7, 0.8, 0.9), **run_backtest_kwargs):
+    """Odpowiednik fetch_and_backtest_xtb, ale przez Yahoo Finance
+    (get_market_data z trading_bot.py) - przydatne do porównania z wynikami
+    z XTB, albo gdy nie masz jeszcze skonfigurowanego konta XTB."""
+    market_info = tb.MARKETS.get(market_name)
+    if not market_info:
+        raise ValueError(f"Nieznany rynek '{market_name}'. Dostępne: {list(tb.MARKETS.keys())}")
+
+    print(f"Pobieram historię {market_name} z Yahoo Finance, interwał {interval}, zakres {range_period}...")
+    data = tb.get_market_data(market_info['symbol'], interval=interval, range_period=range_period)
+    if not data:
+        raise RuntimeError("Nie udało się pobrać danych z Yahoo Finance.")
+
+    bars = [
+        {'open': o, 'high': h, 'low': l, 'close': c, 'volume': v}
+        for o, h, l, c, v in zip(data['opens'], data['highs'], data['lows'], data['prices'], data['volumes'])
+    ]
+    print(f"Pobrano {len(bars)} świec. Uruchamiam backtest...")
+    results = run_backtest(bars, thresholds=thresholds, **run_backtest_kwargs)
+    print_report(results)
+    return results, bars
+
+
 if __name__ == "__main__":
     print("Uruchamiam self-test na danych SYNTETYCZNYCH (tylko sprawdzenie mechaniki backtestu).")
     print("Wyniki na danych syntetycznych NIC nie mówią o realnej skuteczności strategii!\n")
@@ -219,7 +289,11 @@ if __name__ == "__main__":
     results = run_backtest(bars)
     print_report(results)
     print(
-        "\nAby przetestować na prawdziwych danych, zastąp generate_synthetic_data(...) "
-        "listą rzeczywistych świec OHLCV (np. pobranych z Yahoo Finance przez get_market_data "
-        "z trading_bot.py, dla długiego zakresu historycznego jednego interwału)."
+        "\nAby przetestować na prawdziwych danych:\n"
+        "  Z XTB (wymaga XTB_LOGIN/XTB_PASSWORD w zmiennych środowiskowych):\n"
+        "    from backtest import fetch_and_backtest_xtb\n"
+        "    results, bars = fetch_and_backtest_xtb('APPLE', period='H1', months_back=12)\n\n"
+        "  Z Yahoo Finance (nie wymaga logowania):\n"
+        "    from backtest import fetch_and_backtest_yahoo\n"
+        "    results, bars = fetch_and_backtest_yahoo('APPLE', interval='60m', range_period='2y')"
     )
