@@ -11,6 +11,21 @@ import pytz
 import re
 import xml.etree.ElementTree as ET
 
+from config import (
+    AGENT_MODE, RunMode, is_feature_enabled, get_mode_prefix,
+    CONFIDENCE_THRESHOLD, MTF_BULLISH_THRESHOLD, MTF_BEARISH_THRESHOLD,
+    NEAR_MISS_SAMPLE_WEIGHT, NEAR_MISS_MIN_AGE_HOURS, NEAR_MISS_MAX_AGE_HOURS,
+    MACRO_HOURS, DAILY_SUMMARY_HOUR,
+)
+from modes import (
+    log_signal_per_mode, log_trade_outcome, get_notification_message,
+    should_update_weights, should_record_stats, should_update_threshold,
+    should_send_notifications,
+)
+from data_sources import (
+    fetch_trading_economics_macro, fetch_investing_news, log_fetch_error,
+)
+
 # ============================================
 # LOGOWANIE (zamiast cichych `except: pass`)
 # ============================================
@@ -36,6 +51,14 @@ PERFORMANCE_STATS_FILE = 'performance_stats.json'
 CIRCUIT_BREAKER_FILE = 'circuit_breaker_state.json'
 SHADOW_LOG_FILE = 'shadow_scoring_log.jsonl'
 
+# --- Nowe pliki: błędy pobierania danych, near-miss, dane makro ---
+DATA_FETCH_ERRORS_FILE = 'data_fetch_errors.jsonl'     # log błędów każdego źródła danych (Investing/TE/Yahoo)
+NEAR_MISS_LOG_FILE = 'near_miss_log.jsonl'             # log KAŻDEJ próby scoringu (append-only, do audytu)
+NEAR_MISS_PENDING_FILE = 'near_miss_pending.json'      # sygnały "co by było gdyby" czekające na ewaluację
+MACRO_DATA_FILE = 'macro_data_history.jsonl'           # WSZYSTKIE dane makro (append-only, do nauki)
+MACRO_STATE_FILE = 'macro_state.json'                  # ostatnie pobrania/analizy makro + cache sentymentu
+DAILY_SCORES_CACHE_FILE = 'daily_scores_cache.json'     # max confidence per rynek DZIŚ, do podsumowania Top 3
+
 TIMEZONE = pytz.timezone('Europe/Warsaw')
 
 # Zarządzanie ryzykiem (konfigurowalne przez zmienne środowiskowe)
@@ -55,6 +78,16 @@ MAX_RISK_PERCENT_CAP = float(os.environ.get('MAX_RISK_PERCENT_CAP', 2.0))
 DAILY_LOSS_LIMIT_R = float(os.environ.get('DAILY_LOSS_LIMIT_R', -3.0))    # w jednostkach R (wielokrotność ryzyka)
 WEEKLY_LOSS_LIMIT_R = float(os.environ.get('WEEKLY_LOSS_LIMIT_R', -6.0))
 REGIME_ADX_TREND_THRESHOLD = float(os.environ.get('REGIME_ADX_TREND_THRESHOLD', 25))
+
+# --- Near-miss (punkt D): sygnały poniżej progu logowane i ewaluowane później,
+# jako dodatkowe (przyciszone) źródło danych treningowych dla FeatureWeights.
+# Progi/wagi (NEAR_MISS_MIN_AGE_HOURS, NEAR_MISS_MAX_AGE_HOURS, NEAR_MISS_SAMPLE_WEIGHT)
+# są teraz w config.py, żeby kalibrację dało się zmieniać w jednym miejscu. ---
+NEAR_MISS_ATR_SL_MULT = 1.5
+NEAR_MISS_ATR_TP_MULT = 2.5
+
+# --- Dane makro (Trading Economics + Investing.com, RSS - patrz data_sources.py) ---
+# Godziny pobrania (MACRO_HOURS) i próg pewności (CONFIDENCE_THRESHOLD) są w config.py.
 
 DISCLAIMER = (
     "\n\n⚠️ _To automatyczny, niebacktestowany system analityczny. "
@@ -100,6 +133,39 @@ XTB_SYMBOLS = {
     'AMAZON': 'AMAZON.US',
     'META': 'META.US',
     'GOOGLE': 'ALPHABET.US',
+}
+
+# ============================================
+# Investing.com - GŁÓWNE źródło danych cenowych (świece OHLCV), zgodnie
+# z ustaleniem. Yahoo Finance jest fallbackiem (patrz get_price_data),
+# używanym automatycznie, gdy Investing.com nie odpowie/zawiedzie.
+# ============================================
+# `pair_id` = None => rynek na razie pomija Investing.com i idzie prosto na
+# Yahoo, dopóki nie uzupełnisz ID (patrz instrukcja w fetch_investing_data).
+INVESTING_PAIR_IDS = {
+    'DAX': None,
+    'S&P500': None,
+    'NASDAQ': None,
+    'EUR/USD': None,
+    'GOLD': None,
+    'OIL WTI': None,
+    'BITCOIN': None,
+    'ETHEREUM': None,
+    'SOLANA': None,
+    'APPLE': None,
+    'MICROSOFT': None,
+    'NVIDIA': None,
+    'TESLA': None,
+    'AMAZON': None,
+    'META': None,
+    'GOOGLE': None,
+}
+
+# Mapowanie interwałów agenta na kody Investing.com (resolution w minutach,
+# zgodnie z ich wewnętrznym, niezudokumentowanym API - patrz zastrzeżenia
+# w fetch_investing_data).
+INVESTING_INTERVAL_MAP = {
+    '5m': 5, '15m': 15, '60m': 60, '1d': 1440,
 }
 
 # Maksymalny akceptowalny spread jako % ceny środkowej, liczony z REALNYCH
@@ -454,6 +520,26 @@ def http_post_with_retry(url, json_payload=None, headers=None, timeout=25, retri
         logger.error(f"Nie udało się wysłać do {url} po {retries} próbach: {last_exc}")
     return None
 
+
+def log_data_error(source, name, symbol, reason):
+    """Zapisuje błąd pobierania danych do OSOBNEGO pliku (punkt: priorytet
+    źródeł danych). Każde nieudane pobranie z Investing.com / Trading Economics
+    / Yahoo trafia tutaj z nazwą źródła, rynkiem, symbolem i powodem - żeby
+    dało się później ocenić, które źródło faktycznie zawodzi i jak często,
+    zamiast zgadywać na podstawie samych logów tekstowych."""
+    try:
+        with open(DATA_FETCH_ERRORS_FILE, 'a', encoding='utf-8') as f:
+            f.write(json.dumps({
+                'timestamp': datetime.now(pytz.utc).isoformat(),
+                'source': source,
+                'name': name,
+                'symbol': symbol,
+                'reason': str(reason)[:300],
+            }, ensure_ascii=False) + "\n")
+    except Exception as e:
+        logger.error(f"Nie udało się zapisać do {DATA_FETCH_ERRORS_FILE}: {e}")
+    logger.warning(f"[{source}] Błąd danych dla {name} ({symbol}): {reason}")
+
 # ============================================
 # FILTRY BEZPIECZEŃSTWA
 # ============================================
@@ -803,6 +889,7 @@ class FeatureWeights:
     FEATURE_NAMES = [
         'sma20', 'sma50', 'rsi', 'vwap', 'support_resistance',
         'pattern', 'order_flow', 'poc', 'mtf_trend', 'news_sentiment',
+        'macro_sentiment',
     ]
 
     def __init__(self, file_path=FEATURE_WEIGHTS_FILE):
@@ -837,14 +924,20 @@ class FeatureWeights:
         z = max(-30.0, min(30.0, z))  # zabezpieczenie przed przepełnieniem exp()
         return 1.0 / (1.0 + np.exp(-z))
 
-    def update(self, features, went_up):
+    def update(self, features, went_up, weight=1.0):
         """went_up: True jeśli faktyczny ruch rynku był w górę, False jeśli w dół.
-        (Ustalane z outcome + direction sygnału - patrz SignalManager.evaluate_open_signals)."""
+        (Ustalane z outcome + direction sygnału - patrz SignalManager.evaluate_open_signals).
+
+        weight: mnożnik kroku gradientu (< 1.0 = próbka uczy słabiej).
+        Używane przez near-miss (punkt D) - "co by było gdyby" sygnały poniżej
+        progu wciąż karmią model, ale z przyciszoną wagą (NEAR_MISS_SAMPLE_WEIGHT),
+        żeby nie mieć takiego samego wpływu jak realnie wysłane, zweryfikowane
+        sygnały."""
         y = 1.0 if went_up else 0.0
         p = self.predict_proba_up(features)
         error = p - y
         # learning rate maleje z liczbą próbek - mniej gwałtowne zmiany z czasem
-        lr = self.base_learning_rate / (1 + self.n_samples / 50)
+        lr = self.base_learning_rate / (1 + self.n_samples / 50) * weight
         for k, v in features.items():
             self.weights[k] = self.weights.get(k, 0.0) - lr * error * v
         self.bias -= lr * error
@@ -852,7 +945,7 @@ class FeatureWeights:
         self.save()
 
 
-def build_feature_vector(ind, combined, news_analysis, divergences):
+def build_feature_vector(ind, combined, news_analysis, divergences, macro_analysis=None):
     """Cechy w konwencji ZNAKOWANEJ: dodatnie = przechylenie w górę (byczo),
     ujemne = w dół (niedźwiedzio), 0 = brak/neutralne. Dzięki temu ta sama
     regresja logistyczna przewiduje P(ruch w górę) niezależnie od tego, czy
@@ -874,6 +967,10 @@ def build_feature_vector(ind, combined, news_analysis, divergences):
     if news_analysis and news_analysis.get('impact') == 'high':
         news_val = max(-1.0, min(1.0, news_analysis.get('sentiment', 0)))
 
+    macro_val = 0.0
+    if macro_analysis and macro_analysis.get('impact') in ('high', 'medium'):
+        macro_val = max(-1.0, min(1.0, macro_analysis.get('sentiment', 0)))
+
     return {
         'sma20': 1.0 if (ind.get('sma20') and ind['price'] > ind['sma20']) else (
             -1.0 if ind.get('sma20') else 0.0),
@@ -889,6 +986,7 @@ def build_feature_vector(ind, combined, news_analysis, divergences):
             -1.0 if ind.get('volume_profile') else 0.0),
         'mtf_trend': (combined.get('trend_score', 0.5) - 0.5) * 2 if combined else 0.0,
         'news_sentiment': news_val,
+        'macro_sentiment': macro_val,
     }
 
 
@@ -901,7 +999,7 @@ class AdaptiveThreshold:
     MIN_SAMPLES_FOR_ADAPTIVE_THRESHOLD zamkniętych sygnałów, używany jest
     bezpieczny domyślny próg 0.7.
     """
-    DEFAULT = 0.7
+    DEFAULT = CONFIDENCE_THRESHOLD  # z config.py - jedno miejsce do kalibracji (obniżone z 0.7)
     TARGET_WIN_RATE = 0.55
     HISTORY_WINDOW = 200
 
@@ -1102,6 +1200,11 @@ class SignalManager:
         self.save_signals()
         append_feature_store(key, signal.get('features', {}), signal['name'],
                               signal['direction'], signal['confidence'], signal['timestamp'])
+        # Log per tryb pracy (SHADOW -> shadow_trades.jsonl, LIVE -> live_trades.jsonl) -
+        # dokładnie w momencie, gdy sygnał oficjalnie wchodzi do śledzenia
+        # (SIGNALS_FILE), niezależnie od tego, czy zmieści się w limicie
+        # Top 10 wysyłanym na Telegram (patrz main()).
+        log_signal_per_mode(signal)
 
     def evaluate_open_signals(self, tf_weights, feature_weights=None, adaptive_threshold=None,
                                performance_stats=None, circuit_breaker=None,
@@ -1124,7 +1227,7 @@ class SignalManager:
             market_info = MARKETS.get(sig.get('name'))
             if not market_info:
                 continue
-            data = get_market_data(market_info['symbol'], '15m', '1d')
+            data, _src = get_price_data(sig.get('name'), market_info['symbol'], '15m', '1d')
             if not data or not data['prices']:
                 continue
             current_price = data['prices'][-1]
@@ -1164,21 +1267,25 @@ class SignalManager:
                 else:
                     sig['r_multiple'] = 0.0
 
-                tf_weights.update_from_outcome(sig, outcome)
+                if should_update_weights():
+                    tf_weights.update_from_outcome(sig, outcome)
 
-                if outcome in ('win', 'loss') and feature_weights is not None and sig.get('features'):
+                if outcome in ('win', 'loss') and feature_weights is not None and sig.get('features') \
+                        and should_update_weights():
                     went_up = (direction == 'LONG' and outcome == 'win') or \
                               (direction == 'SHORT' and outcome == 'loss')
                     feature_weights.update(sig['features'], went_up)
 
-                if adaptive_threshold is not None:
+                if adaptive_threshold is not None and should_update_threshold():
                     adaptive_threshold.record_outcome(sig['name'], sig.get('confidence', 0), outcome)
 
-                if outcome in ('win', 'loss') and performance_stats is not None:
+                if outcome in ('win', 'loss') and performance_stats is not None and should_record_stats():
                     performance_stats.record(outcome, sig['r_multiple'])
 
-                if outcome in ('win', 'loss') and circuit_breaker is not None:
+                if outcome in ('win', 'loss') and circuit_breaker is not None and should_record_stats():
                     circuit_breaker.record_trade(sig['r_multiple'])
+
+                log_trade_outcome(key, outcome, sig.get('r_multiple', 0.0))
 
                 logger.info(
                     f"Zamknięto sygnał {sig['name']} {direction} - {outcome} "
@@ -1243,6 +1350,233 @@ def log_shadow_comparison(name, production_confidence, production_direction, sha
         logger.error(f"Nie udało się zapisać do {SHADOW_LOG_FILE}: {e}")
 
 
+def log_near_miss(name, stage, reason, long_conf=None, short_conf=None, direction=None,
+                   confidence=None, threshold=None, entry=None, atr=None, features=None,
+                   price_source=None, regime=None):
+    """Loguje KAŻDĄ próbę scoringu dla danego rynku w tym cyklu - także te
+    odrzucone wcześniej przez filtry (spread/zmienność/płynność/sesja/brak
+    danych), nie tylko finalny wynik scoringu. To rozszerza dawny
+    shadow-scoring-log (który logował tylko niezależny model-cień dla
+    rynków, które PRZESZŁY filtry) o pełny audyt każdej próby - potrzebny do
+    odpowiedzi na pytanie "dlaczego nic nie wysłano" bez zgadywania.
+
+    Zapis jest zawsze append-only (audyt). Jeśli sygnał realnie nie osiągnął
+    progu (stage='scored', reason='ponizej progu') i mamy entry/atr/features,
+    dodatkowo trafia do NearMissTracker - do późniejszej ewaluacji "co by
+    było gdyby" (patrz evaluate_near_misses)."""
+    record = {
+        'timestamp': datetime.now(pytz.utc).isoformat(),
+        'name': name,
+        'stage': stage,
+        'reason': reason,
+        'long_conf': long_conf,
+        'short_conf': short_conf,
+        'direction': direction,
+        'confidence': confidence,
+        'threshold': threshold,
+        'regime': regime,
+        'price_source': price_source,
+    }
+    try:
+        with open(NEAR_MISS_LOG_FILE, 'a', encoding='utf-8') as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+    except Exception as e:
+        logger.error(f"Nie udało się zapisać do {NEAR_MISS_LOG_FILE}: {e}")
+
+    if stage == 'scored' and reason == 'ponizej progu' and entry and atr and features is not None:
+        NearMissTracker().add(name, direction, confidence, entry, atr, features)
+
+    if stage == 'scored' and confidence is not None:
+        update_daily_scores_cache(name, confidence, direction, threshold)
+
+
+def update_daily_scores_cache(market_name, conf, direction, threshold=None):
+    """Trzyma TYLKO max confidence per rynek na DZIŚ, w małym pliku JSON -
+    znacznie taniej niż skanowanie całego near_miss_log.jsonl przy każdym
+    dziennym podsumowaniu (patrz send_daily_near_threshold_summary)."""
+    today = datetime.now(TIMEZONE).strftime('%Y-%m-%d')
+    cache = {'date': today, 'scores': {}}
+    if os.path.exists(DAILY_SCORES_CACHE_FILE):
+        try:
+            with open(DAILY_SCORES_CACHE_FILE, 'r', encoding='utf-8') as f:
+                d = json.load(f)
+                if d.get('date') == today:
+                    cache = d
+        except Exception:
+            pass
+    curr = cache['scores'].get(market_name, {'confidence': 0.0, 'direction': 'NONE'})
+    if conf >= curr['confidence']:
+        cache['scores'][market_name] = {'confidence': conf, 'direction': direction or 'NONE',
+                                         'threshold': threshold}
+    try:
+        with open(DAILY_SCORES_CACHE_FILE, 'w', encoding='utf-8') as f:
+            json.dump(cache, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        logger.error(f"Nie udało się zapisać {DAILY_SCORES_CACHE_FILE}: {e}")
+
+
+class NearMissTracker:
+    """Przechowuje sygnały odrzucone przez próg pewności ('near-miss'), żeby
+    po NEAR_MISS_MIN_AGE_HOURS sprawdzić, co faktycznie zrobiła cena - i
+    dokarmić FeatureWeights tym wynikiem z obniżoną wagą
+    (NEAR_MISS_SAMPLE_WEIGHT). Osobny, mutowalny plik (JSON) - w
+    odróżnieniu od NEAR_MISS_LOG_FILE, który jest tylko append-only audytem.
+
+    UWAGA - ograniczenie: ewaluacja sprawdza TYLKO cenę w momencie
+    uruchomienia (jak evaluate_open_signals), a nie pełną ścieżkę świec
+    pomiędzy - przy rzadkim odpalaniu (np. raz dziennie) może to przeoczyć
+    krótkotrwałe dotknięcie TP/SL w środku okresu. To akceptowalny kompromis
+    dla sygnału treningowego o i tak obniżonej wadze, nie dla realnych
+    transakcji."""
+
+    def __init__(self, file_path=NEAR_MISS_PENDING_FILE):
+        self.file_path = file_path
+        self.data = self.load()
+
+    def load(self):
+        try:
+            if os.path.exists(self.file_path):
+                with open(self.file_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except Exception as e:
+            logger.warning(f"Nie udało się wczytać {self.file_path}: {e}")
+        return {}
+
+    def save(self):
+        try:
+            with open(self.file_path, 'w', encoding='utf-8') as f:
+                json.dump(self.data, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            logger.error(f"Nie udało się zapisać {self.file_path}: {e}")
+
+    def add(self, name, direction, confidence, entry, atr, features):
+        key = f"{name}_{datetime.now(pytz.utc).isoformat()}"
+        self.data[key] = {
+            'name': name,
+            'direction': direction,
+            'confidence': confidence,
+            'entry': entry,
+            'atr': atr,
+            'features': features,
+            'created_at': datetime.now(pytz.utc).isoformat(),
+        }
+        self.save()
+
+    def evaluate(self, feature_weights):
+        """Sprawdza dojrzałe próbki (wiek >= NEAR_MISS_MIN_AGE_HOURS), ustala
+        hipotetyczny wynik (TP/SL na bazie NEAR_MISS_ATR_*_MULT) i dokarmia
+        FeatureWeights z wagą NEAR_MISS_SAMPLE_WEIGHT. Próbki starsze niż
+        NEAR_MISS_MAX_AGE_HOURS bez rozstrzygnięcia są porzucane (timeout,
+        bez wpływu na naukę - zbyt niejednoznaczne)."""
+        now = datetime.now(pytz.utc)
+        resolved_keys = []
+        n_evaluated = 0
+        for key, item in list(self.data.items()):
+            try:
+                created_at = datetime.fromisoformat(item['created_at'])
+            except Exception:
+                resolved_keys.append(key)
+                continue
+            age_hours = (now - created_at).total_seconds() / 3600
+            if age_hours < NEAR_MISS_MIN_AGE_HOURS:
+                continue
+
+            market_info = MARKETS.get(item['name'])
+            if not market_info:
+                resolved_keys.append(key)
+                continue
+            data, _src = get_price_data(item['name'], market_info['symbol'], '15m', '1d')
+            if not data or not data['prices']:
+                if age_hours >= NEAR_MISS_MAX_AGE_HOURS:
+                    resolved_keys.append(key)
+                continue
+            current_price = data['prices'][-1]
+
+            direction = item['direction']
+            entry = item['entry']
+            atr = item['atr']
+            stop_loss = entry - NEAR_MISS_ATR_SL_MULT * atr if direction == 'LONG' else entry + NEAR_MISS_ATR_SL_MULT * atr
+            take_profit = entry + NEAR_MISS_ATR_TP_MULT * atr if direction == 'LONG' else entry - NEAR_MISS_ATR_TP_MULT * atr
+
+            hit_tp = (direction == 'LONG' and current_price >= take_profit) or \
+                     (direction == 'SHORT' and current_price <= take_profit)
+            hit_sl = (direction == 'LONG' and current_price <= stop_loss) or \
+                     (direction == 'SHORT' and current_price >= stop_loss)
+
+            outcome = None
+            if hit_tp:
+                outcome = 'win'
+            elif hit_sl:
+                outcome = 'loss'
+            elif age_hours >= NEAR_MISS_MAX_AGE_HOURS:
+                outcome = 'timeout'
+
+            if outcome in ('win', 'loss'):
+                went_up = (direction == 'LONG' and outcome == 'win') or \
+                          (direction == 'SHORT' and outcome == 'loss')
+                feature_weights.update(item['features'], went_up, weight=NEAR_MISS_SAMPLE_WEIGHT)
+                n_evaluated += 1
+                try:
+                    with open(NEAR_MISS_LOG_FILE, 'a', encoding='utf-8') as f:
+                        f.write(json.dumps({
+                            'timestamp': now.isoformat(), 'name': item['name'], 'stage': 'evaluated',
+                            'reason': outcome, 'direction': direction, 'confidence': item['confidence'],
+                        }, ensure_ascii=False) + "\n")
+                except Exception as e:
+                    logger.error(f"Nie udało się zapisać ewaluacji near-miss: {e}")
+
+            if outcome is not None:
+                resolved_keys.append(key)
+
+        for key in resolved_keys:
+            self.data.pop(key, None)
+        if resolved_keys or n_evaluated:
+            self.save()
+        if n_evaluated:
+            logger.info(f"Near-miss: doewaluowano {n_evaluated} próbek do FeatureWeights (waga {NEAR_MISS_SAMPLE_WEIGHT}).")
+
+
+def evaluate_near_misses(feature_weights):
+    NearMissTracker().evaluate(feature_weights)
+
+
+def build_daily_near_miss_summary():
+    """Buduje ranking top-3 rynków z najwyższym confidence dzisiaj, z lekkiego
+    cache'u DAILY_SCORES_CACHE_FILE (aktualizowanego na bieżąco w log_near_miss/
+    update_daily_scores_cache) zamiast skanowania całego near_miss_log.jsonl
+    przy każdym podsumowaniu."""
+    today = datetime.now(TIMEZONE).strftime('%Y-%m-%d')
+    if not os.path.exists(DAILY_SCORES_CACHE_FILE):
+        return []
+    try:
+        with open(DAILY_SCORES_CACHE_FILE, 'r', encoding='utf-8') as f:
+            cache = json.load(f)
+    except Exception as e:
+        logger.warning(f"Nie udało się wczytać {DAILY_SCORES_CACHE_FILE}: {e}")
+        return []
+    if cache.get('date') != today:
+        return []
+    ranked = sorted(
+        ({'name': name, **data} for name, data in cache.get('scores', {}).items()),
+        key=lambda r: r['confidence'], reverse=True
+    )
+    return ranked[:3]
+
+
+def send_daily_near_miss_report():
+    if not should_send_notifications():
+        return
+    top3 = build_daily_near_miss_summary()
+    if not top3:
+        return
+    msg = "📍 *NAJBLIŻEJ PROGU DZIŚ*\n\n_Żaden z poniższych nie osiągnął progu wysyłki, ale były najbliżej:_\n\n"
+    for i, r in enumerate(top3, 1):
+        th = r.get('threshold')
+        th_txt = f"{th:.0%}" if th is not None else f"{CONFIDENCE_THRESHOLD:.0%}"
+        msg += f"{i}. {r['name']} ({r.get('direction', '?')}) - {r['confidence']:.0%} (próg: {th_txt})\n"
+    send_telegram(get_notification_message(msg), add_disclaimer=False)
+
+
 def is_weekend():
     return datetime.now(TIMEZONE).weekday() >= 5
 
@@ -1257,9 +1591,35 @@ def is_monthly_report_time():
     return now.day == 1 and now.hour == 8 and now.minute < 10
 
 
-def is_morning_sentiment_time():
+def is_time_for(target_h, target_m, window_m=14):
+    """Okno (target_h:target_m .. +window_m minut) - szersze niż jeden cykl
+    10-minutowy, żeby nie przegapić wyzwalacza jeśli poprzedni cykl agenta
+    się spóźnił/padł."""
     now = datetime.now(TIMEZONE)
-    return now.hour == 8 and 10 <= now.minute < 20
+    return now.hour == target_h and target_m <= now.minute < (target_m + window_m)
+
+
+def is_morning_sentiment_time():
+    return is_time_for(8, 10, window_m=10)
+
+
+def is_evening_summary_time():
+    """Pora na dzienne podsumowanie 'najbliżej progu' - patrz config.DAILY_SUMMARY_HOUR."""
+    return is_time_for(*DAILY_SUMMARY_HOUR, window_m=10)
+
+
+def is_macro_fetch_time(state):
+    """Sprawdza, czy jesteśmy w oknie jednego z config.MACRO_HOURS (rano /
+    przed otwarciem US / po zamknięciu głównych sesji) i czy dla TEGO okna
+    dziś jeszcze nie pobieraliśmy danych makro (żeby przy cyklu co 10 minut
+    nie odpalać pobrania makro kilkukrotnie w tym samym oknie)."""
+    now = datetime.now(TIMEZONE)
+    today_key = now.strftime('%Y-%m-%d')
+    for window_name, (h, m) in MACRO_HOURS.items():
+        if is_time_for(h, m, window_m=10):
+            last_run = state.get('last_run', {}).get(window_name)
+            return last_run != today_key
+    return False
 
 
 def is_session_active(session):
@@ -1291,19 +1651,106 @@ def send_telegram(message, add_disclaimer=True):
         return False
 
 
-def get_market_data(symbol, interval='15m', range_period='1d'):
+def fetch_investing_data(name, interval='15m', range_period='1d'):
+    """Próba pobrania świec z Investing.com - GŁÓWNE źródło cen, zgodnie
+    z ustaleniem. UWAGA - WAŻNE OGRANICZENIE, powtórzone świadomie: Investing.com
+    NIE MA oficjalnego, publicznego API do świec OHLCV. Poniższy klient korzysta
+    z niezudokumentowanego endpointu używanego przez stronę WWW i może w każdej
+    chwili przestać działać bez ostrzeżenia (zmiana struktury odpowiedzi,
+    Cloudflare/anti-bot, wymóg nagłówków sesji z przeglądarki itp.) - nie było
+    możliwości przetestowania go na żywym połączeniu w tym środowisku (brak
+    dostępu do sieci w sandboxie). To jest świadomie zaakceptowane ryzyko: jeśli
+    pobranie się nie powiedzie, kod loguje błąd do DATA_FETCH_ERRORS_FILE i
+    automatycznie spada na Yahoo Finance - patrz get_price_data(). Warto co
+    jakiś czas zerknąć do DATA_FETCH_ERRORS_FILE i sprawdzić, jak często Investing
+    faktycznie odpowiada, a jak często agent i tak jedzie na samym Yahoo.
+
+    `pair_id` dla każdego rynku trzeba ustalić ręcznie (widoczne w URL-u strony
+    danego instrumentu na investing.com, albo w odpowiedzi sieciowej strony w
+    narzędziach deweloperskich przeglądarki - Sieć/Network, filtr XHR, szukaj
+    zapytania do api.investing.com przy wejściu na wykres). Wartości None =
+    rynek pominie Investing.com i pójdzie od razu na Yahoo, dopóki nie
+    uzupełnisz ID w INVESTING_PAIR_IDS poniżej."""
+    pair_id = INVESTING_PAIR_IDS.get(name)
+    if not pair_id:
+        log_data_error('investing', name, None, 'brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)')
+        return None
+    resolution = INVESTING_INTERVAL_MAP.get(interval)
+    if resolution is None:
+        log_data_error('investing', name, pair_id, f'nieznany interwał {interval}')
+        return None
+
+    range_days = {'1d': 1, '5d': 5, '1mo': 31, '3mo': 93}.get(range_period, 5)
+    end_dt = datetime.now(pytz.utc)
+    start_dt = end_dt - timedelta(days=range_days)
+
+    url = f"https://api.investing.com/api/financialdata/historical/{pair_id}"
+    params = {
+        'start-date': start_dt.strftime('%Y-%m-%d'),
+        'end-date': end_dt.strftime('%Y-%m-%d'),
+        'time-frame': 'Daily' if resolution >= 1440 else 'Intraday',
+        'interval': resolution,
+    }
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Domain-Id': 'www',
+    }
+    resp = http_get_with_retry(url, params=params, headers=headers, timeout=10, retries=2)
+    if resp is None:
+        log_data_error('investing', name, pair_id, 'brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)')
+        return None
+    try:
+        payload = resp.json()
+        rows = payload.get('data', [])
+        opens, highs, lows, closes, volumes = [], [], [], [], []
+        for row in rows:
+            if any(row.get(k) is None for k in ('open_value', 'high_value', 'low_value', 'close_value')):
+                continue
+            opens.append(row['open_value'])
+            highs.append(row['high_value'])
+            lows.append(row['low_value'])
+            closes.append(row['close_value'])
+            volumes.append(row.get('volume', 0) or 0)
+        if len(closes) < 10:
+            log_data_error('investing', name, pair_id, f'za mało świec w odpowiedzi ({len(closes)})')
+            return None
+        return {'prices': closes, 'highs': highs, 'lows': lows, 'volumes': volumes, 'opens': opens}
+    except (KeyError, ValueError, TypeError, json.JSONDecodeError) as e:
+        log_data_error('investing', name, pair_id, f'błąd parsowania odpowiedzi: {e}')
+        return None
+
+
+def get_price_data(name, symbol, interval='15m', range_period='1d'):
+    """Punkt wejścia do pobierania świec: Investing.com jako GŁÓWNE źródło,
+    z automatycznym fallbackiem na Yahoo Finance TYLKO gdy Investing zawiedzie
+    (błąd zawsze najpierw logowany do DATA_FETCH_ERRORS_FILE - patrz
+    fetch_investing_data/fetch_yahoo_data/log_data_error). Zwraca (data, source)
+    gdzie source in {'investing', 'yahoo', None}."""
+    data = fetch_investing_data(name, interval, range_period)
+    if data:
+        return data, 'investing'
+    data = fetch_yahoo_data(symbol, interval, range_period)
+    if data:
+        return data, 'yahoo'
+    log_data_error('all_sources', name, symbol, 'Investing i Yahoo zawiodły w tym cyklu')
+    return None, None
+
+
+def fetch_yahoo_data(symbol, interval='15m', range_period='1d'):
     """
-    NAPRAWIONE: wcześniej close/high/low/volume/open filtrowane były osobno,
-    więc przy różnych pozycjach None w poszczególnych polach indeksy
-    przestawały się zgadzać między tablicami (świeca closes[i] mogła nie
-    odpowiadać highs[i]). Teraz wiersze są wyrównywane RAZEM i odrzucane
-    tylko wtedy, gdy którekolwiek pole w danym wierszu jest None.
+    Fallback: Yahoo Finance. Używane, gdy Investing.com nie zwróci danych
+    (patrz get_price_data). NAPRAWIONE: wcześniej close/high/low/volume/open
+    filtrowane były osobno, więc przy różnych pozycjach None w poszczególnych
+    polach indeksy przestawały się zgadzać między tablicami (świeca closes[i]
+    mogła nie odpowiadać highs[i]). Teraz wiersze są wyrównywane RAZEM i
+    odrzucane tylko wtedy, gdy którekolwiek pole w danym wierszu jest None.
     """
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
     params = {'interval': interval, 'range': range_period}
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
     resp = http_get_with_retry(url, params=params, headers=headers, timeout=10)
     if resp is None:
+        log_data_error('yahoo', symbol, symbol, 'brak odpowiedzi HTTP')
         return None
     try:
         data = resp.json()
@@ -1323,7 +1770,7 @@ def get_market_data(symbol, interval='15m', range_period='1d'):
                 aligned.append(row)
 
         if len(aligned) < 10:
-            logger.warning(f"Za mało poprawnych, wyrównanych świec dla {symbol}")
+            log_data_error('yahoo', symbol, symbol, f'za mało wyrównanych świec ({len(aligned)})')
             return None
 
         opens_a, highs_a, lows_a, closes_a, volumes_a = zip(*aligned)
@@ -1335,7 +1782,7 @@ def get_market_data(symbol, interval='15m', range_period='1d'):
             'opens': list(opens_a),
         }
     except (KeyError, IndexError, TypeError) as e:
-        logger.exception(f"Błąd parsowania danych {symbol}: {e}")
+        log_data_error('yahoo', symbol, symbol, f'błąd parsowania: {e}')
         return None
 
 
@@ -1473,7 +1920,7 @@ def determine_trend(ind):
     return 'SIDEWAYS'
 
 
-def analyze_timeframes(symbol, timeframe_weights):
+def analyze_timeframes(name, symbol, timeframe_weights):
     """NAPRAWIONE: '4h' jest teraz agregowany z tych samych danych 60m
     (resample_ohlcv), a nie pobierany osobno jako duplikat '1h' pod inną nazwą."""
     timeframe_results = {}
@@ -1482,11 +1929,12 @@ def analyze_timeframes(symbol, timeframe_weights):
         if tf_config.get('resample_from_60m'):
             range_key = tf_config['range']
             if range_key not in cache_60m:
-                cache_60m[range_key] = get_market_data(symbol, '60m', range_key)
+                raw, _src = get_price_data(name, symbol, '60m', range_key)
+                cache_60m[range_key] = raw
             raw = cache_60m[range_key]
             data = resample_ohlcv(raw, tf_config['resample_from_60m']) if raw else None
         else:
-            data = get_market_data(symbol, tf_config['interval'], tf_config['range'])
+            data, _src = get_price_data(name, symbol, tf_config['interval'], tf_config['range'])
 
         if data:
             ind = calculate_base_indicators(data)
@@ -1652,6 +2100,170 @@ Odpowiedz w JSON:
     return {'sentiment': 0, 'impact': 'low', 'direction': 'neutral', 'reasoning': ''}
 
 # ============================================
+# DANE MAKRO (Trading Economics + analiza AI)
+# ============================================
+# Projekt świadomie NIE deleguje pobierania danych makro do samego agenta AI
+# (tj. "zapytaj Groq co się dzieje w gospodarce") - model językowy bez
+# realnych danych wejściowych może to zmyślić (halucynacja dat/wartości
+# wskaźników), a to jest dokładnie ten rodzaj informacji, gdzie fałszywy
+# "fakt" jest gorszy niż jego brak. Zamiast tego: RZECZYWISTE dane pobierane
+# są z Trading Economics, a AI służy tylko do ICH interpretacji (wybór
+# top 5, ocena wpływu na konkretne rynki) - nie do wymyślania danych.
+
+def fetch_macro_data():
+    """Pobiera dane makro z DWÓCH źródeł RSS (patrz data_sources.py):
+    Trading Economics (newsy + kalendarz) i Investing.com (newsy). RSS nie
+    wymaga klucza API i nie jest ograniczone do krajów demo, w przeciwieństwie
+    do darmowego dostępu do JSON API Trading Economics - kosztem mniej
+    ustrukturyzowanych danych (tytuł + opis zamiast osobnych pól
+    actual/forecast/previous). Każdy błąd jest logowany do
+    DATA_FETCH_ERRORS_FILE (patrz data_sources.log_fetch_error - wspólny plik
+    z log_data_error() w tym module)."""
+    te_items = fetch_trading_economics_macro()
+    investing_items = [{'title': t, 'description': '', 'pub_date': '', 'source': 'Investing_News'}
+                        for t in fetch_investing_news()]
+    return te_items + investing_items
+
+
+def store_macro_events(events):
+    """Zapisuje WSZYSTKIE pobrane wydarzenia/newsy makro (nie tylko top 5
+    wysyłane na Telegram) do MACRO_DATA_FILE - to jest materiał do nauki/
+    analizy, zgodnie z założeniem 'do nauki użyj wszystkich ważnych danych
+    makro'."""
+    try:
+        ts = datetime.now(pytz.utc).isoformat()
+        with open(MACRO_DATA_FILE, 'a', encoding='utf-8') as f:
+            for ev in events:
+                f.write(json.dumps({'fetched_at': ts, 'event': ev}, ensure_ascii=False) + "\n")
+    except Exception as e:
+        logger.error(f"Nie udało się zapisać {MACRO_DATA_FILE}: {e}")
+
+
+def analyze_macro_with_ai(events):
+    """Wysyła RZECZYWISTE newsy/odczyty makro (z RSS) do AI wyłącznie w celu
+    interpretacji (wybór top 5 + ocena wpływu na poszczególne rynki z
+    MARKETS) - AI nie dostaje zadania 'wymyśl dane makro', tylko konkretną
+    listę tytułów/opisów do oceny."""
+    if not events:
+        return None
+    lines = []
+    for e in events[:60]:
+        title = e.get('title', '')
+        desc = (e.get('description') or '')[:160]
+        source = e.get('source', '?')
+        if not title:
+            continue
+        lines.append(f"- [{source}] {title}" + (f" — {desc}" if desc else ""))
+    if not lines:
+        return None
+    events_text = "\n".join(lines)
+    markets_list = ", ".join(MARKETS.keys())
+    prompt = f"""Przeanalizuj poniższe RZECZYWISTE newsy/odczyty makroekonomiczne (z RSS Trading Economics i Investing.com) pod kątem wpływu na rynki finansowe. Nie wymyślaj dodatkowych danych - bazuj wyłącznie na podanych.
+
+Newsy/odczyty:
+{events_text}
+
+Rynki do oceny (uwzględnij WSZYSTKIE, nawet z impact="low"/sentiment=0 jeśli brak istotnego wpływu): {markets_list}
+
+Odpowiedz WYŁĄCZNIE w JSON, bez żadnego dodatkowego tekstu:
+{{
+  "top5": [{{"event": <string>, "country": <string, "?" jeśli nieznany>, "reasoning": <string po polsku>}}],
+  "market_impact": {{
+     "<dokładna nazwa rynku z listy>": {{"sentiment": <-1 do 1>, "impact": "low"/"medium"/"high"}}
+  }},
+  "summary": <2-3 zdania po polsku>
+}}"""
+    result = call_groq("Analityk makroekonomiczny rynków finansowych. Odpowiadaj tylko JSON, bazuj wyłącznie na podanych danych.",
+                        prompt, max_tokens=1200)
+    if not result:
+        return None
+    json_match = re.search(r'\{.*\}', result, re.DOTALL)
+    if not json_match:
+        return None
+    try:
+        return json.loads(json_match.group())
+    except json.JSONDecodeError as e:
+        logger.warning(f"Nie udało się sparsować JSON analizy makro: {e}")
+        return None
+
+
+def load_macro_state():
+    try:
+        if os.path.exists(MACRO_STATE_FILE):
+            with open(MACRO_STATE_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+    except Exception as e:
+        logger.warning(f"Nie udało się wczytać {MACRO_STATE_FILE}: {e}")
+    return {'last_run': {}, 'market_impact': {}, 'analyzed_at': None}
+
+
+def save_macro_state(state):
+    try:
+        with open(MACRO_STATE_FILE, 'w', encoding='utf-8') as f:
+            json.dump(state, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        logger.error(f"Nie udało się zapisać {MACRO_STATE_FILE}: {e}")
+
+
+def get_cached_macro_analysis(name, max_age_hours=12):
+    """Zwraca ostatnią zapisaną (nie odpytywaną per-rynek per-cykl) analizę
+    makro dla danego rynku, o ile nie jest starsza niż max_age_hours -
+    starsza analiza jest traktowana jak brak (impact='low' domyślnie w
+    analyze_market), żeby nieaktualny sentyment makro nie wpływał cicho na
+    scoring przez cały dzień."""
+    state = load_macro_state()
+    analyzed_at = state.get('analyzed_at')
+    if not analyzed_at:
+        return None
+    try:
+        age_hours = (datetime.now(pytz.utc) - datetime.fromisoformat(analyzed_at)).total_seconds() / 3600
+    except Exception:
+        return None
+    if age_hours > max_age_hours:
+        return None
+    return state.get('market_impact', {}).get(name)
+
+
+def fetch_and_analyze_macro():
+    """Orkiestracja: pobierz REALNE dane makro/newsy (RSS: Trading Economics +
+    Investing.com) -> zapisz WSZYSTKIE do MACRO_DATA_FILE (nauka/audyt) ->
+    wyślij do AI do interpretacji -> zapisz wynik do cache (MACRO_STATE_FILE,
+    używany przez analyze_market przez get_cached_macro_analysis) -> DOPIERO
+    PO odebraniu odpowiedzi AI wyślij skrót top 5 na Telegram (jeśli tryb na
+    to pozwala - patrz config.py/modes.py)."""
+    logger.info("Pobieram dane makro (RSS: Trading Economics + Investing.com)...")
+    events = fetch_macro_data()
+    if not events:
+        logger.warning("Brak danych makro w tym cyklu - poprzednia analiza w cache pozostaje bez zmian.")
+        return
+    store_macro_events(events)
+
+    analysis = analyze_macro_with_ai(events)
+    if not analysis:
+        logger.warning("AI nie zwróciło analizy makro w tym cyklu - dane surowe i tak zostały zapisane do nauki.")
+        return
+
+    state = load_macro_state()
+    now_local = datetime.now(TIMEZONE)
+    today_key = now_local.strftime('%Y-%m-%d')
+    for window_name, (h, m) in MACRO_HOURS.items():
+        if is_time_for(h, m, window_m=10):
+            state.setdefault('last_run', {})[window_name] = today_key
+            break
+    state['analyzed_at'] = datetime.now(pytz.utc).isoformat()
+    state['market_impact'] = analysis.get('market_impact', {})
+    save_macro_state(state)
+
+    top5 = analysis.get('top5', [])
+    if top5 and should_send_notifications():
+        msg = "🌍 *MAKRO - TOP 5 CZYNNIKÓW*\n\n"
+        for i, item in enumerate(top5[:5], 1):
+            msg += f"{i}. [{item.get('country', '?')}] {item.get('event', '?')}\n   {item.get('reasoning', '')}\n\n"
+        if analysis.get('summary'):
+            msg += f"_{analysis['summary']}_"
+        send_telegram(get_notification_message(msg), add_disclaimer=False)
+
+# ============================================
 # ZARZĄDZANIE RYZYKIEM
 # ============================================
 
@@ -1722,12 +2334,14 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
     if not is_session_active(session):
         return None
 
-    main_data = get_market_data(market_info['symbol'], '15m', '1d')
+    main_data, price_source = get_price_data(name, market_info['symbol'], '15m', '1d')
     if not main_data:
+        log_near_miss(name, stage='no_data', reason='brak danych cenowych z żadnego źródła')
         return None
 
     ind = calculate_full_indicators(main_data)
     if not ind:
+        log_near_miss(name, stage='bad_indicators', reason='za mało danych do policzenia wskaźników')
         return None
 
     market_type = market_info['type']
@@ -1742,20 +2356,25 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
     )
     if not spread_ok:
         logger.info(f"❌ {name}: spread zbyt wysoki (źródło: {spread_source}, wartość: {spread_value})")
+        log_near_miss(name, stage='filtered_spread', reason=f'spread {spread_value} ({spread_source})')
         return None
     if not check_extreme_volatility(atr_percent, market_type):
         logger.info(f"❌ {name}: ekstremalna zmienność (ATR: {atr_percent:.2f}%)")
+        log_near_miss(name, stage='filtered_volatility', reason=f'ATR% {atr_percent:.2f}')
         return None
     if not check_liquidity(avg_volume, market_type):
         logger.info(f"❌ {name}: za mała płynność (wolumen: {avg_volume:.0f})")
+        log_near_miss(name, stage='filtered_liquidity', reason=f'wolumen {avg_volume:.0f}')
         return None
 
-    timeframe_results = analyze_timeframes(market_info['symbol'], timeframe_weights)
+    timeframe_results = analyze_timeframes(name, market_info['symbol'], timeframe_weights)
     if not timeframe_results:
+        log_near_miss(name, stage='no_timeframe_data', reason='brak danych MTF')
         return None
 
     combined = combine_timeframe_analysis(timeframe_results)
     if not combined:
+        log_near_miss(name, stage='no_combined', reason='combine_timeframe_analysis zwróciło None')
         return None
 
     divergences = detect_divergences(timeframe_results)
@@ -1765,6 +2384,12 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
 
     articles = fetch_market_news(name)
     news_analysis = analyze_news_with_ai(articles, name, ai_memory.get_context())
+
+    # --- Dane makro (punkt: priorytety danych + makro w analizie/uczeniu).
+    # Pobierane osobno, max 3x dziennie (patrz fetch_and_analyze_macro / main()),
+    # tutaj tylko odczytujemy ostatnią ZAPISANĄ analizę AI z MACRO_STATE_FILE -
+    # żeby nie odpytywać Trading Economics/Groq per rynek per cykl (10 min). ---
+    macro_analysis = get_cached_macro_analysis(name)
 
     # --- Cena "na żywo": jeśli mamy bid/ask z XTB, użyj mid-price zamiast
     # ostatniego (delikatnie opóźnionego) zamknięcia z Yahoo do entry/SL/TP.
@@ -1830,11 +2455,18 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
 
     # --- MTF (multi-timeframe trend). W reżimie RANGE ten bonus jest mniej
     # wiarygodny (trend na wyższych interwałach częściej się załamuje w
-    # konsolidacji) - zmniejszamy go zamiast ufać mu tak samo jak w TREND. ---
-    mtf_bonus = 2.0 if regime != 'RANGE' else 1.0
-    if combined['trend_score'] > 0.6:
+    # konsolidacji) - zmniejszamy go zamiast ufać mu tak samo jak w TREND.
+    # Bonus obniżony z 2.0/1.0 do 1.5/0.75, a próg aktywacji złagodzony
+    # z 0.6/0.4 do MTF_BULLISH_THRESHOLD/MTF_BEARISH_THRESHOLD (0.55/0.45,
+    # patrz config.py) - żeby bonus włączał się częściej (przy solidnej, ale
+    # nie idealnej zgodności interwałów), zamiast być rzadko trafianym
+    # "wszystko albo nic". Dzięki temu CONFIDENCE_THRESHOLD (0.6-0.7) jest
+    # realnie osiągalny przy silnym trendzie bez potrzeby formacji świecowej
+    # ani newsów o wysokim wpływie. ---
+    mtf_bonus = 1.5 if regime != 'RANGE' else 0.75
+    if combined['trend_score'] > MTF_BULLISH_THRESHOLD:
         long_score += mtf_bonus
-    elif combined['trend_score'] < 0.4:
+    elif combined['trend_score'] < MTF_BEARISH_THRESHOLD:
         short_score += mtf_bonus
 
     # --- Kara za dywergencje (obniża obie strony - sygnał mniej pewny) ---
@@ -1848,6 +2480,17 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
         long_score += max(0, sentiment) * 2
         short_score += max(0, -sentiment) * 2
 
+    # --- Makro (tylko przy wysokim/średnim wpływie - patrz fetch_and_analyze_macro).
+    # Waga celowo mniejsza niż newsy specyficzne dla rynku (max 1.0 zamiast 2.0),
+    # bo to sentyment GLOBALNY/sektorowy z analizy 3x/dzień, nie świeża
+    # informacja dla tego konkretnego instrumentu. ---
+    macro_sentiment = 0.0
+    if macro_analysis and macro_analysis.get('impact') in ('high', 'medium'):
+        macro_sentiment = macro_analysis.get('sentiment', 0.0)
+        macro_weight = 1.0 if macro_analysis.get('impact') == 'high' else 0.5
+        long_score += max(0, macro_sentiment) * macro_weight
+        short_score += max(0, -macro_sentiment) * macro_weight
+
     # Confidence bazowe, jawnie ograniczone do [0, 1]
     long_conf = min(1.0, max(0.0, long_score / TOTAL_SCORE_POINTS))
     short_conf = min(1.0, max(0.0, short_score / TOTAL_SCORE_POINTS))
@@ -1855,7 +2498,7 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
     # --- Punkt A: model uczący się (regresja logistyczna na cechach).
     # Dopóki nie ma wystarczająco zamkniętych sygnałów (is_ready()==False),
     # NIE wpływa na confidence - baseline działa samodzielnie. ---
-    features = build_feature_vector(ind, combined, news_analysis, divergences)
+    features = build_feature_vector(ind, combined, news_analysis, divergences, macro_analysis)
     model_used = False
     if feature_weights is not None and feature_weights.is_ready():
         p_up = feature_weights.predict_proba_up(features)
@@ -1872,8 +2515,23 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
     log_shadow_comparison(name, max(long_conf, short_conf),
                            'LONG' if long_conf >= short_conf else 'SHORT', shadow_score)
 
-    # --- Punkt B: próg pewności skalibrowany per rynek zamiast sztywnego 0.7 ---
-    threshold = adaptive_threshold.get_threshold(name) if adaptive_threshold else 0.7
+    # --- Punkt B: próg pewności skalibrowany per rynek (domyślnie AdaptiveThreshold.DEFAULT) ---
+    threshold = adaptive_threshold.get_threshold(name) if adaptive_threshold else AdaptiveThreshold.DEFAULT
+    confidence_for_log = max(long_conf, short_conf)
+    direction_for_log = 'LONG' if long_conf >= short_conf else 'SHORT'
+
+    # --- Near-miss (punkt D): logujemy KAŻDĄ próbę scoringu, niezależnie od
+    # tego, czy przekroczyła próg - z pełnym wektorem cech, żeby dało się
+    # to później ewaluować względem rzeczywistego ruchu ceny (patrz
+    # evaluate_near_misses) i dokarmić FeatureWeights próbkami "co by było
+    # gdyby", z niższą wagą niż prawdziwe sygnały. ---
+    log_near_miss(
+        name, stage='scored',
+        reason='ponizej progu' if confidence_for_log < threshold else 'wyslany',
+        long_conf=long_conf, short_conf=short_conf, direction=direction_for_log,
+        confidence=confidence_for_log, threshold=threshold, entry=p, atr=ind['atr'],
+        features=features, price_source=price_source, regime=regime,
+    )
 
     if long_conf >= threshold or short_conf >= threshold:
         direction = 'LONG' if long_conf >= short_conf else 'SHORT'
@@ -1917,6 +2575,9 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
             'heatmap': create_heatmap(timeframe_results),
             'spread_source': spread_source,
             'spread_value': spread_value,
+            'price_source': price_source,
+            'macro_sentiment': macro_sentiment,
+            'macro_impact': macro_analysis.get('impact', 'low') if macro_analysis else 'low',
         }
     return None
 
@@ -2013,6 +2674,15 @@ def main():
         logger.info("Weekend - agent nie pracuje.")
         return
 
+    if AGENT_MODE == RunMode.BACKTEST:
+        logger.warning(
+            "AGENT_MODE=backtest, ale main() nie jest przeznaczone do symulacji historycznej - "
+            "użyj backtest_2.py. Przerywam, żeby nie pobierać danych live pod złą etykietą."
+        )
+        return
+
+    logger.info(f"Tryb pracy: {AGENT_MODE.value}{' (bez wpływu na wagi/próg/statystyki)' if AGENT_MODE == RunMode.SHADOW else ''}")
+
     if is_monthly_report_time():
         generate_monthly_report()
         return
@@ -2025,6 +2695,17 @@ def main():
         analyze_market_sentiment()
         return
 
+    if is_evening_summary_time():
+        send_daily_near_miss_report()
+        return
+
+    # Dane makro: max 3x dziennie (rano / przed otwarciem / po zamknięciu
+    # głównych sesji - patrz config.MACRO_HOURS), niezależnie od cyklu 10-min
+    # analizy rynków, żeby nie zalewać Trading Economics/Investing.com/Groq zapytaniami.
+    macro_state = load_macro_state()
+    if is_macro_fetch_time(macro_state):
+        fetch_and_analyze_macro()
+
     logger.info(f"Analiza rynków: {datetime.now(TIMEZONE)}")
     sm = SignalManager()
     ai_memory = AIMemory()
@@ -2035,9 +2716,17 @@ def main():
     circuit_breaker = CircuitBreaker()
 
     # Najpierw ocena wcześniej wysłanych, wciąż otwartych sygnałów - to jest to,
-    # co realnie zasila naukę wag interwałów, wag cech, progu i statystyk Kelly.
+    # co realnie zasila naukę wag interwałów, wag cech, progu i statystyk Kelly
+    # (a w trybie SHADOW/BACKTEST te aktualizacje są wyłączone - patrz gating
+    # w evaluate_open_signals przez should_update_weights/should_update_threshold/
+    # should_record_stats z modes.py).
     sm.evaluate_open_signals(tf_weights, feature_weights, adaptive_threshold,
                               performance_stats, circuit_breaker)
+
+    # Near-miss (punkt D): dojrzałe próbki "co by było gdyby" (odrzucone przez
+    # próg) trafiają do FeatureWeights z obniżoną wagą - też tylko gdy tryb na to pozwala.
+    if should_update_weights():
+        evaluate_near_misses(feature_weights)
 
     # --- Circuit breaker (punkt B): jeśli dzienny/tygodniowy limit strat
     # w R jest przekroczony, NIE generujemy nowych sygnałów w tym cyklu.
@@ -2045,7 +2734,8 @@ def main():
     tripped, reason = circuit_breaker.is_tripped()
     if tripped:
         logger.warning(f"⛔ Circuit breaker aktywny: {reason}. Pomijam generowanie nowych sygnałów.")
-        send_telegram(f"⛔ *CIRCUIT BREAKER*\n\n{reason}\n\nNowe sygnały wstrzymane do końca okresu.")
+        if should_send_notifications():
+            send_telegram(get_notification_message(f"⛔ *CIRCUIT BREAKER*\n\n{reason}\n\nNowe sygnały wstrzymane do końca okresu."))
         return
 
     # Jedno logowanie do XTB na cały cykl (nie per rynek) - taniej i szybciej.
@@ -2094,11 +2784,14 @@ def main():
             if s['volume_profile_poc']:
                 msg += f"   POC: {s['volume_profile_poc']:.4f}\n"
             msg += f"   Sentyment: {s['news_sentiment']:.2f}\n"
+            if s.get('macro_impact', 'low') != 'low':
+                msg += f"   Makro: {s['macro_sentiment']:+.2f} (wpływ: {s['macro_impact']})\n"
             if s['divergences']:
                 msg += f"   ⚠️ Dywergencje: {len(s['divergences'])}\n"
             msg += f"\n{s['heatmap']}\n\n"
 
-        send_telegram(msg)
+        if should_send_notifications():
+            send_telegram(get_notification_message(msg))
         ai_memory.add_lesson(f"Wysłano {len(final_sigs)} sygnałów")
     else:
         logger.info("Brak sygnałów.")
