@@ -1,19 +1,19 @@
 {
-  "date": "2026-09-08",
+  "date": "2026-09-09",
   "scores": {
     "BITCOIN": {
-      "confidence": 0.475,
+      "confidence": 0.575,
       "direction": "LONG",
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.475,
+      "confidence": 0.675,
       "direction": "LONG",
       "threshold": 0.6
     },
     "SOLANA": {
       "confidence": 0.525,
-      "direction": "SHORT",
+      "direction": "LONG",
       "threshold": 0.6
     }
   }
