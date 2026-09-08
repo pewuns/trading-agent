@@ -1,1 +1,58 @@
-{}
+{
+  "SOLANA_LONG": {
+    "name": "SOLANA",
+    "direction": "LONG",
+    "entry": 104.12000274658203,
+    "stop_loss": 103.47500310625348,
+    "take_profit": 105.1950021471296,
+    "position_size": 155.03884614425837,
+    "risk_amount": 100.0,
+    "sizing_method": "stały_procent_ryzyka (za mało historii na Kelly)",
+    "confidence": 0.7,
+    "threshold_used": 0.7,
+    "regime": "TREND",
+    "adx": 27.407358438694974,
+    "model_used": false,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.08070297546546001,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.04452232844016275,
+      "poc": 1.0,
+      "mtf_trend": 0.5666666666666667,
+      "news_sentiment": 0.0
+    },
+    "rsi": 54.035148773273,
+    "vwap": 103.28219455277332,
+    "support": 102.88999938964844,
+    "resistance": 104.27999877929688,
+    "candlestick_patterns": [
+      "DOJI (niezdecydowanie)"
+    ],
+    "order_flow_delta": 4.452232844016275,
+    "volume_profile_poc": 102.5,
+    "news_sentiment": 0,
+    "news_impact": "low",
+    "news_reasoning": "",
+    "timeframe_alignment": 0.7833333333333333,
+    "timeframe_trends": {
+      "5m": "UP",
+      "15m": "UP",
+      "1h": "SIDEWAYS",
+      "4h": "UP",
+      "1d": "UP"
+    },
+    "divergences": [],
+    "heatmap": "```\nINTERWAŁ | TREND | RSI | ZGODNOŚĆ\n---------|-------|-----|----------\n5m       | UP    |  63 | ✅\n15m      | UP    |  54 | ✅\n1h       | SIDEWAYS |  61 | ❌\n4h       | UP    |  34 | ❌\n1d       | UP    |  59 | ✅\n```",
+    "spread_source": "proxy_zmiennosci",
+    "spread_value": 0.0025539966025664787,
+    "timestamp": "2026-09-08T18:47:42.184844+00:00",
+    "status": "open",
+    "risk_distance": 0.6449996403285496,
+    "mae_percent": 0.0,
+    "mfe_percent": 0.0
+  }
+}
