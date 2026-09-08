@@ -124,5 +124,68 @@
       "macro_sentiment": 0.0
     },
     "created_at": "2026-09-08T20:19:38.768869+00:00"
+  },
+  "BITCOIN_2026-09-08T20:36:43.520420+00:00": {
+    "name": "BITCOIN",
+    "direction": "SHORT",
+    "confidence": 0.475,
+    "entry": 78469.390625,
+    "atr": 177.45424107142858,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.09984615703020978,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0905560674513806,
+      "poc": 1.0,
+      "mtf_trend": -0.20297951582867768,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-08T20:36:43.520427+00:00"
+  },
+  "ETHEREUM_2026-09-08T20:36:48.654892+00:00": {
+    "name": "ETHEREUM",
+    "direction": "LONG",
+    "confidence": 0.425,
+    "entry": 2483.14990234375,
+    "atr": 8.321358816964286,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 1.0,
+      "rsi": -0.14729420059933018,
+      "vwap": 1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.09008200194364686,
+      "poc": 1.0,
+      "mtf_trend": 0.1210428305400375,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-08T20:36:48.654898+00:00"
+  },
+  "SOLANA_2026-09-08T20:36:54.671253+00:00": {
+    "name": "SOLANA",
+    "direction": "SHORT",
+    "confidence": 0.35,
+    "entry": 103.2699966430664,
+    "atr": 0.43571363176618305,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.17647234820246482,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.00130015561368835,
+      "poc": 1.0,
+      "mtf_trend": -0.005586592178770888,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-08T20:36:54.671260+00:00"
   }
 }
