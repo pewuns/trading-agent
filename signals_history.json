@@ -50,9 +50,13 @@
     "spread_source": "proxy_zmiennosci",
     "spread_value": 0.0025539966025664787,
     "timestamp": "2026-09-08T18:47:42.184844+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.6449996403285496,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -0.7683471289421133,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 103.31999969482422,
+    "closed_at": "2026-09-08T19:00:56.376022+00:00",
+    "r_multiple": -1.2403155005641666
   }
 }
