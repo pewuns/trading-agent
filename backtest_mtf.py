@@ -146,11 +146,14 @@ def _score_at_bar_mtf(all_tf_data: dict, bar_idx_15m: int, lookback_per_tf: dict
         return None
     
     # Reżim rynku (na podstawie głównego TF 15m)
-    regime, adx_value = tb.detect_market_regime(
-        all_tf_data['15m'][bar_idx_15m - 60:bar_idx_15m + 1] if bar_idx_15m >= 60 else all_tf_data['15m'][:bar_idx_15m + 1],
-        all_tf_data.get('15m'),
-        all_tf_data.get('15m')
-    ) if '15m' in all_tf_data else ('UNKNOWN', None)
+    bars_15m_window = all_tf_data['15m'][max(0, bar_idx_15m - 60):bar_idx_15m + 1] if bar_idx_15m >= 0 and '15m' in all_tf_data else []
+    if bars_15m_window:
+        highs = [b['high'] for b in bars_15m_window]
+        lows = [b['low'] for b in bars_15m_window]
+        closes = [b['close'] for b in bars_15m_window]
+        regime, adx_value = tb.detect_market_regime(highs, lows, closes)
+    else:
+        regime, adx_value = 'UNKNOWN', None
     
     # Licz scoring
     ind_15m = tf_indicators.get('15m')
@@ -395,6 +398,6 @@ def run_backtest_mtf_yahoo(market_name: str, range_period='2y',
 if __name__ == "__main__":
     print("Backtest MTF na Yahoo Finance.")
     print("Uruchomienie: python backtest_mtf.py")
-    print("\nPrzykład użycia:")
+    print("\nPrzyk​ład użycia:")
     print("  from backtest_mtf import run_backtest_mtf_yahoo")
     print("  results = run_backtest_mtf_yahoo('APPLE', range_period='2y')")

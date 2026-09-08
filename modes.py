@@ -71,14 +71,20 @@ def log_backtest_results(results: dict, market_name: str, period: str):
     }
     
     if Path(BACKTEST_RESULTS_LOG).exists():
-        with open(BACKTEST_RESULTS_LOG, 'r') as f:
-            history = json.load(f)
+        try:
+            with open(BACKTEST_RESULTS_LOG, 'r') as f:
+                history = json.load(f)
+        except Exception:
+            history = []
     else:
         history = []
     
     history.append(record)
-    with open(BACKTEST_RESULTS_LOG, 'w') as f:
-        json.dump(history[-100:], f, indent=2)  # trzymaj ostatnie 100 backtest'ów
+    try:
+        with open(BACKTEST_RESULTS_LOG, 'w') as f:
+            json.dump(history[-100:], f, indent=2)  # trzymaj ostatnie 100 backtest'ów
+    except Exception as e:
+        logger.error(f"Błąd zapisu {BACKTEST_RESULTS_LOG}: {e}")
 
 
 def _log_to_file(filepath: str, record: dict):
