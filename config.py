@@ -47,7 +47,9 @@ MACRO_HOURS = {
     'pre_us': (14, 30),
     'post_us': (22, 0),
 }
-DAILY_SUMMARY_HOUR = (21, 50)  # podsumowanie Top 3 "najbliżej progu"
+DAILY_SUMMARY_HOUR = (21, 30)  # podsumowanie Top 3 "najbliżej progu" - przesunięte
+# z 21:50 na 21:30, żeby po poszerzeniu okna do 20 min (21:30-21:49) nie
+# nachodzić na okno makro 'post_us' (22:00+) sprawdzane zaraz po tym w main().
 
 # Feature flags per tryb
 FEATURES = {
