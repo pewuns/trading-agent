@@ -58,6 +58,7 @@ NEAR_MISS_PENDING_FILE = 'near_miss_pending.json'      # sygnały "co by było g
 MACRO_DATA_FILE = 'macro_data_history.jsonl'           # WSZYSTKIE dane makro (append-only, do nauki)
 MACRO_STATE_FILE = 'macro_state.json'                  # ostatnie pobrania/analizy makro + cache sentymentu
 DAILY_SCORES_CACHE_FILE = 'daily_scores_cache.json'     # max confidence per rynek DZIŚ, do podsumowania Top 3
+RESOLVED_PAIR_IDS_FILE = 'investing_pair_ids_resolved.json'  # auto-wykryte pair_id (patrz resolve_missing_pair_ids)
 
 TIMEZONE = pytz.timezone('Europe/Warsaw')
 
@@ -142,23 +143,44 @@ XTB_SYMBOLS = {
 # ============================================
 # `pair_id` = None => rynek na razie pomija Investing.com i idzie prosto na
 # Yahoo, dopóki nie uzupełnisz ID (patrz instrukcja w fetch_investing_data).
+#
+# UWAGA - WARTOŚCI PONIŻEJ NIE ZOSTAŁY ZWERYFIKOWANE NA ŻYWO (brak sieci w tym
+# środowisku). Pochodzą od użytkownika, z opisem "zestawienie najpopularniejszych
+# realnych pair_id z investing.com" - część (kryptowaluty) pokrywa się z tym,
+# co wcześniej pojawiło się w tej rozmowie jako wiarygodne, ale traktuj je jako
+# "prawdopodobnie poprawne", nie "potwierdzone". ZANIM zaufasz danym w pełni,
+# sprawdź pierwsze pobrane świece w logach względem wykresu na investing.com dla
+# tego samego okresu - patrz też ostrzeżenie w fetch_investing_data o tym, że
+# nawet z poprawnym pair_id request może być blokowany na poziomie IP (GitHub
+# Actions). Wszystkie 16 rynków ma teraz przypisane ID - żaden nie pomija już
+# Investing.com domyślnie.
 INVESTING_PAIR_IDS = {
-    'DAX': None,
-    'S&P500': None,
-    'NASDAQ': None,
-    'EUR/USD': None,
-    'GOLD': None,
-    'OIL WTI': None,
-    'BITCOIN': None,
-    'ETHEREUM': None,
-    'SOLANA': None,
-    'APPLE': None,
-    'MICROSOFT': None,
-    'NVIDIA': None,
-    'TESLA': None,
-    'AMAZON': None,
-    'META': None,
-    'GOOGLE': None,
+    'DAX': 172,
+    'S&P500': 166,
+    'NASDAQ': 14958,
+    'EUR/USD': 1,
+    'GOLD': 8830,
+    'OIL WTI': 8849,
+    'BITCOIN': 945629,
+    'ETHEREUM': 997650,
+    'SOLANA': 1178453,
+    'APPLE': 6408,
+    'MICROSOFT': 19051,
+    'NVIDIA': 2437,
+    'TESLA': 13994,
+    'AMAZON': 6627,
+    'META': 26490,
+    'GOOGLE': 20301,
+}
+
+# Nazwy do wpisania w wyszukiwarkę Investing.com - inne niż klucze MARKETS
+# (np. 'S&P500' -> 'S&P 500'), bo wyszukiwarka lepiej trafia na pełne,
+# "ludzkie" nazwy niż na skróty/tickery używane wewnątrz agenta.
+INVESTING_SEARCH_QUERIES = {
+    'DAX': 'DAX 40', 'S&P500': 'S&P 500', 'NASDAQ': 'Nasdaq 100', 'EUR/USD': 'EUR USD',
+    'GOLD': 'Gold', 'OIL WTI': 'Crude Oil WTI', 'BITCOIN': 'Bitcoin', 'ETHEREUM': 'Ethereum',
+    'SOLANA': 'Solana', 'APPLE': 'Apple', 'MICROSOFT': 'Microsoft', 'NVIDIA': 'Nvidia',
+    'TESLA': 'Tesla', 'AMAZON': 'Amazon', 'META': 'Meta Platforms', 'GOOGLE': 'Alphabet',
 }
 
 # Mapowanie interwałów agenta na kody Investing.com (resolution w minutach,
@@ -1730,6 +1752,67 @@ def send_telegram(message, add_disclaimer=True):
         return False
 
 
+# --- Auto-uzupełnianie brakujących pair_id (patrz investing_pair_id.py) ---
+# Cache wczytywany raz przy starcie procesu (GitHub Actions odpala nowy proces
+# co cykl, więc to i tak świeży odczyt z pliku za każdym razem).
+def _load_resolved_pair_ids():
+    try:
+        if os.path.exists(RESOLVED_PAIR_IDS_FILE):
+            with open(RESOLVED_PAIR_IDS_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+    except Exception as e:
+        logger.warning(f"Nie udało się wczytać {RESOLVED_PAIR_IDS_FILE}: {e}")
+    return {}
+
+
+_resolved_pair_ids_cache = _load_resolved_pair_ids()
+
+
+def resolve_missing_pair_ids():
+    """Raz dziennie (patrz main() - to samo okno co makro/rotacja logów) próbuje
+    automatycznie znaleźć pair_id dla rynków, które go nie mają - ani w
+    INVESTING_PAIR_IDS, ani we wcześniej zcachowanym RESOLVED_PAIR_IDS_FILE -
+    scrapując wyszukiwarkę Investing.com (patrz investing_pair_id.py).
+
+    Świadomie NIE uruchamiane w każdym 10-minutowym cyklu: to 2 requesty HTTP
+    na instrument (wyszukiwanie + strona instrumentu) z ~1.5s opóźnienia
+    między nimi - przy kilku brakujących rynkach to kilkanaście sekund, więc
+    lepiej raz dziennie niż przy każdym uruchomieniu. Wymaga `beautifulsoup4`
+    (patrz requirements.txt) - jeśli nie jest zainstalowane, funkcja loguje to
+    do DATA_FETCH_ERRORS_FILE i po cichu nic nie robi (nie wywala całego
+    cyklu agenta z powodu opcjonalnej funkcji)."""
+    missing = [name for name in MARKETS
+               if not INVESTING_PAIR_IDS.get(name) and not _resolved_pair_ids_cache.get(name)]
+    if not missing:
+        return
+
+    try:
+        from investing_pair_id import InvestingIDFetcher
+    except ImportError as e:
+        log_data_error('investing_autodiscovery', 'ALL', None, f'brak modułu investing_pair_id/beautifulsoup4: {e}')
+        return
+
+    logger.info(f"Auto-wyszukiwanie pair_id dla {len(missing)} rynków bez ID: {missing}")
+    fetcher = InvestingIDFetcher()
+    changed = False
+    for name in missing:
+        query = INVESTING_SEARCH_QUERIES.get(name, name)
+        try:
+            pair_id, url = fetcher.get_pair_id(query)
+            _resolved_pair_ids_cache[name] = pair_id
+            changed = True
+            logger.info(f"Auto-wykryto pair_id dla {name}: {pair_id} ({url}) - ZWERYFIKUJ RĘCZNIE przed pełnym zaufaniem")
+        except Exception as e:
+            log_data_error('investing_autodiscovery', name, query, str(e))
+
+    if changed:
+        try:
+            with open(RESOLVED_PAIR_IDS_FILE, 'w', encoding='utf-8') as f:
+                json.dump(_resolved_pair_ids_cache, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            logger.error(f"Nie udało się zapisać {RESOLVED_PAIR_IDS_FILE}: {e}")
+
+
 def fetch_investing_data(name, interval='15m', range_period='1d'):
     """Próba pobrania świec z Investing.com - GŁÓWNE źródło cen, zgodnie
     z ustaleniem. UWAGA - WAŻNE OGRANICZENIE, powtórzone świadomie: Investing.com
@@ -1762,10 +1845,12 @@ def fetch_investing_data(name, interval='15m', range_period='1d'):
     to nie jest gwarancja stabilności, tylko inny kompromis.
 
     `pair_id` dla każdego rynku trzeba ustalić ręcznie (patrz
-    discover_investing_pair_ids.py) albo w devtools przeglądarki. Wartości
-    None = rynek pominie Investing.com i pójdzie od razu na Yahoo, dopóki nie
-    uzupełnisz ID w INVESTING_PAIR_IDS poniżej."""
-    pair_id = INVESTING_PAIR_IDS.get(name)
+    discover_investing_pair_ids.py) albo w devtools przeglądarki - LUB dać się
+    znaleźć automatycznie przez resolve_missing_pair_ids() (patrz
+    investing_pair_id.py), które co jakiś czas próbuje uzupełnić braki i
+    cachuje wynik w RESOLVED_PAIR_IDS_FILE. Wartości None (i nieobecność w
+    cache) = rynek pominie Investing.com i pójdzie od razu na Yahoo."""
+    pair_id = INVESTING_PAIR_IDS.get(name) or _resolved_pair_ids_cache.get(name)
     if not pair_id:
         log_data_error('investing', name, None, 'brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)')
         return None
@@ -2865,6 +2950,7 @@ def main():
         send_daily_near_miss_report()
         rotate_jsonl_log(NEAR_MISS_LOG_FILE, days_to_keep=30)
         rotate_jsonl_log(DATA_FETCH_ERRORS_FILE, days_to_keep=30)
+        resolve_missing_pair_ids()
         return
 
     # Dane makro: max 3x dziennie (rano / przed otwarciem / po zamknięciu
