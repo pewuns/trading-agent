@@ -190,5 +190,68 @@
     "closed_price": 78887.578125,
     "closed_at": "2026-09-09T04:34:40.091687+00:00",
     "r_multiple": 1.7996011005779033
+  },
+  "SOLANA_SHORT": {
+    "name": "SOLANA",
+    "direction": "SHORT",
+    "entry": 102.5999984741211,
+    "stop_loss": 103.36714254106793,
+    "take_profit": 101.32142502920968,
+    "position_size": 130.35361193366234,
+    "risk_amount": 100.0,
+    "sizing_method": "stały_procent_ryzyka (za mało historii na Kelly)",
+    "confidence": 0.6,
+    "threshold_used": 0.6,
+    "regime": "TREND",
+    "adx": 25.95624151812766,
+    "model_used": false,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.6091184488795779,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.07438346456393134,
+      "poc": -1.0,
+      "mtf_trend": -0.22160148975791427,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "rsi": 19.544077556021108,
+    "vwap": 103.8777290385829,
+    "support": 102.5999984741211,
+    "resistance": 104.63999938964844,
+    "candlestick_patterns": [
+      "DOJI (niezdecydowanie)"
+    ],
+    "order_flow_delta": -7.438346456393134,
+    "volume_profile_poc": 102.6,
+    "news_sentiment": 0,
+    "news_impact": "low",
+    "news_reasoning": "",
+    "timeframe_alignment": 0.38919925512104286,
+    "timeframe_trends": {
+      "5m": "DOWN",
+      "15m": "DOWN",
+      "1h": "SIDEWAYS",
+      "4h": "SIDEWAYS",
+      "1d": "UP"
+    },
+    "divergences": [
+      "⚠️ 5m DOWN vs 1d UP",
+      "⚠️ 15m DOWN vs 1d UP"
+    ],
+    "heatmap": "```\nINTERWAŁ | TREND | RSI | ZGODNOŚĆ\n---------|-------|-----|----------\n5m       | DOWN  |  35 | ✅\n15m      | DOWN  |  20 | ✅\n1h       | SIDEWAYS |  44 | ❌\n4h       | SIDEWAYS |  31 | ❌\n1d       | UP    |  51 | ✅\n```",
+    "spread_source": "proxy_zmiennosci",
+    "spread_value": 0.0058789506273066484,
+    "price_source": "yahoo",
+    "macro_sentiment": 0.0,
+    "macro_impact": "low",
+    "timestamp": "2026-09-09T15:21:40.986265+00:00",
+    "status": "open",
+    "risk_distance": 0.767144066946841,
+    "mae_percent": 0.0,
+    "mfe_percent": 0.0
   }
 }
