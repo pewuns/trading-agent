@@ -1665,11 +1665,26 @@ def fetch_investing_data(name, interval='15m', range_period='1d'):
     jakiś czas zerknąć do DATA_FETCH_ERRORS_FILE i sprawdzić, jak często Investing
     faktycznie odpowiada, a jak często agent i tak jedzie na samym Yahoo.
 
-    `pair_id` dla każdego rynku trzeba ustalić ręcznie (widoczne w URL-u strony
-    danego instrumentu na investing.com, albo w odpowiedzi sieciowej strony w
-    narzędziach deweloperskich przeglądarki - Sieć/Network, filtr XHR, szukaj
-    zapytania do api.investing.com przy wejściu na wykres). Wartości None =
-    rynek pominie Investing.com i pójdzie od razu na Yahoo, dopóki nie
+    Endpoint (`/api/financialdata/{pairId}/historical/chart`) i parametry
+    (period/interval/pointscount) potwierdzone przez użytkownika na bazie
+    kodu źródłowego biblioteki investing-com-api. DOKŁADNY FORMAT wartości
+    'interval' (czy to np. 'PT5M' w stylu ISO-8601, czy zwykła liczba minut)
+    i dokładny KSZTAŁT odpowiedzi JSON (nazwy pól świec) NIE są potwierdzone -
+    nadal nie było możliwości przetestowania na żywym połączeniu. Parsowanie
+    poniżej próbuje kilku najbardziej prawdopodobnych wariantów; jeśli żaden
+    nie pasuje, błąd trafia do DATA_FETCH_ERRORS_FILE z fragmentem realnej
+    odpowiedzi, żeby dało się to poprawić na podstawie faktycznych danych,
+    zamiast dalej zgadywać.
+
+    ALTERNATYWA WARTA ROZWAŻENIA: biblioteka `investpy` (PyPI) opakowuje te
+    same niezudokumentowane endpointy z gotową obsługą błędów/nagłówków -
+    mniej kodu do utrzymania tutaj, ale ma własną, udokumentowaną w jej
+    issues historię przestojów po zmianach zabezpieczeń Investing.com, więc
+    to nie jest gwarancja stabilności, tylko inny kompromis.
+
+    `pair_id` dla każdego rynku trzeba ustalić ręcznie (patrz
+    discover_investing_pair_ids.py) albo w devtools przeglądarki. Wartości
+    None = rynek pominie Investing.com i pójdzie od razu na Yahoo, dopóki nie
     uzupełnisz ID w INVESTING_PAIR_IDS poniżej."""
     pair_id = INVESTING_PAIR_IDS.get(name)
     if not pair_id:
@@ -1680,16 +1695,13 @@ def fetch_investing_data(name, interval='15m', range_period='1d'):
         log_data_error('investing', name, pair_id, f'nieznany interwał {interval}')
         return None
 
-    range_days = {'1d': 1, '5d': 5, '1mo': 31, '3mo': 93}.get(range_period, 5)
-    end_dt = datetime.now(pytz.utc)
-    start_dt = end_dt - timedelta(days=range_days)
+    points_count = {'1d': 100, '5d': 300, '1mo': 200, '3mo': 200}.get(range_period, 150)
 
-    url = f"https://api.investing.com/api/financialdata/historical/{pair_id}"
+    url = f"https://api.investing.com/api/financialdata/{pair_id}/historical/chart"
     params = {
-        'start-date': start_dt.strftime('%Y-%m-%d'),
-        'end-date': end_dt.strftime('%Y-%m-%d'),
-        'time-frame': 'Daily' if resolution >= 1440 else 'Intraday',
-        'interval': resolution,
+        'period': range_period,
+        'interval': resolution,       # niepotwierdzony dokładny format - patrz docstring
+        'pointscount': points_count,
     }
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -1701,23 +1713,61 @@ def fetch_investing_data(name, interval='15m', range_period='1d'):
         return None
     try:
         payload = resp.json()
-        rows = payload.get('data', [])
-        opens, highs, lows, closes, volumes = [], [], [], [], []
-        for row in rows:
-            if any(row.get(k) is None for k in ('open_value', 'high_value', 'low_value', 'close_value')):
-                continue
-            opens.append(row['open_value'])
-            highs.append(row['high_value'])
-            lows.append(row['low_value'])
-            closes.append(row['close_value'])
-            volumes.append(row.get('volume', 0) or 0)
-        if len(closes) < 10:
-            log_data_error('investing', name, pair_id, f'za mało świec w odpowiedzi ({len(closes)})')
-            return None
-        return {'prices': closes, 'highs': highs, 'lows': lows, 'volumes': volumes, 'opens': opens}
-    except (KeyError, ValueError, TypeError, json.JSONDecodeError) as e:
-        log_data_error('investing', name, pair_id, f'błąd parsowania odpowiedzi: {e}')
+    except (ValueError, json.JSONDecodeError) as e:
+        log_data_error('investing', name, pair_id, f'odpowiedź nie jest poprawnym JSON: {e} '
+                                                     f'(pierwsze 200 znaków: {resp.text[:200]!r})')
         return None
+
+    rows = _extract_investing_candles(payload)
+    if rows is None:
+        log_data_error('investing', name, pair_id,
+                        f'nierozpoznany kształt odpowiedzi JSON (klucze: {list(payload)[:10] if isinstance(payload, dict) else type(payload)})')
+        return None
+
+    opens, highs, lows, closes, volumes = [], [], [], [], []
+    for row in rows:
+        o, h, l, c, v = row
+        if None in (o, h, l, c):
+            continue
+        opens.append(o); highs.append(h); lows.append(l); closes.append(c); volumes.append(v or 0)
+
+    if len(closes) < 10:
+        log_data_error('investing', name, pair_id, f'za mało świec w odpowiedzi ({len(closes)})')
+        return None
+    return {'prices': closes, 'highs': highs, 'lows': lows, 'volumes': volumes, 'opens': opens}
+
+
+def _extract_investing_candles(payload):
+    """Próbuje wydobyć świece z kilku najbardziej prawdopodobnych kształtów
+    odpowiedzi tego niezudokumentowanego endpointu (dokładny format nie jest
+    potwierdzony - patrz fetch_investing_data). Zwraca listę krotek
+    (open, high, low, close, volume) albo None, jeśli żaden znany kształt
+    nie pasuje - NIE zgaduje na siłę, żeby nie zwrócić po cichu śmieciowych
+    danych."""
+    if isinstance(payload, dict):
+        candidates = payload.get('data') or payload.get('candles') or payload.get('chart')
+    elif isinstance(payload, list):
+        candidates = payload
+    else:
+        candidates = None
+    if not candidates:
+        return None
+
+    rows = []
+    for item in candidates:
+        if isinstance(item, dict):
+            o = item.get('open_value', item.get('open'))
+            h = item.get('high_value', item.get('high'))
+            l = item.get('low_value', item.get('low'))
+            c = item.get('close_value', item.get('close'))
+            v = item.get('volume', 0)
+            rows.append((o, h, l, c, v))
+        elif isinstance(item, (list, tuple)) and len(item) >= 5:
+            # popularny format świec z wykresów: [timestamp, open, high, low, close, volume]
+            rows.append((item[1], item[2], item[3], item[4], item[5] if len(item) > 5 else 0))
+        else:
+            return None
+    return rows if rows else None
 
 
 def get_price_data(name, symbol, interval='15m', range_period='1d'):
