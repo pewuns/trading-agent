@@ -4219,5 +4219,26 @@
       "macro_sentiment": 0.0
     },
     "created_at": "2026-09-09T22:42:15.201470+00:00"
+  },
+  "ETHEREUM_2026-09-09T23:17:36.943441+00:00": {
+    "name": "ETHEREUM",
+    "direction": "SHORT",
+    "confidence": 0.55,
+    "entry": 2459.7900390625,
+    "atr": 8.824253627232142,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.09024762672551319,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.000889683143876426,
+      "poc": -1.0,
+      "mtf_trend": -0.2960893854748602,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-09T23:17:36.943451+00:00"
   }
 }
