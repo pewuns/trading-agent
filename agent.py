@@ -932,7 +932,15 @@ class FeatureWeights:
         Używane przez near-miss (punkt D) - "co by było gdyby" sygnały poniżej
         progu wciąż karmią model, ale z przyciszoną wagą (NEAR_MISS_SAMPLE_WEIGHT),
         żeby nie mieć takiego samego wpływu jak realnie wysłane, zweryfikowane
-        sygnały."""
+        sygnały.
+
+        NAPRAWIONE: n_samples (który steruje zanikaniem learning_rate w czasie)
+        rósł wcześniej o 1 przy KAŻDEJ próbce, także near-missach z weight=0.25.
+        Skoro near-missów jest z założenia dużo więcej niż realnych sygnałów,
+        learning_rate wygasał znacznie szybciej niż powinien względem faktycznej
+        liczby "pełnowartościowych" obserwacji. Teraz n_samples rośnie o `weight`,
+        więc 4 near-missy (0.25 każdy) liczą się tyle co 1 realny sygnał - spójnie
+        z tym, jak słabo pojedynczy near-miss wpływa na same wagi."""
         y = 1.0 if went_up else 0.0
         p = self.predict_proba_up(features)
         error = p - y
@@ -941,7 +949,7 @@ class FeatureWeights:
         for k, v in features.items():
             self.weights[k] = self.weights.get(k, 0.0) - lr * error * v
         self.bias -= lr * error
-        self.n_samples += 1
+        self.n_samples += weight
         self.save()
 
 
@@ -1563,6 +1571,77 @@ def build_daily_near_miss_summary():
     return ranked[:3]
 
 
+def rotate_jsonl_log(file_path, days_to_keep=30):
+    """Punkt 4: near_miss_log.jsonl i data_fetch_errors.jsonl rosną bez końca
+    i są commitowane do repo co 10 minut - po kilku miesiącach mogłoby to
+    realnie spowolnić `git add -A && git commit` w workflow. Trzyma pełne
+    wpisy z ostatnich `days_to_keep` dni, a starsze zwija do JEDNEJ linii
+    dziennego podsumowania (liczba wpisów + rozbicie wg reason/source/stage)
+    w <file_path bez '.jsonl'>_summary.jsonl - podobnie jak PerformanceStats/
+    backtest_results.json już trzymają tylko ostatnie N wpisów zamiast
+    wszystkiego. Wywoływane raz dziennie (patrz is_evening_summary_time),
+    nie przy każdym cyklu."""
+    if not os.path.exists(file_path):
+        return
+    cutoff = datetime.now(pytz.utc) - timedelta(days=days_to_keep)
+    kept = []
+    old_by_day = {}
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    rec = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                ts = rec.get('timestamp')
+                try:
+                    dt = datetime.fromisoformat(ts)
+                except (TypeError, ValueError):
+                    kept.append(rec)  # brak/zły timestamp - nie wywalaj po cichu, zostaw
+                    continue
+                if dt >= cutoff:
+                    kept.append(rec)
+                else:
+                    day = dt.strftime('%Y-%m-%d')
+                    old_by_day.setdefault(day, []).append(rec)
+    except Exception as e:
+        logger.error(f"Nie udało się przeczytać {file_path} do rotacji: {e}")
+        return
+
+    if not old_by_day:
+        return  # nic starszego niż days_to_keep - nie ma czego zwijać
+
+    summary_path = file_path[:-len('.jsonl')] + '_summary.jsonl' if file_path.endswith('.jsonl') \
+        else file_path + '.summary.jsonl'
+    try:
+        with open(summary_path, 'a', encoding='utf-8') as f:
+            for day, recs in sorted(old_by_day.items()):
+                breakdown = {}
+                for r in recs:
+                    key = r.get('reason') or r.get('source') or r.get('stage') or '?'
+                    breakdown[key] = breakdown.get(key, 0) + 1
+                f.write(json.dumps({'date': day, 'total': len(recs), 'breakdown': breakdown},
+                                    ensure_ascii=False) + '\n')
+    except Exception as e:
+        logger.error(f"Nie udało się zapisać podsumowania rotacji do {summary_path}: {e}")
+        return  # nie ucinaj oryginału, jeśli podsumowanie się nie zapisało - wolimy duplikat niż utratę danych
+
+    n_collapsed = sum(len(v) for v in old_by_day.values())
+    try:
+        with open(file_path, 'w', encoding='utf-8') as f:
+            for rec in kept:
+                f.write(json.dumps(rec, ensure_ascii=False) + '\n')
+    except Exception as e:
+        logger.error(f"Nie udało się nadpisać {file_path} po rotacji: {e}")
+        return
+
+    logger.info(f"Rotacja {file_path}: zachowano {len(kept)} wpisów z ostatnich {days_to_keep} dni, "
+                f"zwinięto {n_collapsed} starszych do {summary_path}.")
+
+
 def send_daily_near_miss_report():
     if not should_send_notifications():
         return
@@ -1770,19 +1849,56 @@ def _extract_investing_candles(payload):
     return rows if rows else None
 
 
+# --- Circuit breaker PER ŹRÓDŁO DANYCH (punkt 2) - w jednym cyklu agenta
+# (16 rynków x do 5 interwałów = do ~80 zapytań) po kilku kolejnych błędach
+# Investing.com nie ma sensu dalej w niego dobijać - w praktyce to prawie
+# zawsze oznacza, że w TYM cyklu ono po prostu nie działa (blokada
+# Cloudflare/anti-bot na cały zakres IP, nie problem z jednym zapytaniem).
+# Dalsze próby tylko zaśmiecają DATA_FETCH_ERRORS_FILE i ryzykują twardszą
+# blokadę. Stan jest module-level, więc naturalnie resetuje się przy każdym
+# nowym uruchomieniu `python agent.py` (GitHub Actions odpala nowy proces co
+# cykl) - reset_investing_circuit() istnieje głównie dla jasności/testów. ---
+INVESTING_CIRCUIT_THRESHOLD = int(os.environ.get('INVESTING_CIRCUIT_THRESHOLD', 5))
+_investing_cycle_failures = 0
+_investing_cycle_disabled = False
+
+
+def reset_investing_circuit():
+    global _investing_cycle_failures, _investing_cycle_disabled
+    _investing_cycle_failures = 0
+    _investing_cycle_disabled = False
+
+
 def get_price_data(name, symbol, interval='15m', range_period='1d'):
     """Punkt wejścia do pobierania świec: Investing.com jako GŁÓWNE źródło,
-    z automatycznym fallbackiem na Yahoo Finance TYLKO gdy Investing zawiedzie
+    z automatycznym fallbackiem na Yahoo Finance gdy Investing zawiedzie
     (błąd zawsze najpierw logowany do DATA_FETCH_ERRORS_FILE - patrz
     fetch_investing_data/fetch_yahoo_data/log_data_error). Zwraca (data, source)
-    gdzie source in {'investing', 'yahoo', None}."""
-    data = fetch_investing_data(name, interval, range_period)
-    if data:
-        return data, 'investing'
+    gdzie source in {'investing', 'yahoo', None}.
+
+    Jeśli Investing zawiedzie INVESTING_CIRCUIT_THRESHOLD razy z rzędu w tym
+    cyklu, dalsze wywołania w tym samym cyklu pomijają Investing całkowicie
+    i idą prosto na Yahoo - patrz komentarz przy _investing_cycle_disabled."""
+    global _investing_cycle_failures, _investing_cycle_disabled
+    if not _investing_cycle_disabled:
+        data = fetch_investing_data(name, interval, range_period)
+        if data:
+            _investing_cycle_failures = 0
+            return data, 'investing'
+        _investing_cycle_failures += 1
+        if _investing_cycle_failures >= INVESTING_CIRCUIT_THRESHOLD:
+            _investing_cycle_disabled = True
+            logger.warning(
+                f"Investing.com: {_investing_cycle_failures} błędów z rzędu w tym cyklu - "
+                f"wyłączam Investing do końca cyklu, reszta rynków/interwałów idzie od razu na Yahoo."
+            )
+
     data = fetch_yahoo_data(symbol, interval, range_period)
     if data:
         return data, 'yahoo'
-    log_data_error('all_sources', name, symbol, 'Investing i Yahoo zawiodły w tym cyklu')
+    reason = 'Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)' if _investing_cycle_disabled \
+        else 'Investing i Yahoo zawiodły w tym cyklu'
+    log_data_error('all_sources', name, symbol, reason)
     return None, None
 
 
@@ -2747,6 +2863,8 @@ def main():
 
     if is_evening_summary_time():
         send_daily_near_miss_report()
+        rotate_jsonl_log(NEAR_MISS_LOG_FILE, days_to_keep=30)
+        rotate_jsonl_log(DATA_FETCH_ERRORS_FILE, days_to_keep=30)
         return
 
     # Dane makro: max 3x dziennie (rano / przed otwarciem / po zamknięciu
@@ -2757,6 +2875,7 @@ def main():
         fetch_and_analyze_macro()
 
     logger.info(f"Analiza rynków: {datetime.now(TIMEZONE)}")
+    reset_investing_circuit()
     sm = SignalManager()
     ai_memory = AIMemory()
     tf_weights = TimeframeWeights()
