@@ -257,5 +257,68 @@
     "closed_price": 103.37000274658203,
     "closed_at": "2026-09-09T16:45:09.651152+00:00",
     "r_multiple": -1.0037283811963507
+  },
+  "ETHEREUM_SHORT": {
+    "name": "ETHEREUM",
+    "direction": "SHORT",
+    "entry": 2467.699951171875,
+    "stop_loss": 2476.5371442522323,
+    "take_profit": 2452.9712960379466,
+    "position_size": 11.315810245480845,
+    "risk_amount": 100.0,
+    "sizing_method": "stały_procent_ryzyka (za mało historii na Kelly)",
+    "confidence": 0.6,
+    "threshold_used": 0.6,
+    "regime": "TREND",
+    "adx": 33.30180353025961,
+    "model_used": false,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.6204124698153024,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.05142685548812104,
+      "poc": -1.0,
+      "mtf_trend": -0.22160148975791427,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "rsi": 18.979376509234882,
+    "vwap": 2497.3001081293783,
+    "support": 2464.820068359375,
+    "resistance": 2498.3798828125,
+    "candlestick_patterns": [
+      "DOJI (niezdecydowanie)"
+    ],
+    "order_flow_delta": -5.1426855488121035,
+    "volume_profile_poc": 2487.14,
+    "news_sentiment": 0,
+    "news_impact": "low",
+    "news_reasoning": "",
+    "timeframe_alignment": 0.38919925512104286,
+    "timeframe_trends": {
+      "5m": "DOWN",
+      "15m": "DOWN",
+      "1h": "SIDEWAYS",
+      "4h": "SIDEWAYS",
+      "1d": "UP"
+    },
+    "divergences": [
+      "⚠️ 5m DOWN vs 1d UP",
+      "⚠️ 15m DOWN vs 1d UP"
+    ],
+    "heatmap": "```\nINTERWAŁ | TREND | RSI | ZGODNOŚĆ\n---------|-------|-----|----------\n5m       | DOWN  |  29 | ✅\n15m      | DOWN  |  19 | ✅\n1h       | SIDEWAYS |  33 | ❌\n4h       | SIDEWAYS |  49 | ❌\n1d       | UP    |  46 | ❌\n```",
+    "spread_source": "proxy_zmiennosci",
+    "spread_value": 0.002287634694078747,
+    "price_source": "yahoo",
+    "macro_sentiment": 0.0,
+    "macro_impact": "low",
+    "timestamp": "2026-09-09T20:02:42.259444+00:00",
+    "status": "open",
+    "risk_distance": 8.837193080357338,
+    "mae_percent": 0.0,
+    "mfe_percent": 0.0
   }
 }
