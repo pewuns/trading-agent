@@ -332,3 +332,23 @@
 {"timestamp": "2026-09-09T00:35:07.804071+00:00", "source": "investing", "name": "SOLANA", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
 {"timestamp": "2026-09-09T00:35:07.997029+00:00", "source": "yahoo", "name": "SOL-USD", "symbol": "SOL-USD", "reason": "za mało wyrównanych świec (4)"}
 {"timestamp": "2026-09-09T00:35:07.997960+00:00", "source": "all_sources", "name": "SOLANA", "symbol": "SOL-USD", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-09T00:54:48.727399+00:00", "source": "investing", "name": "SOLANA", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T00:54:48.818639+00:00", "source": "yahoo", "name": "SOL-USD", "symbol": "SOL-USD", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T00:54:48.820001+00:00", "source": "all_sources", "name": "SOLANA", "symbol": "SOL-USD", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-09T00:54:48.820147+00:00", "source": "investing", "name": "ETHEREUM", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T00:54:48.875814+00:00", "source": "yahoo", "name": "ETH-USD", "symbol": "ETH-USD", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T00:54:48.877111+00:00", "source": "all_sources", "name": "ETHEREUM", "symbol": "ETH-USD", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-09T00:54:48.877301+00:00", "source": "investing", "name": "BITCOIN", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T00:54:48.949736+00:00", "source": "yahoo", "name": "BTC-USD", "symbol": "BTC-USD", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T00:54:48.951406+00:00", "source": "all_sources", "name": "BITCOIN", "symbol": "BTC-USD", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-09T00:54:49.492323+00:00", "source": "investing", "name": "GOLD", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T00:54:49.564860+00:00", "source": "investing", "name": "OIL WTI", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T00:54:49.629738+00:00", "source": "investing", "name": "BITCOIN", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T00:54:49.684294+00:00", "source": "yahoo", "name": "BTC-USD", "symbol": "BTC-USD", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T00:54:49.685636+00:00", "source": "all_sources", "name": "BITCOIN", "symbol": "BTC-USD", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-09T00:54:49.685920+00:00", "source": "investing", "name": "ETHEREUM", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T00:54:49.756314+00:00", "source": "yahoo", "name": "ETH-USD", "symbol": "ETH-USD", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T00:54:49.757591+00:00", "source": "all_sources", "name": "ETHEREUM", "symbol": "ETH-USD", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-09T00:54:49.757818+00:00", "source": "investing", "name": "SOLANA", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T00:54:49.834606+00:00", "source": "yahoo", "name": "SOL-USD", "symbol": "SOL-USD", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T00:54:49.836305+00:00", "source": "all_sources", "name": "SOLANA", "symbol": "SOL-USD", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
