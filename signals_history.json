@@ -249,9 +249,13 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-09T15:21:40.986265+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.767144066946841,
-    "mae_percent": -0.5847938431231381,
-    "mfe_percent": 0.0
+    "mae_percent": -0.75049150478804,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 103.37000274658203,
+    "closed_at": "2026-09-09T16:45:09.651152+00:00",
+    "r_multiple": -1.0037283811963507
   }
 }
