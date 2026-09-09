@@ -251,7 +251,7 @@
     "timestamp": "2026-09-09T23:17:43.037173+00:00",
     "status": "open",
     "risk_distance": 0.8110713958740234,
-    "mae_percent": -0.1282024176151431,
+    "mae_percent": -0.29585346927900946,
     "mfe_percent": 0.0
   },
   "ETHEREUM_SHORT": {
@@ -312,10 +312,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-09T22:58:24.762928+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 13.366071428571558,
-    "mae_percent": -0.490070474031007,
-    "mfe_percent": 0.0
+    "mae_percent": -0.6888004670374008,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 2467.5,
+    "closed_at": "2026-09-09T23:48:38.077967+00:00",
+    "r_multiple": -1.262890364061444
   },
   "BITCOIN_SHORT": {
     "name": "BITCOIN",
@@ -375,9 +379,13 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-09T22:58:19.700089+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 295.7586495535652,
-    "mae_percent": -0.3613397642831956,
-    "mfe_percent": 0.0
+    "mae_percent": -0.43932633085640405,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 78240.2578125,
+    "closed_at": "2026-09-09T23:48:38.077967+00:00",
+    "r_multiple": -1.1571142991644576
   }
 }
