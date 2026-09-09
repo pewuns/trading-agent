@@ -314,7 +314,7 @@
     "timestamp": "2026-09-09T21:50:05.220599+00:00",
     "status": "open",
     "risk_distance": 11.36036028180797,
-    "mae_percent": 0.0,
+    "mae_percent": -0.03253738248279099,
     "mfe_percent": 0.0
   },
   "BITCOIN_SHORT": {
@@ -378,6 +378,6 @@
     "status": "open",
     "risk_distance": 250.37862723214494,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.04242215284821734
   }
 }

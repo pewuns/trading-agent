@@ -1,39 +1,19 @@
 {
-  "date": "2026-09-09",
+  "date": "2026-09-10",
   "scores": {
     "BITCOIN": {
-      "confidence": 0.675,
-      "direction": "LONG",
+      "confidence": 0.6,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.675,
-      "direction": "LONG",
+      "confidence": 0.6,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.625,
-      "direction": "LONG",
-      "threshold": 0.6
-    },
-    "S&P500": {
-      "confidence": 0.5,
+      "confidence": 0.55,
       "direction": "SHORT",
-      "threshold": 0.6
-    },
-    "NASDAQ": {
-      "confidence": 0.5,
-      "direction": "SHORT",
-      "threshold": 0.6
-    },
-    "NVIDIA": {
-      "confidence": 0.5,
-      "direction": "SHORT",
-      "threshold": 0.6
-    },
-    "TESLA": {
-      "confidence": 0.3,
-      "direction": "LONG",
       "threshold": 0.6
     }
   }

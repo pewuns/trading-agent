@@ -4177,5 +4177,26 @@
       "macro_sentiment": 0.0
     },
     "created_at": "2026-09-09T21:50:11.057153+00:00"
+  },
+  "SOLANA_2026-09-09T22:05:08.156074+00:00": {
+    "name": "SOLANA",
+    "direction": "SHORT",
+    "confidence": 0.55,
+    "entry": 102.0,
+    "atr": 0.3885721479143415,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.5594707141728815,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.008299306275499898,
+      "poc": -1.0,
+      "mtf_trend": -0.22160148975791427,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-09T22:05:08.156083+00:00"
   }
 }
