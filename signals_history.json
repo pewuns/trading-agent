@@ -54,10 +54,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-08T22:58:28.662452+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.46928542000907214,
     "mae_percent": -0.31905813601566213,
-    "mfe_percent": 0.454414791952394
+    "mfe_percent": 0.8218103757257348,
+    "outcome": "win",
+    "closed_price": 104.27999877929688,
+    "closed_at": "2026-09-09T04:51:52.282012+00:00",
+    "r_multiple": 1.811261202414219
   },
   "ETHEREUM_LONG": {
     "name": "ETHEREUM",
