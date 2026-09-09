@@ -2350,5 +2350,152 @@
       "macro_sentiment": 0.0
     },
     "created_at": "2026-09-09T12:49:21.118217+00:00"
+  },
+  "S&P500_2026-09-09T13:04:16.273431+00:00": {
+    "name": "S&P500",
+    "direction": "SHORT",
+    "confidence": 0.5,
+    "entry": 7673.52001953125,
+    "atr": 7.246477399553571,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.31637890210031855,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.2598835147387408,
+      "poc": -1.0,
+      "mtf_trend": -0.6722532588454375,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-09T13:04:16.273436+00:00"
+  },
+  "NASDAQ_2026-09-09T13:04:22.486577+00:00": {
+    "name": "NASDAQ",
+    "direction": "SHORT",
+    "confidence": 0.5,
+    "entry": 26421.412109375,
+    "atr": 27.657366071428573,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.24896324896324884,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.0796680445231791,
+      "poc": -1.0,
+      "mtf_trend": -0.4189944134078212,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-09T13:04:22.486582+00:00"
+  },
+  "BITCOIN_2026-09-09T13:04:29.422270+00:00": {
+    "name": "BITCOIN",
+    "direction": "LONG",
+    "confidence": 0.575,
+    "entry": 79558.171875,
+    "atr": 170.76171875,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.5108066931777102,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.21841892465303275,
+      "poc": 1.0,
+      "mtf_trend": 1.0,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-09T13:04:29.422276+00:00"
+  },
+  "ETHEREUM_2026-09-09T13:04:36.154745+00:00": {
+    "name": "ETHEREUM",
+    "direction": "LONG",
+    "confidence": 0.575,
+    "entry": 2511.320068359375,
+    "atr": 6.037179129464286,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.5877419311376237,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.12017170052805934,
+      "poc": 1.0,
+      "mtf_trend": 1.0,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-09T13:04:36.154749+00:00"
+  },
+  "SOLANA_2026-09-09T13:04:42.534698+00:00": {
+    "name": "SOLANA",
+    "direction": "LONG",
+    "confidence": 0.575,
+    "entry": 104.62999725341797,
+    "atr": 0.3192868913922991,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.5159817033447485,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.35530227423138494,
+      "poc": 1.0,
+      "mtf_trend": 1.0,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-09T13:04:42.534703+00:00"
+  },
+  "NVIDIA_2026-09-09T13:04:49.584252+00:00": {
+    "name": "NVIDIA",
+    "direction": "SHORT",
+    "confidence": 0.45,
+    "entry": 225.72999572753906,
+    "atr": 0.5391911097935268,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.03885187205083824,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.2430102643746114,
+      "poc": 1.0,
+      "mtf_trend": -0.32960893854748596,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-09T13:04:49.584257+00:00"
+  },
+  "TESLA_2026-09-09T13:04:55.817602+00:00": {
+    "name": "TESLA",
+    "direction": "LONG",
+    "confidence": 0.3,
+    "entry": 368.1600036621094,
+    "atr": 1.3708103724888392,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": -0.13936961378211066,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.42503201564808224,
+      "poc": 1.0,
+      "mtf_trend": -0.0800744878957168,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-09T13:04:55.817606+00:00"
   }
 }

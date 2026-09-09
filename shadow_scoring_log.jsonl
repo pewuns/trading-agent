@@ -555,3 +555,10 @@
 {"name": "BITCOIN", "timestamp": "2026-09-09T12:49:11.250439+00:00", "production_confidence": 0.575, "production_direction": "LONG", "shadow_score": 2}
 {"name": "ETHEREUM", "timestamp": "2026-09-09T12:49:16.339805+00:00", "production_confidence": 0.575, "production_direction": "LONG", "shadow_score": 2}
 {"name": "SOLANA", "timestamp": "2026-09-09T12:49:21.117602+00:00", "production_confidence": 0.575, "production_direction": "LONG", "shadow_score": 2}
+{"name": "S&P500", "timestamp": "2026-09-09T13:04:16.272847+00:00", "production_confidence": 0.5, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "NASDAQ", "timestamp": "2026-09-09T13:04:22.486011+00:00", "production_confidence": 0.5, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "BITCOIN", "timestamp": "2026-09-09T13:04:29.421630+00:00", "production_confidence": 0.575, "production_direction": "LONG", "shadow_score": 2}
+{"name": "ETHEREUM", "timestamp": "2026-09-09T13:04:36.154161+00:00", "production_confidence": 0.575, "production_direction": "LONG", "shadow_score": 2}
+{"name": "SOLANA", "timestamp": "2026-09-09T13:04:42.534155+00:00", "production_confidence": 0.575, "production_direction": "LONG", "shadow_score": 2}
+{"name": "NVIDIA", "timestamp": "2026-09-09T13:04:49.583631+00:00", "production_confidence": 0.45, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "TESLA", "timestamp": "2026-09-09T13:04:55.817048+00:00", "production_confidence": 0.3, "production_direction": "LONG", "shadow_score": -1}
