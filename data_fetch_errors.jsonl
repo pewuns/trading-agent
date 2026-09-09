@@ -678,3 +678,26 @@
 {"timestamp": "2026-09-09T14:00:57.732120+00:00", "source": "all_sources", "name": "META", "symbol": "META", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
 {"timestamp": "2026-09-09T14:00:57.793477+00:00", "source": "yahoo", "name": "GOOGL", "symbol": "GOOGL", "reason": "za mało wyrównanych świec (3)"}
 {"timestamp": "2026-09-09T14:00:57.794998+00:00", "source": "all_sources", "name": "GOOGLE", "symbol": "GOOGL", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
+{"timestamp": "2026-09-09T14:25:41.167638+00:00", "source": "investing", "name": "DAX", "symbol": 172, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-09T14:25:43.875887+00:00", "source": "investing", "name": "S&P500", "symbol": 166, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-09T14:25:43.941086+00:00", "source": "yahoo", "name": "^GSPC", "symbol": "^GSPC", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T14:25:43.942042+00:00", "source": "all_sources", "name": "S&P500", "symbol": "^GSPC", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-09T14:25:46.519861+00:00", "source": "investing", "name": "NASDAQ", "symbol": 14958, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-09T14:25:46.572323+00:00", "source": "yahoo", "name": "^IXIC", "symbol": "^IXIC", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T14:25:46.573284+00:00", "source": "all_sources", "name": "NASDAQ", "symbol": "^IXIC", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-09T14:25:49.163092+00:00", "source": "investing", "name": "EUR/USD", "symbol": 1, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-09T14:25:51.831997+00:00", "source": "investing", "name": "GOLD", "symbol": 8830, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-09T14:26:10.121406+00:00", "source": "yahoo", "name": "AAPL", "symbol": "AAPL", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T14:26:10.122345+00:00", "source": "all_sources", "name": "APPLE", "symbol": "AAPL", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
+{"timestamp": "2026-09-09T14:26:10.194016+00:00", "source": "yahoo", "name": "MSFT", "symbol": "MSFT", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T14:26:10.194972+00:00", "source": "all_sources", "name": "MICROSOFT", "symbol": "MSFT", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
+{"timestamp": "2026-09-09T14:26:10.266659+00:00", "source": "yahoo", "name": "NVDA", "symbol": "NVDA", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T14:26:10.267736+00:00", "source": "all_sources", "name": "NVIDIA", "symbol": "NVDA", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
+{"timestamp": "2026-09-09T14:26:10.327953+00:00", "source": "yahoo", "name": "TSLA", "symbol": "TSLA", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T14:26:10.328887+00:00", "source": "all_sources", "name": "TESLA", "symbol": "TSLA", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
+{"timestamp": "2026-09-09T14:26:10.385133+00:00", "source": "yahoo", "name": "AMZN", "symbol": "AMZN", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T14:26:10.386054+00:00", "source": "all_sources", "name": "AMAZON", "symbol": "AMZN", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
+{"timestamp": "2026-09-09T14:26:10.460376+00:00", "source": "yahoo", "name": "META", "symbol": "META", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T14:26:10.461320+00:00", "source": "all_sources", "name": "META", "symbol": "META", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
+{"timestamp": "2026-09-09T14:26:10.562084+00:00", "source": "yahoo", "name": "GOOGL", "symbol": "GOOGL", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-09T14:26:10.563137+00:00", "source": "all_sources", "name": "GOOGLE", "symbol": "GOOGL", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
