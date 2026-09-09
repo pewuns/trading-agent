@@ -57,7 +57,7 @@
     "status": "open",
     "risk_distance": 0.46928542000907214,
     "mae_percent": -0.05800788786302231,
-    "mfe_percent": 0.11602315211056433
+    "mfe_percent": 0.18370148007893025
   },
   "ETHEREUM_LONG": {
     "name": "ETHEREUM",
@@ -114,10 +114,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-08T23:48:37.776301+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 5.8553466796875,
     "mae_percent": 0.0,
-    "mfe_percent": 0.292897632675192
+    "mfe_percent": 0.4236549781989236,
+    "outcome": "win",
+    "closed_price": 2496.050048828125,
+    "closed_at": "2026-09-09T02:34:06.604419+00:00",
+    "r_multiple": 1.798361373444243
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
@@ -177,6 +181,6 @@
     "status": "open",
     "risk_distance": 185.77901785714494,
     "mae_percent": -0.12467657289800232,
-    "mfe_percent": 0.2327044075197398
+    "mfe_percent": 0.30366542759211107
   }
 }
