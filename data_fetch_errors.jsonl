@@ -523,3 +523,10 @@
 {"timestamp": "2026-09-09T07:03:01.525891+00:00", "source": "investing", "name": "GOLD", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
 {"timestamp": "2026-09-09T07:03:01.593747+00:00", "source": "investing", "name": "OIL WTI", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
 {"timestamp": "2026-09-09T07:03:01.649642+00:00", "source": "investing", "name": "BITCOIN", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T07:26:29.839789+00:00", "source": "investing", "name": "DAX", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T07:26:29.999476+00:00", "source": "yahoo", "name": "^GDAXI", "symbol": "^GDAXI", "reason": "za mało wyrównanych świec (2)"}
+{"timestamp": "2026-09-09T07:26:30.000593+00:00", "source": "all_sources", "name": "DAX", "symbol": "^GDAXI", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-09T07:26:30.000818+00:00", "source": "investing", "name": "EUR/USD", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T07:26:30.126415+00:00", "source": "investing", "name": "GOLD", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T07:26:30.242407+00:00", "source": "investing", "name": "OIL WTI", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
+{"timestamp": "2026-09-09T07:26:30.359588+00:00", "source": "investing", "name": "BITCOIN", "symbol": null, "reason": "brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)"}
