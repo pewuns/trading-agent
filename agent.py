@@ -1693,11 +1693,17 @@ def is_monthly_report_time():
 
 
 def is_time_for(target_h, target_m, window_m=14):
-    """Okno (target_h:target_m .. +window_m minut) - szersze niż jeden cykl
-    10-minutowy, żeby nie przegapić wyzwalacza jeśli poprzedni cykl agenta
-    się spóźnił/padł."""
+    """Okno (target_h:target_m .. +window_m minut), poprawnie obsługujące
+    przejście przez pełną godzinę (np. 21:50 + 25 min -> sięga do 22:15) -
+    liczone w minutach od północy z zawijaniem, nie porównaniem samej
+    godziny. Szersze niż jeden cykl 10-minutowy, żeby jeden spóźniony/pominięty
+    cykl GitHub Actions (cron nie gwarantuje dokładnego wykonania co 10 min)
+    nie skasował całego okna wyzwalacza."""
     now = datetime.now(TIMEZONE)
-    return now.hour == target_h and target_m <= now.minute < (target_m + window_m)
+    target_total = target_h * 60 + target_m
+    now_total = now.hour * 60 + now.minute
+    diff = (now_total - target_total) % (24 * 60)
+    return 0 <= diff < window_m
 
 
 def is_morning_sentiment_time():
@@ -1705,19 +1711,29 @@ def is_morning_sentiment_time():
 
 
 def is_evening_summary_time():
-    """Pora na dzienne podsumowanie 'najbliżej progu' - patrz config.DAILY_SUMMARY_HOUR."""
-    return is_time_for(*DAILY_SUMMARY_HOUR, window_m=10)
+    """Pora na dzienne podsumowanie 'najbliżej progu' - patrz config.DAILY_SUMMARY_HOUR.
+    Okno POSZERZONE do 20 min (z 10) - patrz is_time_for. DAILY_SUMMARY_HOUR
+    przesunięte na 21:30 (z 21:50), żeby po poszerzeniu (21:30-21:49) nie
+    nachodziło na okno makro 'post_us' (22:00+), które sprawdzane jest zaraz
+    po tym w main() - obie funkcje mają osobne, nienakładające się okna."""
+    return is_time_for(*DAILY_SUMMARY_HOUR, window_m=20)
 
 
 def is_macro_fetch_time(state):
     """Sprawdza, czy jesteśmy w oknie jednego z config.MACRO_HOURS (rano /
     przed otwarciem US / po zamknięciu głównych sesji) i czy dla TEGO okna
     dziś jeszcze nie pobieraliśmy danych makro (żeby przy cyklu co 10 minut
-    nie odpalać pobrania makro kilkukrotnie w tym samym oknie)."""
+    nie odpalać pobrania makro kilkukrotnie w tym samym oknie).
+
+    Okno POSZERZONE do 20 min (z 10) - GitHub Actions cron nie gwarantuje
+    dokładnego wykonania co 10 minut, więc jeden spóźniony/pominięty cykl
+    (typowo kilkanaście minut poślizgu) mógł wcześniej całkowicie skasować
+    wąskie 10-minutowe okno. MACRO_HOURS (7:00, 14:30, 22:00) mają odstępy
+    co najmniej 90 minut, więc 20-minutowe okna się nie nakładają."""
     now = datetime.now(TIMEZONE)
     today_key = now.strftime('%Y-%m-%d')
     for window_name, (h, m) in MACRO_HOURS.items():
-        if is_time_for(h, m, window_m=10):
+        if is_time_for(h, m, window_m=20):
             last_run = state.get('last_run', {}).get(window_name)
             return last_run != today_key
     return False
@@ -2498,7 +2514,7 @@ def fetch_and_analyze_macro():
     now_local = datetime.now(TIMEZONE)
     today_key = now_local.strftime('%Y-%m-%d')
     for window_name, (h, m) in MACRO_HOURS.items():
-        if is_time_for(h, m, window_m=10):
+        if is_time_for(h, m, window_m=20):  # spójne z is_macro_fetch_time
             state.setdefault('last_run', {})[window_name] = today_key
             break
     state['analyzed_at'] = datetime.now(pytz.utc).isoformat()
