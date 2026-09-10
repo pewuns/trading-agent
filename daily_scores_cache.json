@@ -15,6 +15,26 @@
       "confidence": 0.6,
       "direction": "SHORT",
       "threshold": 0.6
+    },
+    "S&P500": {
+      "confidence": 0.5,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "NASDAQ": {
+      "confidence": 0.35,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "APPLE": {
+      "confidence": 0.35,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "NVIDIA": {
+      "confidence": 0.45,
+      "direction": "SHORT",
+      "threshold": 0.6
     }
   }
 }
