@@ -22,16 +22,21 @@
       "threshold": 0.6
     },
     "NASDAQ": {
-      "confidence": 0.35,
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "APPLE": {
-      "confidence": 0.35,
+      "confidence": 0.4,
       "direction": "LONG",
       "threshold": 0.6
     },
     "NVIDIA": {
+      "confidence": 0.45,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "TESLA": {
       "confidence": 0.45,
       "direction": "SHORT",
       "threshold": 0.6
