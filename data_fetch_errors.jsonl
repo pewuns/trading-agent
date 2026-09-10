@@ -1037,3 +1037,14 @@
 {"timestamp": "2026-09-10T04:52:14.771639+00:00", "source": "all_sources", "name": "OIL WTI", "symbol": "CL=F", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
 {"timestamp": "2026-09-10T04:52:17.356454+00:00", "source": "investing", "name": "BITCOIN", "symbol": 945629, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
 {"timestamp": "2026-09-10T04:52:20.006144+00:00", "source": "investing", "name": "BITCOIN", "symbol": 945629, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T05:15:18.610708+00:00", "source": "TradingEconomics_News", "target": "https://tradingeconomics.com/rss/news.aspx", "status_code": 403, "error": "Status HTTP 403"}
+{"timestamp": "2026-09-10T05:15:18.651811+00:00", "source": "TradingEconomics_Calendar", "target": "https://tradingeconomics.com/rss/calendar.aspx", "status_code": 403, "error": "Status HTTP 403"}
+{"timestamp": "2026-09-10T05:15:24.075435+00:00", "source": "investing", "name": "SOLANA", "symbol": 1178453, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T05:15:27.057049+00:00", "source": "investing", "name": "GOLD", "symbol": 8830, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T05:15:27.121375+00:00", "source": "yahoo", "name": "GC=F", "symbol": "GC=F", "reason": "za mało wyrównanych świec (6)"}
+{"timestamp": "2026-09-10T05:15:27.122317+00:00", "source": "all_sources", "name": "GOLD", "symbol": "GC=F", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-10T05:15:29.720584+00:00", "source": "investing", "name": "OIL WTI", "symbol": 8849, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T05:15:29.785139+00:00", "source": "yahoo", "name": "CL=F", "symbol": "CL=F", "reason": "za mało wyrównanych świec (6)"}
+{"timestamp": "2026-09-10T05:15:29.786496+00:00", "source": "all_sources", "name": "OIL WTI", "symbol": "CL=F", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-10T05:15:32.382344+00:00", "source": "investing", "name": "BITCOIN", "symbol": 945629, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T05:15:35.058068+00:00", "source": "investing", "name": "BITCOIN", "symbol": 945629, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
