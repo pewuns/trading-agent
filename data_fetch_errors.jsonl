@@ -1083,3 +1083,10 @@
 {"timestamp": "2026-09-10T07:04:11.734467+00:00", "source": "investing", "name": "EUR/USD", "symbol": 1, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
 {"timestamp": "2026-09-10T07:04:14.382382+00:00", "source": "investing", "name": "GOLD", "symbol": 8830, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
 {"timestamp": "2026-09-10T07:04:17.030567+00:00", "source": "investing", "name": "OIL WTI", "symbol": 8849, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T07:26:35.823315+00:00", "source": "investing", "name": "SOLANA", "symbol": 1178453, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T07:26:39.310583+00:00", "source": "investing", "name": "DAX", "symbol": 172, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T07:26:39.479434+00:00", "source": "yahoo", "name": "^GDAXI", "symbol": "^GDAXI", "reason": "za mało wyrównanych świec (2)"}
+{"timestamp": "2026-09-10T07:26:39.480261+00:00", "source": "all_sources", "name": "DAX", "symbol": "^GDAXI", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-10T07:26:42.152922+00:00", "source": "investing", "name": "EUR/USD", "symbol": 1, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T07:26:44.975857+00:00", "source": "investing", "name": "GOLD", "symbol": 8830, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T07:26:47.813282+00:00", "source": "investing", "name": "OIL WTI", "symbol": 8849, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
