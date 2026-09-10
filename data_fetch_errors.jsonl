@@ -967,3 +967,16 @@
 {"timestamp": "2026-09-10T01:31:51.101025+00:00", "source": "all_sources", "name": "ETHEREUM", "symbol": "ETH-USD", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
 {"timestamp": "2026-09-10T01:31:51.190187+00:00", "source": "yahoo", "name": "SOL-USD", "symbol": "SOL-USD", "reason": "za mało wyrównanych świec (8)"}
 {"timestamp": "2026-09-10T01:31:51.191394+00:00", "source": "all_sources", "name": "SOLANA", "symbol": "SOL-USD", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
+{"timestamp": "2026-09-10T01:51:33.654570+00:00", "source": "investing", "name": "SOLANA", "symbol": 1178453, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T01:51:33.738258+00:00", "source": "yahoo", "name": "SOL-USD", "symbol": "SOL-USD", "reason": "za mało wyrównanych świec (9)"}
+{"timestamp": "2026-09-10T01:51:33.739600+00:00", "source": "all_sources", "name": "SOLANA", "symbol": "SOL-USD", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-10T01:51:36.724421+00:00", "source": "investing", "name": "GOLD", "symbol": 8830, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T01:51:39.447473+00:00", "source": "investing", "name": "OIL WTI", "symbol": 8849, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T01:51:43.169234+00:00", "source": "investing", "name": "BITCOIN", "symbol": 945629, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T01:51:43.243369+00:00", "source": "yahoo", "name": "BTC-USD", "symbol": "BTC-USD", "reason": "za mało wyrównanych świec (9)"}
+{"timestamp": "2026-09-10T01:51:43.244735+00:00", "source": "all_sources", "name": "BITCOIN", "symbol": "BTC-USD", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-10T01:51:45.841602+00:00", "source": "investing", "name": "ETHEREUM", "symbol": 997650, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-10T01:51:45.906466+00:00", "source": "yahoo", "name": "ETH-USD", "symbol": "ETH-USD", "reason": "za mało wyrównanych świec (9)"}
+{"timestamp": "2026-09-10T01:51:45.907804+00:00", "source": "all_sources", "name": "ETHEREUM", "symbol": "ETH-USD", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
+{"timestamp": "2026-09-10T01:51:45.977424+00:00", "source": "yahoo", "name": "SOL-USD", "symbol": "SOL-USD", "reason": "za mało wyrównanych świec (9)"}
+{"timestamp": "2026-09-10T01:51:45.978758+00:00", "source": "all_sources", "name": "SOLANA", "symbol": "SOL-USD", "reason": "Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)"}
