@@ -8062,5 +8062,47 @@
       "macro_sentiment": 0.0
     },
     "created_at": "2026-09-10T21:49:51.662522+00:00"
+  },
+  "BITCOIN_2026-09-10T22:03:18.307026+00:00": {
+    "name": "BITCOIN",
+    "direction": "SHORT",
+    "confidence": 0.525,
+    "entry": 77083.1171875,
+    "atr": 108.546875,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.19034552399350232,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.19460279159074884,
+      "poc": -1.0,
+      "mtf_trend": -0.5828677839851024,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-10T22:03:18.307037+00:00"
+  },
+  "ETHEREUM_2026-09-10T22:03:23.197786+00:00": {
+    "name": "ETHEREUM",
+    "direction": "LONG",
+    "confidence": 0.35,
+    "entry": 2458.5,
+    "atr": 4.722133091517857,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 1.0,
+      "rsi": -0.22184654081690694,
+      "vwap": 1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.33816486012993474,
+      "poc": 1.0,
+      "mtf_trend": -0.32960893854748596,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-10T22:03:23.197797+00:00"
   }
 }
