@@ -851,3 +851,6 @@
 {"name": "SOLANA", "timestamp": "2026-09-10T19:59:05.901273+00:00", "production_confidence": 0.425, "production_direction": "SHORT", "shadow_score": 0}
 {"name": "APPLE", "timestamp": "2026-09-10T19:59:11.609211+00:00", "production_confidence": 0.4, "production_direction": "LONG", "shadow_score": 1}
 {"name": "NVIDIA", "timestamp": "2026-09-10T19:59:17.422767+00:00", "production_confidence": 0.3, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "BITCOIN", "timestamp": "2026-09-10T20:18:39.325936+00:00", "production_confidence": 0.325, "production_direction": "SHORT", "shadow_score": 0}
+{"name": "ETHEREUM", "timestamp": "2026-09-10T20:18:45.738549+00:00", "production_confidence": 0.575, "production_direction": "LONG", "shadow_score": 2}
+{"name": "SOLANA", "timestamp": "2026-09-10T20:18:51.717769+00:00", "production_confidence": 0.375, "production_direction": "SHORT", "shadow_score": -1}
