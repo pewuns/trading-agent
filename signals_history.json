@@ -251,7 +251,7 @@
     "timestamp": "2026-09-10T12:49:40.740429+00:00",
     "status": "open",
     "risk_distance": 0.721071788242881,
-    "mae_percent": -0.1408869737132547,
+    "mae_percent": -0.3723408543432153,
     "mfe_percent": 0.0
   },
   "ETHEREUM_SHORT": {
@@ -314,7 +314,7 @@
     "timestamp": "2026-09-10T13:44:06.088794+00:00",
     "status": "open",
     "risk_distance": 16.434605189732338,
-    "mae_percent": 0.0,
+    "mae_percent": -0.2891752862437082,
     "mfe_percent": 0.0
   },
   "BITCOIN_SHORT": {
@@ -377,7 +377,7 @@
     "timestamp": "2026-09-10T12:49:28.317748+00:00",
     "status": "open",
     "risk_distance": 313.1333705357101,
-    "mae_percent": -0.08958482954415088,
+    "mae_percent": -0.2610285077526817,
     "mfe_percent": 0.051553917092610854
   }
 }
