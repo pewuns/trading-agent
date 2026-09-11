@@ -48,6 +48,18 @@ MACRO_HOURS = {
     'post_us': (22, 0),
 }
 DAILY_SUMMARY_HOUR = (21, 30)  # podsumowanie Top 3 "najbliżej progu" - przesunięte
+
+# --- Główny cykl agenta: 6:00-22:00 (czas Europe/Warsaw), co 15 minut. ---
+TRADING_WINDOW_START = (6, 0)
+TRADING_WINDOW_END = (22, 0)
+CYCLE_MINUTES = 15
+
+# Harmonogram odświeżania interwałów w ramach cyklu (dotyczy na razie tylko
+# forexu przez Twelve Data - patrz agent.py: forex_intervals_for_now).
+# Cykl 0 (6:00): tylko 1d. Cykl 1 (6:15): tylko 1h. Cykl >=2: zawsze 5m,
+# +1h co 4 cykle (godzinowo), +15m co 2 cykle (co 30 min).
+FOREX_1H_EVERY_N_CYCLES = 4
+FOREX_15M_EVERY_N_CYCLES = 2
 # z 21:50 na 21:30, żeby po poszerzeniu okna do 20 min (21:30-21:49) nie
 # nachodzić na okno makro 'post_us' (22:00+) sprawdzane zaraz po tym w main().
 
