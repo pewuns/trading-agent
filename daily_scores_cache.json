@@ -52,7 +52,7 @@
       "threshold": 0.6
     },
     "OIL WTI": {
-      "confidence": 0.4,
+      "confidence": 0.425,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -67,8 +67,8 @@
       "threshold": 0.6
     },
     "NASDAQ": {
-      "confidence": 0.45,
-      "direction": "SHORT",
+      "confidence": 0.55,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "APPLE": {
@@ -77,12 +77,12 @@
       "threshold": 0.6
     },
     "MICROSOFT": {
-      "confidence": 0.25,
-      "direction": "LONG",
+      "confidence": 0.35,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "NVIDIA": {
-      "confidence": 0.3,
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     },
@@ -93,7 +93,7 @@
     },
     "AMAZON": {
       "confidence": 0.45,
-      "direction": "SHORT",
+      "direction": "LONG",
       "threshold": 0.6
     },
     "META": {
