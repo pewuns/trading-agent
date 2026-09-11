@@ -50,6 +50,11 @@
       "confidence": 0.375,
       "direction": "SHORT",
       "threshold": 0.6
+    },
+    "OIL WTI": {
+      "confidence": 0.35,
+      "direction": "SHORT",
+      "threshold": 0.6
     }
   }
 }
