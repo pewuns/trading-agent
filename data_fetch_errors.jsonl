@@ -1601,3 +1601,12 @@
 {"timestamp": "2026-09-11T04:17:12.568857+00:00", "source": "all_sources", "name": "OIL WTI", "symbol": "CL=F", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
 {"timestamp": "2026-09-11T04:17:15.243072+00:00", "source": "investing", "name": "BITCOIN", "symbol": 945629, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
 {"timestamp": "2026-09-11T04:17:18.105064+00:00", "source": "investing", "name": "ETHEREUM", "symbol": 997650, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-11T04:34:32.119700+00:00", "source": "investing", "name": "GOLD", "symbol": 8830, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-11T04:34:32.177957+00:00", "source": "yahoo", "name": "GC=F", "symbol": "GC=F", "reason": "za mało wyrównanych świec (3)"}
+{"timestamp": "2026-09-11T04:34:32.179182+00:00", "source": "all_sources", "name": "GOLD", "symbol": "GC=F", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-11T04:34:34.765484+00:00", "source": "investing", "name": "OIL WTI", "symbol": 8849, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-11T04:34:34.828229+00:00", "source": "yahoo", "name": "CL=F", "symbol": "CL=F", "reason": "za mało wyrównanych świec (3)"}
+{"timestamp": "2026-09-11T04:34:34.829480+00:00", "source": "all_sources", "name": "OIL WTI", "symbol": "CL=F", "reason": "Investing i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-09-11T04:34:37.403305+00:00", "source": "investing", "name": "BITCOIN", "symbol": 945629, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-11T04:34:40.076025+00:00", "source": "investing", "name": "BITCOIN", "symbol": 945629, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
+{"timestamp": "2026-09-11T04:34:42.703952+00:00", "source": "investing", "name": "BITCOIN", "symbol": 945629, "reason": "brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)"}
