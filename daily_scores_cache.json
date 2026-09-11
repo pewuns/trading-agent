@@ -7,7 +7,7 @@
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.55,
+      "confidence": 0.575,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -59,6 +59,51 @@
     "DAX": {
       "confidence": 0.3,
       "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "S&P500": {
+      "confidence": 0.5,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "NASDAQ": {
+      "confidence": 0.45,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "APPLE": {
+      "confidence": 0.55,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "MICROSOFT": {
+      "confidence": 0.25,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "NVIDIA": {
+      "confidence": 0.3,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "TESLA": {
+      "confidence": 0.5,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "AMAZON": {
+      "confidence": 0.45,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "META": {
+      "confidence": 0.35,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "GOOGLE": {
+      "confidence": 0.35,
+      "direction": "LONG",
       "threshold": 0.6
     }
   }
