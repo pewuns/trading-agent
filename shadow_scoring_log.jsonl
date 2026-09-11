@@ -1071,3 +1071,7 @@
 {"name": "BITCOIN", "timestamp": "2026-09-11T12:29:22.772730+00:00", "production_confidence": 0.475, "production_direction": "SHORT", "shadow_score": -2}
 {"name": "ETHEREUM", "timestamp": "2026-09-11T12:29:48.272565+00:00", "production_confidence": 0.45, "production_direction": "SHORT", "shadow_score": -1}
 {"name": "SOLANA", "timestamp": "2026-09-11T12:30:13.487245+00:00", "production_confidence": 0.4, "production_direction": "LONG", "shadow_score": 0}
+{"name": "DAX", "timestamp": "2026-09-11T12:43:01.695220+00:00", "production_confidence": 0.2, "production_direction": "LONG", "shadow_score": 0}
+{"name": "BITCOIN", "timestamp": "2026-09-11T12:43:29.621900+00:00", "production_confidence": 0.45, "production_direction": "LONG", "shadow_score": 1}
+{"name": "ETHEREUM", "timestamp": "2026-09-11T12:43:57.275487+00:00", "production_confidence": 0.525, "production_direction": "LONG", "shadow_score": 2}
+{"name": "SOLANA", "timestamp": "2026-09-11T12:44:22.837707+00:00", "production_confidence": 0.525, "production_direction": "LONG", "shadow_score": 2}

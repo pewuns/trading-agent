@@ -12220,5 +12220,89 @@
       "macro_sentiment": 0.0
     },
     "created_at": "2026-09-11T12:30:13.490320+00:00"
+  },
+  "DAX_2026-09-11T12:43:01.698171+00:00": {
+    "name": "DAX",
+    "direction": "LONG",
+    "confidence": 0.2,
+    "entry": 25525.630859375,
+    "atr": 22.450753348214285,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.26003122231129483,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": -0.24394785847299805,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T12:43:01.698183+00:00"
+  },
+  "BITCOIN_2026-09-11T12:43:29.624639+00:00": {
+    "name": "BITCOIN",
+    "direction": "LONG",
+    "confidence": 0.45,
+    "entry": 77581.8671875,
+    "atr": 264.5591517857143,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.28300896484823485,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.10654401192463951,
+      "poc": 1.0,
+      "mtf_trend": 0.08379888268156455,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T12:43:29.624650+00:00"
+  },
+  "ETHEREUM_2026-09-11T12:43:57.278161+00:00": {
+    "name": "ETHEREUM",
+    "direction": "LONG",
+    "confidence": 0.525,
+    "entry": 2489.10009765625,
+    "atr": 11.985700334821429,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.21405713868542078,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.057826757160057564,
+      "poc": 1.0,
+      "mtf_trend": 0.623836126629423,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T12:43:57.278170+00:00"
+  },
+  "SOLANA_2026-09-11T12:44:22.840362+00:00": {
+    "name": "SOLANA",
+    "direction": "LONG",
+    "confidence": 0.525,
+    "entry": 100.93000030517578,
+    "atr": 0.585000719342913,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.29596411788956545,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.021697837030634482,
+      "poc": 1.0,
+      "mtf_trend": 0.37057728119180644,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T12:44:22.840371+00:00"
   }
 }
