@@ -54,10 +54,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-11T13:51:19.881176+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 1.2042854854038723,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 2.4285991263921014,
+    "outcome": "win",
+    "closed_price": 105.44000244140625,
+    "closed_at": "2026-09-11T14:02:23.795592+00:00",
+    "r_multiple": 2.0759197302470134
   },
   "ETHEREUM_LONG": {
     "name": "ETHEREUM",
@@ -114,10 +118,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-11T13:50:54.604180+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 29.75895472935281,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 2.3036611341380646,
+    "outcome": "win",
+    "closed_price": 2637.89990234375,
+    "closed_at": "2026-09-11T14:02:23.795592+00:00",
+    "r_multiple": 1.9960345678795224
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
