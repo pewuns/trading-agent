@@ -1879,3 +1879,35 @@
 {"timestamp": "2026-09-11T06:56:43.695472+00:00", "source": "binance", "name": "SOLANA", "symbol": "SOLUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
 {"timestamp": "2026-09-11T06:56:46.544499+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak odpowiedzi HTTP"}
 {"timestamp": "2026-09-11T06:56:49.114974+00:00", "source": "binance", "name": "SOLANA", "symbol": "SOLUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-11T07:03:41.693683+00:00", "source": "yahoo", "name": "^GDAXI", "symbol": "^GDAXI", "reason": "za mało wyrównanych świec (0)"}
+{"timestamp": "2026-09-11T07:03:41.694838+00:00", "source": "yahoo", "name": "DAX", "symbol": "^GDAXI", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-11T07:03:41.695094+00:00", "source": "twelvedata", "name": "EUR/USD", "symbol": "EUR/USD", "reason": "brak TWELVEDATA_API_KEY"}
+{"timestamp": "2026-09-11T07:03:41.766966+00:00", "source": "twelvedata", "name": "USD/JPY", "symbol": "USD/JPY", "reason": "brak TWELVEDATA_API_KEY"}
+{"timestamp": "2026-09-11T07:03:41.873013+00:00", "source": "twelvedata", "name": "GBP/USD", "symbol": "GBP/USD", "reason": "brak TWELVEDATA_API_KEY"}
+{"timestamp": "2026-09-11T07:03:41.940865+00:00", "source": "twelvedata", "name": "USD/CHF", "symbol": "USD/CHF", "reason": "brak TWELVEDATA_API_KEY"}
+{"timestamp": "2026-09-11T07:03:42.009079+00:00", "source": "twelvedata", "name": "AUD/USD", "symbol": "AUD/USD", "reason": "brak TWELVEDATA_API_KEY"}
+{"timestamp": "2026-09-11T07:03:42.076676+00:00", "source": "twelvedata", "name": "USD/CAD", "symbol": "USD/CAD", "reason": "brak TWELVEDATA_API_KEY"}
+{"timestamp": "2026-09-11T07:03:44.926529+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak odpowiedzi HTTP"}
+{"timestamp": "2026-09-11T07:03:47.794121+00:00", "source": "binance", "name": "BITCOIN", "symbol": "BTCUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-11T07:03:50.519908+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak odpowiedzi HTTP"}
+{"timestamp": "2026-09-11T07:03:53.121782+00:00", "source": "binance", "name": "BITCOIN", "symbol": "BTCUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-11T07:03:55.907527+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak odpowiedzi HTTP"}
+{"timestamp": "2026-09-11T07:03:58.581014+00:00", "source": "binance", "name": "BITCOIN", "symbol": "BTCUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-11T07:04:01.263310+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak odpowiedzi HTTP"}
+{"timestamp": "2026-09-11T07:04:03.851860+00:00", "source": "binance", "name": "BITCOIN", "symbol": "BTCUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-11T07:04:12.598489+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak odpowiedzi HTTP"}
+{"timestamp": "2026-09-11T07:04:15.291925+00:00", "source": "binance", "name": "ETHEREUM", "symbol": "ETHUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-11T07:04:18.011361+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak odpowiedzi HTTP"}
+{"timestamp": "2026-09-11T07:04:20.605053+00:00", "source": "binance", "name": "ETHEREUM", "symbol": "ETHUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-11T07:04:23.284370+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak odpowiedzi HTTP"}
+{"timestamp": "2026-09-11T07:04:25.942449+00:00", "source": "binance", "name": "ETHEREUM", "symbol": "ETHUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-11T07:04:28.643307+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak odpowiedzi HTTP"}
+{"timestamp": "2026-09-11T07:04:31.261912+00:00", "source": "binance", "name": "ETHEREUM", "symbol": "ETHUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-11T07:04:38.411183+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak odpowiedzi HTTP"}
+{"timestamp": "2026-09-11T07:04:41.000545+00:00", "source": "binance", "name": "SOLANA", "symbol": "SOLUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-11T07:04:43.686698+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak odpowiedzi HTTP"}
+{"timestamp": "2026-09-11T07:04:46.374801+00:00", "source": "binance", "name": "SOLANA", "symbol": "SOLUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-11T07:04:49.098738+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak odpowiedzi HTTP"}
+{"timestamp": "2026-09-11T07:04:51.718368+00:00", "source": "binance", "name": "SOLANA", "symbol": "SOLUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-11T07:04:54.397714+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak odpowiedzi HTTP"}
+{"timestamp": "2026-09-11T07:04:56.992917+00:00", "source": "binance", "name": "SOLANA", "symbol": "SOLUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
