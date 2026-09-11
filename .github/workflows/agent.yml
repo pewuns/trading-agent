@@ -2,7 +2,15 @@ name: Trading Agent
 
 on:
   schedule:
-    - cron: '*/10 * * * 1-5'
+    # Co 15 min, godziny UTC 4-21. Celowo POSZERZONE względem docelowego
+    # okna 6:00-22:00 czasu Europe/Warsaw: Warszawa to UTC+1 (CET, zima) albo
+    # UTC+2 (CEST, lato), więc lokalne 6-22 to UTC 5-21 zimą albo UTC 4-20
+    # latem - unia obu przypadków to UTC 4-21, żeby nie trzeba było ręcznie
+    # poprawiać crona 2x/rok przy zmianie czasu. OSTATECZNĄ, precyzyjną
+    # decyzję "czy analizować rynki teraz" podejmuje i tak kod
+    # (is_within_trading_window w agent.py, przez pytz z pełną obsługą
+    # strefy) - ten cron to tylko szerokie, bezpieczne okno wyzwalaczy.
+    - cron: '*/15 4-21 * * 1-5'
   workflow_dispatch:
     inputs:
       agent_mode:
@@ -34,6 +42,9 @@ jobs:
         TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        # Twelve Data (GŁÓWNE źródło cen dla 6 par forex - patrz FOREX_SYMBOLS
+        # w agent.py). Bez tego sekretu forex automatycznie spada na Yahoo.
+        TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
         # Domyślnie 'shadow' przy uruchomieniu z harmonogramu (cron) - bezpieczny
         # tryb testowy, który wysyła powiadomienia, ale NIE zmienia wag ML/progu/
         # statystyk. Uruchomienie ręczne (workflow_dispatch) pozwala wybrać 'live'.
@@ -50,3 +61,4 @@ jobs:
         git add -A
         git commit -m 'Auto-update data' || echo "No changes"
         git push || echo "Push failed"
+
