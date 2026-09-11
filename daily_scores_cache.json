@@ -15,6 +15,31 @@
       "confidence": 0.625,
       "direction": "SHORT",
       "threshold": 0.6
+    },
+    "EUR/USD": {
+      "confidence": 0.225,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "GBP/USD": {
+      "confidence": 0.225,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "AUD/USD": {
+      "confidence": 0.375,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "USD/CAD": {
+      "confidence": 0.325,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "GOLD": {
+      "confidence": 0.4,
+      "direction": "SHORT",
+      "threshold": 0.6
     }
   }
 }

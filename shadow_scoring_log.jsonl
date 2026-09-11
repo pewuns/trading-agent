@@ -950,3 +950,11 @@
 {"name": "BITCOIN", "timestamp": "2026-09-11T09:02:28.454471+00:00", "production_confidence": 0.3, "production_direction": "LONG", "shadow_score": 1}
 {"name": "ETHEREUM", "timestamp": "2026-09-11T09:02:54.259800+00:00", "production_confidence": 0.5, "production_direction": "LONG", "shadow_score": 2}
 {"name": "SOLANA", "timestamp": "2026-09-11T09:03:19.762070+00:00", "production_confidence": 0.25, "production_direction": "SHORT", "shadow_score": 0}
+{"name": "EUR/USD", "timestamp": "2026-09-11T09:23:34.725271+00:00", "production_confidence": 0.225, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "GBP/USD", "timestamp": "2026-09-11T09:23:39.720761+00:00", "production_confidence": 0.225, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "AUD/USD", "timestamp": "2026-09-11T09:23:44.274990+00:00", "production_confidence": 0.375, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "USD/CAD", "timestamp": "2026-09-11T09:23:48.493738+00:00", "production_confidence": 0.325, "production_direction": "LONG", "shadow_score": 2}
+{"name": "GOLD", "timestamp": "2026-09-11T09:23:53.222462+00:00", "production_confidence": 0.4, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "BITCOIN", "timestamp": "2026-09-11T09:24:18.633491+00:00", "production_confidence": 0.275, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "ETHEREUM", "timestamp": "2026-09-11T09:24:43.806967+00:00", "production_confidence": 0.5, "production_direction": "LONG", "shadow_score": 2}
+{"name": "SOLANA", "timestamp": "2026-09-11T09:25:08.919863+00:00", "production_confidence": 0.325, "production_direction": "SHORT", "shadow_score": -2}
