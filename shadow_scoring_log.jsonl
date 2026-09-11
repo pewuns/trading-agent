@@ -1104,3 +1104,7 @@
 {"name": "AMAZON", "timestamp": "2026-09-11T13:25:43.886116+00:00", "production_confidence": 0.45, "production_direction": "SHORT", "shadow_score": -2}
 {"name": "META", "timestamp": "2026-09-11T13:25:48.906762+00:00", "production_confidence": 0.35, "production_direction": "SHORT", "shadow_score": -1}
 {"name": "GOOGLE", "timestamp": "2026-09-11T13:25:54.267511+00:00", "production_confidence": 0.35, "production_direction": "LONG", "shadow_score": 0}
+{"name": "DAX", "timestamp": "2026-09-11T13:36:33.657022+00:00", "production_confidence": 0.25, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "BITCOIN", "timestamp": "2026-09-11T13:37:05.201486+00:00", "production_confidence": 0.55, "production_direction": "LONG", "shadow_score": 1}
+{"name": "ETHEREUM", "timestamp": "2026-09-11T13:37:31.370918+00:00", "production_confidence": 0.6, "production_direction": "LONG", "shadow_score": 2}
+{"name": "SOLANA", "timestamp": "2026-09-11T13:37:57.286521+00:00", "production_confidence": 0.6, "production_direction": "LONG", "shadow_score": 2}
