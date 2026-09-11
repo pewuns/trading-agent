@@ -10351,5 +10351,173 @@
       "macro_sentiment": 0.0
     },
     "created_at": "2026-09-11T10:03:54.589321+00:00"
+  },
+  "EUR/USD_2026-09-11T10:23:56.798181+00:00": {
+    "name": "EUR/USD",
+    "direction": "SHORT",
+    "confidence": 0.45,
+    "entry": 1.15966,
+    "atr": 0.0004278571428571544,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.43421052631570006,
+      "vwap": 0.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": -1.0,
+      "mtf_trend": -0.5828677839851024,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T10:23:56.798196+00:00"
+  },
+  "GBP/USD_2026-09-11T10:24:01.968675+00:00": {
+    "name": "GBP/USD",
+    "direction": "SHORT",
+    "confidence": 0.325,
+    "entry": 1.3509,
+    "atr": 0.0006142857142857418,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.32142857142853304,
+      "vwap": 0.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": -0.45623836126629413,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T10:24:01.968688+00:00"
+  },
+  "AUD/USD_2026-09-11T10:24:08.707118+00:00": {
+    "name": "AUD/USD",
+    "direction": "SHORT",
+    "confidence": 0.2,
+    "entry": 0.71702,
+    "atr": 0.00034857142857145203,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": -0.042654028436036384,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": -1.0,
+      "mtf_trend": 0.06890130353817536,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T10:24:08.707132+00:00"
+  },
+  "USD/CAD_2026-09-11T10:24:14.104647+00:00": {
+    "name": "USD/CAD",
+    "direction": "LONG",
+    "confidence": 0.4,
+    "entry": 1.3848999738693237,
+    "atr": 0.0008092863219124931,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.5106927248541901,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": 0.3296089385474863,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T10:24:14.104659+00:00"
+  },
+  "GOLD_2026-09-11T10:24:19.765373+00:00": {
+    "name": "GOLD",
+    "direction": "SHORT",
+    "confidence": 0.3,
+    "entry": 4387.7998046875,
+    "atr": 6.807163783482143,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.22292716302792812,
+      "vwap": 1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.18723926380368097,
+      "poc": 1.0,
+      "mtf_trend": -0.4748603351955306,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T10:24:19.765387+00:00"
+  },
+  "BITCOIN_2026-09-11T10:24:47.442304+00:00": {
+    "name": "BITCOIN",
+    "direction": "LONG",
+    "confidence": 0.25,
+    "entry": 77072.3203125,
+    "atr": 130.43191964285714,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.20839353285173715,
+      "vwap": 1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.1342002586376387,
+      "poc": 1.0,
+      "mtf_trend": -0.4748603351955306,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T10:24:47.442319+00:00"
+  },
+  "ETHEREUM_2026-09-11T10:25:14.532358+00:00": {
+    "name": "ETHEREUM",
+    "direction": "SHORT",
+    "confidence": 0.4,
+    "entry": 2465.8701171875,
+    "atr": 5.447858537946429,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.0546154374871125,
+      "vwap": 1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.043109673256854074,
+      "poc": -1.0,
+      "mtf_trend": -0.22160148975791427,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T10:25:14.532371+00:00"
+  },
+  "SOLANA_2026-09-11T10:25:41.872337+00:00": {
+    "name": "SOLANA",
+    "direction": "SHORT",
+    "confidence": 0.425,
+    "entry": 99.45999908447266,
+    "atr": 0.2978570120675223,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.17209417859867643,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.5360202122712009,
+      "poc": -1.0,
+      "mtf_trend": -0.6722532588454375,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T10:25:41.872350+00:00"
   }
 }
