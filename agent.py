@@ -599,12 +599,35 @@ def check_extreme_volatility(atr_percent, market_type):
 
 
 def check_liquidity(volume, market_type):
+    """NAPRAWIONE na podstawie realnych logów (patrz rozmowa - 4 dni danych):
+
+    1) Forex (Yahoo I Twelve Data) strukturalnie NIE raportuje wolumenu dla par
+       walutowych - w logu EUR/USD miało `wolumen 0` w KAŻDYM wpisie, więc
+       próg 1 000 000 był matematycznie nieosiągalny niezależnie od realnej
+       płynności rynku. To samo dotyczyło DAX (^GDAXI) - Yahoo nie raportuje
+       wolumenu dla tego tickera indeksowego, mimo że S&P500/NASDAQ już tak.
+       Zamiast zgadywać z góry, które konkretne tickery mają ten problem,
+       POMIJAMY filtr płynności, gdy volume == 0 - to sygnał "źródło nie
+       raportuje tej metryki", a nie "rynek jest nielikwidny". Realną kontrolę
+       jakości egzekucji i tak zapewnia check_spread_real_or_proxy.
+
+    2) Progi dla 'commodity' i 'stock' były skalibrowane pod wolumen DZIENNY,
+       a nie pod średni wolumen POJEDYNCZEJ świecy 15-minutowej (to realnie
+       liczy avg_volume). W logu GOLD/OIL WTI (Yahoo GC=F/CL=F) osiągały
+       realnie 700-9000 na świecę, więc próg 50 000 odrzucał je niemal zawsze;
+       podobnie duże spółki (MICROSOFT, AMAZON, META, GOOGLE) osiągały
+       230 000-900 000 na świecę 15-min, więc próg 1 000 000 odrzucał je
+       poza szczytem otwarcia/zamknięcia sesji. Progi obniżone do wartości
+       realnie osiąganych w zwykłych, aktywnych okresach (z zapasem
+       odcinającym tylko wyraźnie ciche okresy - nocne godziny, itp.)."""
+    if volume == 0:
+        return True  # źródło nie raportuje wolumenu dla tego instrumentu - nie karz go za to
     min_volume = {
-        'forex': 1000000,
+        'forex': 1000000,   # de facto nieużywane teraz (forex ma volume=0), zostaje jako bezpieczny fallback
         'index': 100000,
-        'commodity': 50000,
+        'commodity': 1000,   # obniżone z 50 000 - patrz uzasadnienie w docstringu
         'crypto': 100,
-        'stock': 1000000,
+        'stock': 200000,     # obniżone z 1 000 000 - patrz uzasadnienie w docstringu
     }
     return volume >= min_volume.get(market_type, 100000)
 
