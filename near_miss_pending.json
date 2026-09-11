@@ -12913,5 +12913,47 @@
       "macro_sentiment": 0.0
     },
     "created_at": "2026-09-11T13:37:05.204608+00:00"
+  },
+  "DAX_2026-09-11T13:50:03.319602+00:00": {
+    "name": "DAX",
+    "direction": "LONG",
+    "confidence": 0.2,
+    "entry": 25543.7109375,
+    "atr": 33.439453125,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.038326715731065095,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": -0.24394785847299805,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T13:50:03.319612+00:00"
+  },
+  "BITCOIN_2026-09-11T13:50:29.097760+00:00": {
+    "name": "BITCOIN",
+    "direction": "LONG",
+    "confidence": 0.575,
+    "entry": 78450.890625,
+    "atr": 411.06808035714283,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.4464869319742712,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.10059838012303203,
+      "poc": 1.0,
+      "mtf_trend": 0.45996275605214154,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-11T13:50:29.097769+00:00"
   }
 }
