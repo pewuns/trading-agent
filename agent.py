@@ -16,6 +16,8 @@ from config import (
     CONFIDENCE_THRESHOLD, MTF_BULLISH_THRESHOLD, MTF_BEARISH_THRESHOLD,
     NEAR_MISS_SAMPLE_WEIGHT, NEAR_MISS_MIN_AGE_HOURS, NEAR_MISS_MAX_AGE_HOURS,
     MACRO_HOURS, DAILY_SUMMARY_HOUR,
+    TRADING_WINDOW_START, TRADING_WINDOW_END, CYCLE_MINUTES,
+    FOREX_1H_EVERY_N_CYCLES, FOREX_15M_EVERY_N_CYCLES,
 )
 from modes import (
     log_signal_per_mode, log_trade_outcome, get_notification_message,
@@ -39,6 +41,7 @@ logger = logging.getLogger('trading_bot')
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
 GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '')
+TWELVEDATA_API_KEY = os.environ.get('TWELVEDATA_API_KEY', '')
 
 # Pliki
 SIGNALS_FILE = 'signals_history.json'
@@ -52,13 +55,12 @@ CIRCUIT_BREAKER_FILE = 'circuit_breaker_state.json'
 SHADOW_LOG_FILE = 'shadow_scoring_log.jsonl'
 
 # --- Nowe pliki: błędy pobierania danych, near-miss, dane makro ---
-DATA_FETCH_ERRORS_FILE = 'data_fetch_errors.jsonl'     # log błędów każdego źródła danych (Investing/TE/Yahoo)
+DATA_FETCH_ERRORS_FILE = 'data_fetch_errors.jsonl'     # log błędów każdego źródła danych
 NEAR_MISS_LOG_FILE = 'near_miss_log.jsonl'             # log KAŻDEJ próby scoringu (append-only, do audytu)
 NEAR_MISS_PENDING_FILE = 'near_miss_pending.json'      # sygnały "co by było gdyby" czekające na ewaluację
 MACRO_DATA_FILE = 'macro_data_history.jsonl'           # WSZYSTKIE dane makro (append-only, do nauki)
 MACRO_STATE_FILE = 'macro_state.json'                  # ostatnie pobrania/analizy makro + cache sentymentu
 DAILY_SCORES_CACHE_FILE = 'daily_scores_cache.json'     # max confidence per rynek DZIŚ, do podsumowania Top 3
-RESOLVED_PAIR_IDS_FILE = 'investing_pair_ids_resolved.json'  # auto-wykryte pair_id (patrz resolve_missing_pair_ids)
 
 TIMEZONE = pytz.timezone('Europe/Warsaw')
 
@@ -122,6 +124,11 @@ XTB_SYMBOLS = {
     'S&P500': 'US500',
     'NASDAQ': 'US100',
     'EUR/USD': 'EURUSD',
+    'USD/JPY': 'USDJPY',
+    'GBP/USD': 'GBPUSD',
+    'USD/CHF': 'USDCHF',
+    'AUD/USD': 'AUDUSD',
+    'USD/CAD': 'USDCAD',
     'GOLD': 'GOLD',
     'OIL WTI': 'OIL.WTI',
     'BITCOIN': 'BITCOIN',
@@ -137,57 +144,21 @@ XTB_SYMBOLS = {
 }
 
 # ============================================
-# Investing.com - GŁÓWNE źródło danych cenowych (świece OHLCV), zgodnie
-# z ustaleniem. Yahoo Finance jest fallbackiem (patrz get_price_data),
-# używanym automatycznie, gdy Investing.com nie odpowie/zawiedzie.
-# ============================================
-# `pair_id` = None => rynek na razie pomija Investing.com i idzie prosto na
-# Yahoo, dopóki nie uzupełnisz ID (patrz instrukcja w fetch_investing_data).
+# Ceny (OHLCV) - routing wg kategorii rynku (patrz get_price_data):
+#   - krypto: CryptoCompare (główne) -> Binance (fallback) -> Yahoo (ostatnia deska ratunku)
+#   - forex/reszta: Yahoo (na razie - Twelve Data dla forexu w kolejnym kroku)
 #
-# UWAGA - WARTOŚCI PONIŻEJ NIE ZOSTAŁY ZWERYFIKOWANE NA ŻYWO (brak sieci w tym
-# środowisku). Pochodzą od użytkownika, z opisem "zestawienie najpopularniejszych
-# realnych pair_id z investing.com" - część (kryptowaluty) pokrywa się z tym,
-# co wcześniej pojawiło się w tej rozmowie jako wiarygodne, ale traktuj je jako
-# "prawdopodobnie poprawne", nie "potwierdzone". ZANIM zaufasz danym w pełni,
-# sprawdź pierwsze pobrane świece w logach względem wykresu na investing.com dla
-# tego samego okresu - patrz też ostrzeżenie w fetch_investing_data o tym, że
-# nawet z poprawnym pair_id request może być blokowany na poziomie IP (GitHub
-# Actions). Wszystkie 16 rynków ma teraz przypisane ID - żaden nie pomija już
-# Investing.com domyślnie.
-INVESTING_PAIR_IDS = {
-    'DAX': 172,
-    'S&P500': 166,
-    'NASDAQ': 14958,
-    'EUR/USD': 1,
-    'GOLD': 8830,
-    'OIL WTI': 8849,
-    'BITCOIN': 945629,
-    'ETHEREUM': 997650,
-    'SOLANA': 1178453,
-    'APPLE': 6408,
-    'MICROSOFT': 19051,
-    'NVIDIA': 2437,
-    'TESLA': 13994,
-    'AMAZON': 6627,
-    'META': 26490,
-    'GOOGLE': 20301,
-}
-
-# Nazwy do wpisania w wyszukiwarkę Investing.com - inne niż klucze MARKETS
-# (np. 'S&P500' -> 'S&P 500'), bo wyszukiwarka lepiej trafia na pełne,
-# "ludzkie" nazwy niż na skróty/tickery używane wewnątrz agenta.
-INVESTING_SEARCH_QUERIES = {
-    'DAX': 'DAX 40', 'S&P500': 'S&P 500', 'NASDAQ': 'Nasdaq 100', 'EUR/USD': 'EUR USD',
-    'GOLD': 'Gold', 'OIL WTI': 'Crude Oil WTI', 'BITCOIN': 'Bitcoin', 'ETHEREUM': 'Ethereum',
-    'SOLANA': 'Solana', 'APPLE': 'Apple', 'MICROSOFT': 'Microsoft', 'NVIDIA': 'Nvidia',
-    'TESLA': 'Tesla', 'AMAZON': 'Amazon', 'META': 'Meta Platforms', 'GOOGLE': 'Alphabet',
-}
-
-# Mapowanie interwałów agenta na kody Investing.com (resolution w minutach,
-# zgodnie z ich wewnętrznym, niezudokumentowanym API - patrz zastrzeżenia
-# w fetch_investing_data).
-INVESTING_INTERVAL_MAP = {
-    '5m': 5, '15m': 15, '60m': 60, '1d': 1440,
+# Investing.com zostało CAŁKOWICIE USUNIĘTE z kodu: nie odpowiedziało ani
+# razu z IP GitHub Actions (błąd "brak odpowiedzi HTTP" dla WSZYSTKICH
+# rynków, niezależnie od poprawności pair_id) - Cloudflare najpewniej
+# blokuje całą pulę adresów data-center, na których stoją runnery GH
+# Actions. To ograniczenie sieciowe, nie błąd konfiguracji, więc dalsze
+# próby naprawy nagłówków/endpointu nie miały sensu.
+# ============================================
+CRYPTO_SYMBOLS = {  # nazwa w MARKETS -> ticker bazowy (bez waluty kwotowania)
+    'BITCOIN': 'BTC',
+    'ETHEREUM': 'ETH',
+    'SOLANA': 'SOL',
 }
 
 # Maksymalny akceptowalny spread jako % ceny środkowej, liczony z REALNYCH
@@ -430,6 +401,11 @@ MARKETS = {
     'S&P500': {'symbol': '^GSPC', 'type': 'index', 'session': 'US'},
     'NASDAQ': {'symbol': '^IXIC', 'type': 'index', 'session': 'US'},
     'EUR/USD': {'symbol': 'EURUSD=X', 'type': 'forex', 'session': 'EU_US'},
+    'USD/JPY': {'symbol': 'USDJPY=X', 'type': 'forex', 'session': 'EU_US'},
+    'GBP/USD': {'symbol': 'GBPUSD=X', 'type': 'forex', 'session': 'EU_US'},
+    'USD/CHF': {'symbol': 'USDCHF=X', 'type': 'forex', 'session': 'EU_US'},
+    'AUD/USD': {'symbol': 'AUDUSD=X', 'type': 'forex', 'session': 'EU_US'},
+    'USD/CAD': {'symbol': 'USDCAD=X', 'type': 'forex', 'session': 'EU_US'},
     'GOLD': {'symbol': 'GC=F', 'type': 'commodity', 'session': '24_7'},
     'OIL WTI': {'symbol': 'CL=F', 'type': 'commodity', 'session': '24_7'},
     'BITCOIN': {'symbol': 'BTC-USD', 'type': 'crypto', 'session': '24_7'},
@@ -450,6 +426,11 @@ CORRELATION_CLUSTERS = {
     'S&P500': 'indices_us',
     'NASDAQ': 'indices_us',
     'EUR/USD': 'forex',
+    'USD/JPY': 'forex',
+    'GBP/USD': 'forex',
+    'USD/CHF': 'forex',
+    'AUD/USD': 'forex',
+    'USD/CAD': 'forex',
     'GOLD': 'metals',
     'OIL WTI': 'energy',
     'BITCOIN': 'crypto',
@@ -469,7 +450,14 @@ CORRELATION_CLUSTERS = {
 TIMEFRAMES = {
     '5m': {'interval': '5m', 'range': '1d', 'default_weight': 0.15},
     '15m': {'interval': '15m', 'range': '1d', 'default_weight': 0.20},
-    '1h': {'interval': '60m', 'range': '5d', 'default_weight': 0.25},
+    # NAPRAWIONE: '1h' i '4h' mają teraz TEN SAM zakres ('1mo') - dzięki temu
+    # analyze_timeframes pobiera świece 60-minutowe RAZ i współdzieli je
+    # między obiema pozycjami (4h nadal resampluje z tych samych danych), a
+    # nie osobno dla '1h' (wcześniej 5d) i osobno dla '4h' (wcześniej 1mo).
+    # Celowo wzięty szerszy zakres (1mo, nie 5d) dla obu - węższy zakres nie
+    # dałby '4h' wystarczająco świec do policzenia SMA50 (50 świec 4h to
+    # >8 dni, a 5d danych 60m dawało tylko ~30 świec 4h).
+    '1h': {'interval': '60m', 'range': '1mo', 'default_weight': 0.25},
     '4h': {'interval': '60m', 'range': '1mo', 'default_weight': 0.15, 'resample_from_60m': 4},
     '1d': {'interval': '1d', 'range': '3mo', 'default_weight': 0.25},
 }
@@ -1682,6 +1670,20 @@ def is_weekend():
     return datetime.now(TIMEZONE).weekday() >= 5
 
 
+def is_within_trading_window():
+    """Twarda bramka 6:00-22:00 (Europe/Warsaw, przez pytz - poprawnie
+    obsługuje zmianę czasu lato/zima). Cron w agent.yml jest celowo
+    poszerzony w UTC (żeby pokryć oba warianty czasu letniego/zimowego bez
+    ręcznej korekty 2x/rok) - to jest właściwa, precyzyjna decyzja "czy w
+    ogóle analizować rynki w tym cyklu", niezależna od tego, kiedy dokładnie
+    odpalił się runner."""
+    now = datetime.now(TIMEZONE)
+    total_min = now.hour * 60 + now.minute
+    start_min = TRADING_WINDOW_START[0] * 60 + TRADING_WINDOW_START[1]
+    end_min = TRADING_WINDOW_END[0] * 60 + TRADING_WINDOW_END[1]
+    return start_min <= total_min < end_min
+
+
 def is_friday_evening():
     now = datetime.now(TIMEZONE)
     return now.weekday() == 4 and now.hour == 19 and now.minute < 10
@@ -1751,7 +1753,7 @@ def is_session_active(session):
     if session == 'EU':
         return 9 <= hour < 17
     if session == 'EU_US':
-        return 9 <= hour < 22
+        return 6 <= hour < 22  # poszerzone z 9-22 na 6-22, zgodnie z nowym oknem cyklu (patrz FOREX_SCHEDULE)
     return True
 
 
@@ -1768,238 +1770,304 @@ def send_telegram(message, add_disclaimer=True):
         return False
 
 
-# --- Auto-uzupełnianie brakujących pair_id (patrz investing_pair_id.py) ---
-# Cache wczytywany raz przy starcie procesu (GitHub Actions odpala nowy proces
-# co cykl, więc to i tak świeży odczyt z pliku za każdym razem).
-def _load_resolved_pair_ids():
-    try:
-        if os.path.exists(RESOLVED_PAIR_IDS_FILE):
-            with open(RESOLVED_PAIR_IDS_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
-    except Exception as e:
-        logger.warning(f"Nie udało się wczytać {RESOLVED_PAIR_IDS_FILE}: {e}")
-    return {}
+# ============================================
+# CryptoCompare (GŁÓWNE) + Binance (fallback) - dane cenowe dla krypto
+# ============================================
+CRYPTOCOMPARE_BASE_URL = "https://min-api.cryptocompare.com/data/v2"
 
 
-_resolved_pair_ids_cache = _load_resolved_pair_ids()
+def _cryptocompare_params(interval):
+    """Zwraca (endpoint, aggregate, limit) dla CryptoCompare na podstawie
+    interwału używanego w reszcie kodu. limit ma spory zapas ponad to, co
+    realnie potrzebują wskaźniki (SMA50 = najdłuższe wymaganie w kodzie),
+    żeby nie ucinać danych za krótko."""
+    if interval == '5m':
+        return 'histominute', 5, 200    # ~16h świec 5-minutowych
+    if interval == '15m':
+        return 'histominute', 15, 200   # ~50h świec 15-minutowych
+    if interval == '60m':
+        return 'histohour', 1, 500      # ~20 dni świec godzinowych (starcza na SMA50 w 1h/4h)
+    if interval == '1d':
+        return 'histoday', 1, 120       # ~4 miesiące świec dziennych
+    return None, None, None
 
 
-def resolve_missing_pair_ids():
-    """Raz dziennie (patrz main() - to samo okno co makro/rotacja logów) próbuje
-    automatycznie znaleźć pair_id dla rynków, które go nie mają - ani w
-    INVESTING_PAIR_IDS, ani we wcześniej zcachowanym RESOLVED_PAIR_IDS_FILE -
-    scrapując wyszukiwarkę Investing.com (patrz investing_pair_id.py).
-
-    Świadomie NIE uruchamiane w każdym 10-minutowym cyklu: to 2 requesty HTTP
-    na instrument (wyszukiwanie + strona instrumentu) z ~1.5s opóźnienia
-    między nimi - przy kilku brakujących rynkach to kilkanaście sekund, więc
-    lepiej raz dziennie niż przy każdym uruchomieniu. Wymaga `beautifulsoup4`
-    (patrz requirements.txt) - jeśli nie jest zainstalowane, funkcja loguje to
-    do DATA_FETCH_ERRORS_FILE i po cichu nic nie robi (nie wywala całego
-    cyklu agenta z powodu opcjonalnej funkcji)."""
-    missing = [name for name in MARKETS
-               if not INVESTING_PAIR_IDS.get(name) and not _resolved_pair_ids_cache.get(name)]
-    if not missing:
-        return
-
-    try:
-        from investing_pair_id import InvestingIDFetcher
-    except ImportError as e:
-        log_data_error('investing_autodiscovery', 'ALL', None, f'brak modułu investing_pair_id/beautifulsoup4: {e}')
-        return
-
-    logger.info(f"Auto-wyszukiwanie pair_id dla {len(missing)} rynków bez ID: {missing}")
-    fetcher = InvestingIDFetcher()
-    changed = False
-    for name in missing:
-        query = INVESTING_SEARCH_QUERIES.get(name, name)
-        try:
-            pair_id, url = fetcher.get_pair_id(query)
-            _resolved_pair_ids_cache[name] = pair_id
-            changed = True
-            logger.info(f"Auto-wykryto pair_id dla {name}: {pair_id} ({url}) - ZWERYFIKUJ RĘCZNIE przed pełnym zaufaniem")
-        except Exception as e:
-            log_data_error('investing_autodiscovery', name, query, str(e))
-
-    if changed:
-        try:
-            with open(RESOLVED_PAIR_IDS_FILE, 'w', encoding='utf-8') as f:
-                json.dump(_resolved_pair_ids_cache, f, indent=2, ensure_ascii=False)
-        except Exception as e:
-            logger.error(f"Nie udało się zapisać {RESOLVED_PAIR_IDS_FILE}: {e}")
-
-
-def fetch_investing_data(name, interval='15m', range_period='1d'):
-    """Próba pobrania świec z Investing.com - GŁÓWNE źródło cen, zgodnie
-    z ustaleniem. UWAGA - WAŻNE OGRANICZENIE, powtórzone świadomie: Investing.com
-    NIE MA oficjalnego, publicznego API do świec OHLCV. Poniższy klient korzysta
-    z niezudokumentowanego endpointu używanego przez stronę WWW i może w każdej
-    chwili przestać działać bez ostrzeżenia (zmiana struktury odpowiedzi,
-    Cloudflare/anti-bot, wymóg nagłówków sesji z przeglądarki itp.) - nie było
-    możliwości przetestowania go na żywym połączeniu w tym środowisku (brak
-    dostępu do sieci w sandboxie). To jest świadomie zaakceptowane ryzyko: jeśli
-    pobranie się nie powiedzie, kod loguje błąd do DATA_FETCH_ERRORS_FILE i
-    automatycznie spada na Yahoo Finance - patrz get_price_data(). Warto co
-    jakiś czas zerknąć do DATA_FETCH_ERRORS_FILE i sprawdzić, jak często Investing
-    faktycznie odpowiada, a jak często agent i tak jedzie na samym Yahoo.
-
-    Endpoint (`/api/financialdata/{pairId}/historical/chart`) i parametry
-    (period/interval/pointscount) potwierdzone przez użytkownika na bazie
-    kodu źródłowego biblioteki investing-com-api. DOKŁADNY FORMAT wartości
-    'interval' (czy to np. 'PT5M' w stylu ISO-8601, czy zwykła liczba minut)
-    i dokładny KSZTAŁT odpowiedzi JSON (nazwy pól świec) NIE są potwierdzone -
-    nadal nie było możliwości przetestowania na żywym połączeniu. Parsowanie
-    poniżej próbuje kilku najbardziej prawdopodobnych wariantów; jeśli żaden
-    nie pasuje, błąd trafia do DATA_FETCH_ERRORS_FILE z fragmentem realnej
-    odpowiedzi, żeby dało się to poprawić na podstawie faktycznych danych,
-    zamiast dalej zgadywać.
-
-    ALTERNATYWA WARTA ROZWAŻENIA: biblioteka `investpy` (PyPI) opakowuje te
-    same niezudokumentowane endpointy z gotową obsługą błędów/nagłówków -
-    mniej kodu do utrzymania tutaj, ale ma własną, udokumentowaną w jej
-    issues historię przestojów po zmianach zabezpieczeń Investing.com, więc
-    to nie jest gwarancja stabilności, tylko inny kompromis.
-
-    `pair_id` dla każdego rynku trzeba ustalić ręcznie (patrz
-    discover_investing_pair_ids.py) albo w devtools przeglądarki - LUB dać się
-    znaleźć automatycznie przez resolve_missing_pair_ids() (patrz
-    investing_pair_id.py), które co jakiś czas próbuje uzupełnić braki i
-    cachuje wynik w RESOLVED_PAIR_IDS_FILE. Wartości None (i nieobecność w
-    cache) = rynek pominie Investing.com i pójdzie od razu na Yahoo."""
-    pair_id = INVESTING_PAIR_IDS.get(name) or _resolved_pair_ids_cache.get(name)
-    if not pair_id:
-        log_data_error('investing', name, None, 'brak zmapowanego pair_id (patrz INVESTING_PAIR_IDS)')
+def fetch_cryptocompare_data(name, interval='15m', range_period='1d'):
+    """GŁÓWNE źródło cen dla krypto (BITCOIN/ETHEREUM/SOLANA) - oficjalne,
+    udokumentowane, darmowe API (nie wymaga klucza do danych historycznych).
+    W przeciwieństwie do Binance (patrz fetch_binance_data) nie ma znanych
+    blokad geograficznych, więc jest tu źródłem GŁÓWNYM, nie fallbackiem."""
+    fsym = CRYPTO_SYMBOLS.get(name)
+    if not fsym:
         return None
-    resolution = INVESTING_INTERVAL_MAP.get(interval)
-    if resolution is None:
-        log_data_error('investing', name, pair_id, f'nieznany interwał {interval}')
+    endpoint, aggregate, limit = _cryptocompare_params(interval)
+    if endpoint is None:
+        log_data_error('cryptocompare', name, fsym, f'nieznany interwał {interval}')
         return None
 
-    points_count = {'1d': 100, '5d': 300, '1mo': 200, '3mo': 200}.get(range_period, 150)
-
-    url = f"https://api.investing.com/api/financialdata/{pair_id}/historical/chart"
-    params = {
-        'period': range_period,
-        'interval': resolution,       # niepotwierdzony dokładny format - patrz docstring
-        'pointscount': points_count,
-    }
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Domain-Id': 'www',
-    }
-    resp = http_get_with_retry(url, params=params, headers=headers, timeout=10, retries=2)
+    url = f"{CRYPTOCOMPARE_BASE_URL}/{endpoint}"
+    params = {'fsym': fsym, 'tsym': 'USD', 'aggregate': aggregate, 'limit': limit}
+    resp = http_get_with_retry(url, params=params, timeout=10, retries=2)
     if resp is None:
-        log_data_error('investing', name, pair_id, 'brak odpowiedzi HTTP (sieć/anti-bot/Cloudflare?)')
+        log_data_error('cryptocompare', name, fsym, 'brak odpowiedzi HTTP')
         return None
     try:
         payload = resp.json()
-    except (ValueError, json.JSONDecodeError) as e:
-        log_data_error('investing', name, pair_id, f'odpowiedź nie jest poprawnym JSON: {e} '
-                                                     f'(pierwsze 200 znaków: {resp.text[:200]!r})')
-        return None
-
-    rows = _extract_investing_candles(payload)
-    if rows is None:
-        log_data_error('investing', name, pair_id,
-                        f'nierozpoznany kształt odpowiedzi JSON (klucze: {list(payload)[:10] if isinstance(payload, dict) else type(payload)})')
-        return None
-
-    opens, highs, lows, closes, volumes = [], [], [], [], []
-    for row in rows:
-        o, h, l, c, v = row
-        if None in (o, h, l, c):
-            continue
-        opens.append(o); highs.append(h); lows.append(l); closes.append(c); volumes.append(v or 0)
-
-    if len(closes) < 10:
-        log_data_error('investing', name, pair_id, f'za mało świec w odpowiedzi ({len(closes)})')
-        return None
-    return {'prices': closes, 'highs': highs, 'lows': lows, 'volumes': volumes, 'opens': opens}
-
-
-def _extract_investing_candles(payload):
-    """Próbuje wydobyć świece z kilku najbardziej prawdopodobnych kształtów
-    odpowiedzi tego niezudokumentowanego endpointu (dokładny format nie jest
-    potwierdzony - patrz fetch_investing_data). Zwraca listę krotek
-    (open, high, low, close, volume) albo None, jeśli żaden znany kształt
-    nie pasuje - NIE zgaduje na siłę, żeby nie zwrócić po cichu śmieciowych
-    danych."""
-    if isinstance(payload, dict):
-        candidates = payload.get('data') or payload.get('candles') or payload.get('chart')
-    elif isinstance(payload, list):
-        candidates = payload
-    else:
-        candidates = None
-    if not candidates:
-        return None
-
-    rows = []
-    for item in candidates:
-        if isinstance(item, dict):
-            o = item.get('open_value', item.get('open'))
-            h = item.get('high_value', item.get('high'))
-            l = item.get('low_value', item.get('low'))
-            c = item.get('close_value', item.get('close'))
-            v = item.get('volume', 0)
-            rows.append((o, h, l, c, v))
-        elif isinstance(item, (list, tuple)) and len(item) >= 5:
-            # popularny format świec z wykresów: [timestamp, open, high, low, close, volume]
-            rows.append((item[1], item[2], item[3], item[4], item[5] if len(item) > 5 else 0))
-        else:
+        if payload.get('Response') != 'Success':
+            log_data_error('cryptocompare', name, fsym,
+                            f"API zwróciło błąd: {payload.get('Message', payload)}")
             return None
-    return rows if rows else None
+        rows = payload.get('Data', {}).get('Data', [])
+        opens, highs, lows, closes, volumes = [], [], [], [], []
+        for r in rows:
+            o, h, l, c = r.get('open'), r.get('high'), r.get('low'), r.get('close')
+            if None in (o, h, l, c) or (o == 0 and h == 0 and l == 0 and c == 0):
+                continue  # CryptoCompare czasem zwraca zerowe wypełniacze na początku okna
+            opens.append(o); highs.append(h); lows.append(l); closes.append(c)
+            volumes.append(r.get('volumeto', 0) or 0)
+        if len(closes) < 10:
+            log_data_error('cryptocompare', name, fsym, f'za mało świec w odpowiedzi ({len(closes)})')
+            return None
+        return {'prices': closes, 'highs': highs, 'lows': lows, 'volumes': volumes, 'opens': opens}
+    except (ValueError, KeyError, TypeError, json.JSONDecodeError) as e:
+        log_data_error('cryptocompare', name, fsym, f'błąd parsowania: {e}')
+        return None
 
 
-# --- Circuit breaker PER ŹRÓDŁO DANYCH (punkt 2) - w jednym cyklu agenta
-# (16 rynków x do 5 interwałów = do ~80 zapytań) po kilku kolejnych błędach
-# Investing.com nie ma sensu dalej w niego dobijać - w praktyce to prawie
-# zawsze oznacza, że w TYM cyklu ono po prostu nie działa (blokada
-# Cloudflare/anti-bot na cały zakres IP, nie problem z jednym zapytaniem).
-# Dalsze próby tylko zaśmiecają DATA_FETCH_ERRORS_FILE i ryzykują twardszą
-# blokadę. Stan jest module-level, więc naturalnie resetuje się przy każdym
-# nowym uruchomieniu `python agent.py` (GitHub Actions odpala nowy proces co
-# cykl) - reset_investing_circuit() istnieje głównie dla jasności/testów. ---
-INVESTING_CIRCUIT_THRESHOLD = int(os.environ.get('INVESTING_CIRCUIT_THRESHOLD', 5))
-_investing_cycle_failures = 0
-_investing_cycle_disabled = False
+BINANCE_SYMBOLS = {
+    'BITCOIN': 'BTCUSDT',
+    'ETHEREUM': 'ETHUSDT',
+    'SOLANA': 'SOLUSDT',
+}
+BINANCE_INTERVAL_MAP = {'5m': '5m', '15m': '15m', '60m': '1h', '1d': '1d'}
+BINANCE_BASE_URL = "https://api.binance.com/api/v3/klines"
 
 
-def reset_investing_circuit():
-    global _investing_cycle_failures, _investing_cycle_disabled
-    _investing_cycle_failures = 0
-    _investing_cycle_disabled = False
+def fetch_binance_data(name, interval='15m', range_period='1d'):
+    """Fallback #1 dla krypto (po CryptoCompare) - oficjalne, udokumentowane
+    API Binance. UWAGA: Binance.com geo-blokuje ruch z USA (regulacje CFTC) -
+    runnery GitHub Actions bywają hostowane w regionach US bez gwarancji,
+    który akurat trafi, więc to NIE jest pewniak w 100% przypadków. Dlatego
+    fallback #1, nie źródło główne (tę rolę pełni CryptoCompare, bez znanych
+    blokad geograficznych)."""
+    symbol = BINANCE_SYMBOLS.get(name)
+    b_interval = BINANCE_INTERVAL_MAP.get(interval)
+    if not symbol or not b_interval:
+        return None
+    limit = {'5m': 200, '15m': 200, '60m': 500, '1d': 120}.get(interval, 200)
+    params = {'symbol': symbol, 'interval': b_interval, 'limit': limit}
+    resp = http_get_with_retry(BINANCE_BASE_URL, params=params, timeout=10, retries=2)
+    if resp is None:
+        log_data_error('binance', name, symbol, 'brak odpowiedzi HTTP (możliwa blokada geograficzna)')
+        return None
+    try:
+        rows = resp.json()
+        if not isinstance(rows, list):
+            log_data_error('binance', name, symbol, f'nieoczekiwana odpowiedź: {rows}')
+            return None
+        opens, highs, lows, closes, volumes = [], [], [], [], []
+        for r in rows:
+            # format klines: [openTime, open, high, low, close, volume, closeTime, ...]
+            opens.append(float(r[1])); highs.append(float(r[2])); lows.append(float(r[3]))
+            closes.append(float(r[4])); volumes.append(float(r[5]))
+        if len(closes) < 10:
+            log_data_error('binance', name, symbol, f'za mało świec w odpowiedzi ({len(closes)})')
+            return None
+        return {'prices': closes, 'highs': highs, 'lows': lows, 'volumes': volumes, 'opens': opens}
+    except (ValueError, KeyError, IndexError, TypeError, json.JSONDecodeError) as e:
+        log_data_error('binance', name, symbol, f'błąd parsowania: {e}')
+        return None
+
+
+# ============================================
+# Twelve Data - GŁÓWNE źródło cen dla forexu (6 par), Yahoo jako fallback.
+# ============================================
+# Darmowy plan Twelve Data: 8 kredytów/min, 800/dzień. Przy 6 parach x do 4
+# interwałów x pełnej rozdzielczości co 15 min przez 16h budżet zostałby
+# przekroczony ~10x (patrz wyliczenia w rozmowie) - stąd HARMONOGRAM
+# odświeżania (forex_intervals_for_now) zamiast pobierania wszystkiego za
+# każdym razem, plus CACHE (TWELVEDATA_CACHE_FILE) do zwracania ostatnio
+# pobranych danych dla interwałów, które w tym cyklu nie są "w kolejce".
+FOREX_SYMBOLS = {  # nazwa w MARKETS -> symbol Twelve Data (ten sam format co nazwa)
+    'EUR/USD': 'EUR/USD', 'USD/JPY': 'USD/JPY', 'GBP/USD': 'GBP/USD',
+    'USD/CHF': 'USD/CHF', 'AUD/USD': 'AUD/USD', 'USD/CAD': 'USD/CAD',
+}
+TWELVEDATA_INTERVAL_MAP = {'5m': '5min', '15m': '15min', '60m': '1h', '1d': '1day'}
+TWELVEDATA_OUTPUTSIZE = {'5m': 100, '15m': 100, '60m': 200, '1d': 120}
+TWELVEDATA_BASE_URL = "https://api.twelvedata.com/time_series"
+TWELVEDATA_CACHE_FILE = 'twelvedata_cache.json'
+TWELVEDATA_CACHE_MAX_AGE_HOURS = 30  # dane starsze niż to są traktowane jak brak cache (zbyt nieaktualne)
+
+
+def _cycle_index_for_now(now=None):
+    """Który to (zaokrąglony w dół do 15 min) cykl od TRADING_WINDOW_START.
+    Zaokrąglenie w dół sprawia, że spóźniony cykl GitHub Actions (cron nie
+    gwarantuje dokładnego wykonania co 15 min) trafia w ten sam "logiczny"
+    slot, co planowany - zamiast się rozjeżdżać. Zwraca None poza oknem
+    TRADING_WINDOW_START..TRADING_WINDOW_END."""
+    now = now or datetime.now(TIMEZONE)
+    total_min = now.hour * 60 + now.minute
+    start_min = TRADING_WINDOW_START[0] * 60 + TRADING_WINDOW_START[1]
+    end_min = TRADING_WINDOW_END[0] * 60 + TRADING_WINDOW_END[1]
+    if total_min < start_min or total_min >= end_min:
+        return None
+    return (total_min - start_min) // CYCLE_MINUTES
+
+
+def forex_intervals_for_now(now=None):
+    """Zwraca listę interwałów ('5m'/'15m'/'60m'/'1d'), które NALEŻY pobrać
+    z Twelve Data w tym cyklu, zgodnie z ustalonym harmonogramem (opcja B):
+    - cykl 0 (6:00): tylko 1d
+    - cykl 1 (6:15): tylko 1h (60m)
+    - cykl >=2: zawsze 5m; +60m co FOREX_1H_EVERY_N_CYCLES cykli (godzinowo,
+      wyrównane do cyklu 1); +15m co FOREX_15M_EVERY_N_CYCLES cykli (co 30 min).
+    Poza oknem 6-22 zwraca [] - forex wtedy nie jest odświeżany wcale
+    (poza sesją EU_US i tak nikt by tego nie użył do sygnału)."""
+    idx = _cycle_index_for_now(now)
+    if idx is None:
+        return []
+    if idx == 0:
+        return ['1d']
+    if idx == 1:
+        return ['60m']
+    intervals = ['5m']
+    if idx % FOREX_1H_EVERY_N_CYCLES == 1:
+        intervals.append('60m')
+    if idx % FOREX_15M_EVERY_N_CYCLES == 0:
+        intervals.append('15m')
+    return intervals
+
+
+def _load_twelvedata_cache():
+    try:
+        if os.path.exists(TWELVEDATA_CACHE_FILE):
+            with open(TWELVEDATA_CACHE_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+    except Exception as e:
+        logger.warning(f"Nie udało się wczytać {TWELVEDATA_CACHE_FILE}: {e}")
+    return {}
+
+
+def _save_twelvedata_cache(cache):
+    try:
+        with open(TWELVEDATA_CACHE_FILE, 'w', encoding='utf-8') as f:
+            json.dump(cache, f, ensure_ascii=False)
+    except Exception as e:
+        logger.error(f"Nie udało się zapisać {TWELVEDATA_CACHE_FILE}: {e}")
+
+
+def fetch_twelvedata_data(name, interval='15m', range_period='1d'):
+    """GŁÓWNE źródło cen dla 6 par forex. Pobiera z Twelve Data TYLKO gdy
+    dany interwał jest "w kolejce" w tym cyklu (patrz forex_intervals_for_now)
+    - w przeciwnym razie zwraca ostatnio zcachowane dane dla tego interwału
+    (o ile nie starsze niż TWELVEDATA_CACHE_MAX_AGE_HOURS), żeby scoring MTF
+    nadal miał komplet interwałów co cykl, mimo że nie każdy jest odświeżany
+    co 15 minut. Świeżo pobrane dane ZAWSZE aktualizują cache, niezależnie od
+    tego, czy akurat jest ich kolej."""
+    symbol = FOREX_SYMBOLS.get(name)
+    if not symbol:
+        return None
+    if not TWELVEDATA_API_KEY:
+        log_data_error('twelvedata', name, symbol, 'brak TWELVEDATA_API_KEY')
+        return None
+
+    cache = _load_twelvedata_cache()
+    market_cache = cache.get(name, {})
+    due_intervals = forex_intervals_for_now()
+
+    if interval in due_intervals:
+        td_interval = TWELVEDATA_INTERVAL_MAP.get(interval)
+        outputsize = TWELVEDATA_OUTPUTSIZE.get(interval, 100)
+        params = {'symbol': symbol, 'interval': td_interval, 'outputsize': outputsize,
+                   'apikey': TWELVEDATA_API_KEY}
+        resp = http_get_with_retry(TWELVEDATA_BASE_URL, params=params, timeout=10, retries=2)
+        data = None
+        if resp is not None:
+            try:
+                payload = resp.json()
+                if payload.get('status') == 'error':
+                    log_data_error('twelvedata', name, symbol, f"API zwróciło błąd: {payload.get('message', payload)}")
+                else:
+                    values = payload.get('values', [])
+                    # Twelve Data zwraca od najnowszej do najstarszej - odwracamy
+                    # do kolejności chronologicznej, tak jak reszta źródeł w kodzie.
+                    values = list(reversed(values))
+                    opens, highs, lows, closes, volumes = [], [], [], [], []
+                    for v in values:
+                        try:
+                            opens.append(float(v['open'])); highs.append(float(v['high']))
+                            lows.append(float(v['low'])); closes.append(float(v['close']))
+                            volumes.append(float(v.get('volume', 0) or 0))
+                        except (KeyError, ValueError, TypeError):
+                            continue
+                    if len(closes) >= 10:
+                        data = {'prices': closes, 'highs': highs, 'lows': lows,
+                                'volumes': volumes, 'opens': opens}
+                    else:
+                        log_data_error('twelvedata', name, symbol, f'za mało świec w odpowiedzi ({len(closes)})')
+            except (ValueError, KeyError, json.JSONDecodeError) as e:
+                log_data_error('twelvedata', name, symbol, f'błąd parsowania: {e}')
+        else:
+            log_data_error('twelvedata', name, symbol, 'brak odpowiedzi HTTP')
+
+        if data:
+            market_cache[interval] = {'cached_at': datetime.now(pytz.utc).isoformat(), 'data': data}
+            cache[name] = market_cache
+            _save_twelvedata_cache(cache)
+            return data
+        # Świeże pobranie zawiodło mimo że była "kolej" - spadamy do cache poniżej,
+        # zamiast od razu oddawać sprawę Yahoo (cache może być całkiem świeży).
+
+    cached_entry = market_cache.get(interval)
+    if cached_entry:
+        try:
+            age_hours = (datetime.now(pytz.utc) - datetime.fromisoformat(cached_entry['cached_at'])).total_seconds() / 3600
+        except Exception:
+            age_hours = 999
+        if age_hours <= TWELVEDATA_CACHE_MAX_AGE_HOURS:
+            return cached_entry['data']
+        log_data_error('twelvedata', name, symbol, f'cache dla {interval} zbyt stary ({age_hours:.1f}h)')
+
+    return None
 
 
 def get_price_data(name, symbol, interval='15m', range_period='1d'):
-    """Punkt wejścia do pobierania świec: Investing.com jako GŁÓWNE źródło,
-    z automatycznym fallbackiem na Yahoo Finance gdy Investing zawiedzie
-    (błąd zawsze najpierw logowany do DATA_FETCH_ERRORS_FILE - patrz
-    fetch_investing_data/fetch_yahoo_data/log_data_error). Zwraca (data, source)
-    gdzie source in {'investing', 'yahoo', None}.
+    """Punkt wejścia do pobierania świec, routing wg kategorii rynku:
+    - krypto (BITCOIN/ETHEREUM/SOLANA): CryptoCompare (główne) -> Binance
+      (fallback #1) -> Yahoo (fallback #2, ostatnia deska ratunku).
+    - forex (6 par - patrz FOREX_SYMBOLS): Twelve Data (główne, wg
+      harmonogramu + cache - patrz fetch_twelvedata_data) -> Yahoo (fallback).
+    - pozostałe (indeksy/surowce/akcje): Yahoo bezpośrednio.
 
-    Jeśli Investing zawiedzie INVESTING_CIRCUIT_THRESHOLD razy z rzędu w tym
-    cyklu, dalsze wywołania w tym samym cyklu pomijają Investing całkowicie
-    i idą prosto na Yahoo - patrz komentarz przy _investing_cycle_disabled."""
-    global _investing_cycle_failures, _investing_cycle_disabled
-    if not _investing_cycle_disabled:
-        data = fetch_investing_data(name, interval, range_period)
+    Investing.com zostało CAŁKOWICIE USUNIĘTE z kodu - patrz komentarz przy
+    CRYPTO_SYMBOLS wyżej. Zwraca (data, source)."""
+    if name in CRYPTO_SYMBOLS:
+        data = fetch_cryptocompare_data(name, interval, range_period)
         if data:
-            _investing_cycle_failures = 0
-            return data, 'investing'
-        _investing_cycle_failures += 1
-        if _investing_cycle_failures >= INVESTING_CIRCUIT_THRESHOLD:
-            _investing_cycle_disabled = True
-            logger.warning(
-                f"Investing.com: {_investing_cycle_failures} błędów z rzędu w tym cyklu - "
-                f"wyłączam Investing do końca cyklu, reszta rynków/interwałów idzie od razu na Yahoo."
-            )
+            return data, 'cryptocompare'
+        data = fetch_binance_data(name, interval, range_period)
+        if data:
+            return data, 'binance'
+        data = fetch_yahoo_data(symbol, interval, range_period)
+        if data:
+            return data, 'yahoo'
+        log_data_error('all_sources', name, symbol, 'CryptoCompare, Binance i Yahoo zawiodły w tym cyklu')
+        return None, None
+
+    if name in FOREX_SYMBOLS:
+        data = fetch_twelvedata_data(name, interval, range_period)
+        if data:
+            return data, 'twelvedata'
+        data = fetch_yahoo_data(symbol, interval, range_period)
+        if data:
+            return data, 'yahoo'
+        log_data_error('all_sources', name, symbol, 'Twelve Data i Yahoo zawiodły w tym cyklu')
+        return None, None
 
     data = fetch_yahoo_data(symbol, interval, range_period)
     if data:
         return data, 'yahoo'
-    reason = 'Yahoo zawiodło (Investing wyłączone w tym cyklu po serii błędów)' if _investing_cycle_disabled \
-        else 'Investing i Yahoo zawiodły w tym cyklu'
-    log_data_error('all_sources', name, symbol, reason)
+    log_data_error('yahoo', name, symbol, 'Yahoo nie zwróciło danych w tym cyklu')
     return None, None
 
 
@@ -2187,21 +2255,40 @@ def determine_trend(ind):
     return 'SIDEWAYS'
 
 
-def analyze_timeframes(name, symbol, timeframe_weights):
-    """NAPRAWIONE: '4h' jest teraz agregowany z tych samych danych 60m
-    (resample_ohlcv), a nie pobierany osobno jako duplikat '1h' pod inną nazwą."""
+def analyze_timeframes(name, symbol, timeframe_weights, price_cache=None):
+    """'4h' jest agregowany z tych samych danych 60m co '1h' (resample_ohlcv),
+    a nie pobierany osobno.
+
+    NAPRAWIONE (2x): wcześniej cache'owanie po '60m' działało TYLKO dla
+    wpisów z resample_from_60m (czyli '4h') - '1h' miał ten sam interval
+    '60m', ale trafiał w gałąź "else" i pobierał swoje dane OSOBNO, nawet gdy
+    '1h' i '4h' miały już ten sam zakres. Teraz cache'owanie jest po samym
+    interwale '60m' niezależnie od tego, czy dany wpis resampluje.
+
+    price_cache: opcjonalny dict {(interval, range): data} z danymi
+    pobranymi wcześniej przez wywołującego (patrz analyze_market/
+    fetch_price_cache) - używany, żeby '15m/1d' (potrzebne też jako
+    main_data do głównego scoringu) nie było pobierane drugi raz. Gdy None
+    (np. przy użyciu tej funkcji samodzielnie), funkcja pobiera wszystko
+    sama jak dawniej."""
     timeframe_results = {}
     cache_60m = {}
     for tf_name, tf_config in TIMEFRAMES.items():
-        if tf_config.get('resample_from_60m'):
-            range_key = tf_config['range']
-            if range_key not in cache_60m:
-                raw, _src = get_price_data(name, symbol, '60m', range_key)
-                cache_60m[range_key] = raw
-            raw = cache_60m[range_key]
-            data = resample_ohlcv(raw, tf_config['resample_from_60m']) if raw else None
+        interval, rng = tf_config['interval'], tf_config['range']
+        if interval == '60m':
+            if rng not in cache_60m:
+                if price_cache is not None and (interval, rng) in price_cache:
+                    cache_60m[rng] = price_cache[(interval, rng)]
+                else:
+                    raw, _src = get_price_data(name, symbol, interval, rng)
+                    cache_60m[rng] = raw
+            raw = cache_60m[rng]
+            bucket = tf_config.get('resample_from_60m')
+            data = (resample_ohlcv(raw, bucket) if bucket else raw) if raw else None
+        elif price_cache is not None and (interval, rng) in price_cache:
+            data = price_cache[(interval, rng)]
         else:
-            data, _src = get_price_data(name, symbol, tf_config['interval'], tf_config['range'])
+            data, _src = get_price_data(name, symbol, interval, rng)
 
         if data:
             ind = calculate_base_indicators(data)
@@ -2634,7 +2721,15 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
         log_near_miss(name, stage='filtered_liquidity', reason=f'wolumen {avg_volume:.0f}')
         return None
 
-    timeframe_results = analyze_timeframes(name, market_info['symbol'], timeframe_weights)
+    timeframe_results = analyze_timeframes(
+        name, market_info['symbol'], timeframe_weights,
+        # NAPRAWIONE: '15m/1d' zostało już pobrane wyżej jako main_data -
+        # zasilamy tym samym wynikiem cache MTF zamiast pobierać to samo
+        # drugi raz. Reszta kombinacji (5m, 60m, 1d/3mo) i tak jest pobierana
+        # dopiero TERAZ (po filtrach spread/zmienność/płynność), więc rynek
+        # odrzucony przez filtry nadal kosztuje tylko 1 zapytanie, nie 6.
+        price_cache={('15m', '1d'): main_data},
+    )
     if not timeframe_results:
         log_near_miss(name, stage='no_timeframe_data', reason='brak danych MTF')
         return None
@@ -2966,18 +3061,21 @@ def main():
         send_daily_near_miss_report()
         rotate_jsonl_log(NEAR_MISS_LOG_FILE, days_to_keep=30)
         rotate_jsonl_log(DATA_FETCH_ERRORS_FILE, days_to_keep=30)
-        resolve_missing_pair_ids()
         return
 
     # Dane makro: max 3x dziennie (rano / przed otwarciem / po zamknięciu
     # głównych sesji - patrz config.MACRO_HOURS), niezależnie od cyklu 10-min
-    # analizy rynków, żeby nie zalewać Trading Economics/Investing.com/Groq zapytaniami.
+    # analizy rynków, żeby nie zalewać Trading Economics/Groq zapytaniami.
     macro_state = load_macro_state()
     if is_macro_fetch_time(macro_state):
         fetch_and_analyze_macro()
 
+    if not is_within_trading_window():
+        logger.info(f"Poza oknem {TRADING_WINDOW_START[0]}:{TRADING_WINDOW_START[1]:02d}-"
+                     f"{TRADING_WINDOW_END[0]}:{TRADING_WINDOW_END[1]:02d} - pomijam analizę rynków w tym cyklu.")
+        return
+
     logger.info(f"Analiza rynków: {datetime.now(TIMEZONE)}")
-    reset_investing_circuit()
     sm = SignalManager()
     ai_memory = AIMemory()
     tf_weights = TimeframeWeights()
