@@ -498,20 +498,27 @@ GLOBAL_NEWS_QUERIES = {
 # ============================================
 
 def http_get_with_retry(url, params=None, headers=None, timeout=10, retries=3, backoff=1.5):
-    last_exc = None
+    """Zwraca (response, error_detail). error_detail jest None przy sukcesie,
+    inaczej zawiera PRAWDZIWY powód ostatniej nieudanej próby (typ wyjątku/
+    kod HTTP), żeby dało się to zapisać do DATA_FETCH_ERRORS_FILE zamiast
+    zawsze tego samego ogólnego 'brak odpowiedzi HTTP' - wcześniej ta
+    informacja była logowana tylko do konsoli GitHub Actions (znika po
+    zakończeniu joba), nigdy do pliku."""
+    last_detail = None
     for attempt in range(retries):
         try:
             resp = requests.get(url, params=params, headers=headers, timeout=timeout)
             if resp.status_code == 200:
-                return resp
+                return resp, None
+            last_detail = f"HTTP {resp.status_code}: {resp.text[:150]}"
             logger.warning(f"HTTP {resp.status_code} dla {url} (próba {attempt + 1}/{retries})")
         except requests.RequestException as e:
-            last_exc = e
+            last_detail = f"{type(e).__name__}: {e}"
             logger.warning(f"Błąd sieci dla {url}: {e} (próba {attempt + 1}/{retries})")
         time.sleep(backoff ** attempt)
-    if last_exc:
-        logger.error(f"Nie udało się pobrać {url} po {retries} próbach: {last_exc}")
-    return None
+    if last_detail:
+        logger.error(f"Nie udało się pobrać {url} po {retries} próbach: {last_detail}")
+    return None, (last_detail or 'nieznany błąd')
 
 
 def http_post_with_retry(url, json_payload=None, headers=None, timeout=25, retries=2, backoff=1.5):
@@ -1830,9 +1837,9 @@ def fetch_cryptocompare_data(name, interval='15m', range_period='1d'):
 
     url = f"{CRYPTOCOMPARE_BASE_URL}/{endpoint}"
     params = {'fsym': fsym, 'tsym': 'USD', 'aggregate': aggregate, 'limit': limit}
-    resp = http_get_with_retry(url, params=params, timeout=10, retries=2)
+    resp, err = http_get_with_retry(url, params=params, timeout=10, retries=2)
     if resp is None:
-        log_data_error('cryptocompare', name, fsym, 'brak odpowiedzi HTTP')
+        log_data_error('cryptocompare', name, fsym, err)
         return None
     try:
         payload = resp.json()
@@ -1879,9 +1886,9 @@ def fetch_binance_data(name, interval='15m', range_period='1d'):
         return None
     limit = {'5m': 200, '15m': 200, '60m': 500, '1d': 120}.get(interval, 200)
     params = {'symbol': symbol, 'interval': b_interval, 'limit': limit}
-    resp = http_get_with_retry(BINANCE_BASE_URL, params=params, timeout=10, retries=2)
+    resp, err = http_get_with_retry(BINANCE_BASE_URL, params=params, timeout=10, retries=2)
     if resp is None:
-        log_data_error('binance', name, symbol, 'brak odpowiedzi HTTP (możliwa blokada geograficzna)')
+        log_data_error('binance', name, symbol, f'{err} (możliwa blokada geograficzna)')
         return None
     try:
         rows = resp.json()
@@ -2003,7 +2010,7 @@ def fetch_twelvedata_data(name, interval='15m', range_period='1d'):
         outputsize = TWELVEDATA_OUTPUTSIZE.get(interval, 100)
         params = {'symbol': symbol, 'interval': td_interval, 'outputsize': outputsize,
                    'apikey': TWELVEDATA_API_KEY}
-        resp = http_get_with_retry(TWELVEDATA_BASE_URL, params=params, timeout=10, retries=2)
+        resp, err = http_get_with_retry(TWELVEDATA_BASE_URL, params=params, timeout=10, retries=2)
         data = None
         if resp is not None:
             try:
@@ -2031,7 +2038,7 @@ def fetch_twelvedata_data(name, interval='15m', range_period='1d'):
             except (ValueError, KeyError, json.JSONDecodeError) as e:
                 log_data_error('twelvedata', name, symbol, f'błąd parsowania: {e}')
         else:
-            log_data_error('twelvedata', name, symbol, 'brak odpowiedzi HTTP')
+            log_data_error('twelvedata', name, symbol, err)
 
         if data:
             market_cache[interval] = {'cached_at': datetime.now(pytz.utc).isoformat(), 'data': data}
@@ -2106,9 +2113,9 @@ def fetch_yahoo_data(symbol, interval='15m', range_period='1d'):
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
     params = {'interval': interval, 'range': range_period}
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
-    resp = http_get_with_retry(url, params=params, headers=headers, timeout=10)
+    resp, err = http_get_with_retry(url, params=params, headers=headers, timeout=10)
     if resp is None:
-        log_data_error('yahoo', symbol, symbol, 'brak odpowiedzi HTTP')
+        log_data_error('yahoo', symbol, symbol, err)
         return None
     try:
         data = resp.json()
@@ -2386,7 +2393,7 @@ def fetch_news_by_query(query, lang='en', limit=10):
     try:
         query_encoded = query.replace(' ', '+').replace('&', '%26')
         url = f"https://news.google.com/rss/search?q={query_encoded}&hl={lang}"
-        resp = http_get_with_retry(url, timeout=10, retries=2)
+        resp, _err = http_get_with_retry(url, timeout=10, retries=2)
         if resp is None:
             return []
         root = ET.fromstring(resp.content)
