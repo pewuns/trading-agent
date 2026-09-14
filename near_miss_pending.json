@@ -25534,5 +25534,152 @@
       "macro_sentiment": 0.0
     },
     "created_at": "2026-09-14T16:25:28.118522+00:00"
+  },
+  "EUR/USD_2026-09-14T16:37:00.697727+00:00": {
+    "name": "EUR/USD",
+    "direction": "LONG",
+    "confidence": 0.3,
+    "entry": 1.15514,
+    "atr": 0.0007292857142856864,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.3419117647058843,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": -0.3147113594040968,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-14T16:37:00.697739+00:00"
+  },
+  "GBP/USD_2026-09-14T16:37:05.088586+00:00": {
+    "name": "GBP/USD",
+    "direction": "LONG",
+    "confidence": 0.25,
+    "entry": 1.34941,
+    "atr": 0.0007957142857142488,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.4404145077721,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": -1.0,
+      "mtf_trend": -0.3147113594040968,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-14T16:37:05.088599+00:00"
+  },
+  "USD/CHF_2026-09-14T16:37:09.326337+00:00": {
+    "name": "USD/CHF",
+    "direction": "SHORT",
+    "confidence": 0.3,
+    "entry": 0.8168,
+    "atr": 0.0006735714285714163,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.21330724070450074,
+      "vwap": 0.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": -1.0,
+      "mtf_trend": 0.15456238361266306,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-14T16:37:09.326349+00:00"
+  },
+  "USD/CAD_2026-09-14T16:37:13.472874+00:00": {
+    "name": "USD/CAD",
+    "direction": "LONG",
+    "confidence": 0.3,
+    "entry": 1.39074,
+    "atr": 0.0007528571428571265,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 1.0,
+      "rsi": -0.1839080459769906,
+      "vwap": 0.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": 0.27746741154562415,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-14T16:37:13.472892+00:00"
+  },
+  "GOLD_2026-09-14T16:37:18.320055+00:00": {
+    "name": "GOLD",
+    "direction": "LONG",
+    "confidence": 0.4,
+    "entry": 4343.2001953125,
+    "atr": 12.135672433035714,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.45079472438282037,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.09015997921383764,
+      "poc": 1.0,
+      "mtf_trend": -0.15083798882681554,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-14T16:37:18.320069+00:00"
+  },
+  "ETHEREUM_2026-09-14T16:38:09.185483+00:00": {
+    "name": "ETHEREUM",
+    "direction": "LONG",
+    "confidence": 0.575,
+    "entry": 2520.6298828125,
+    "atr": 13.060756138392858,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.2231857855361595,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.14748631884442306,
+      "poc": 1.0,
+      "mtf_trend": 0.6759776536312851,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-14T16:38:09.185495+00:00"
+  },
+  "SOLANA_2026-09-14T16:38:34.597040+00:00": {
+    "name": "SOLANA",
+    "direction": "LONG",
+    "confidence": 0.575,
+    "entry": 102.36000061035156,
+    "atr": 0.4928583417619978,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.43795421258680506,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.15833122237331934,
+      "poc": 1.0,
+      "mtf_trend": 0.7467411545623837,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-14T16:38:34.597053+00:00"
   }
 }
