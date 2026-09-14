@@ -3283,3 +3283,33 @@
 {"timestamp": "2026-09-11T19:23:44.028197+00:00", "source": "binance", "name": "SOLANA", "symbol": "SOLUSDT", "reason": "brak odpowiedzi HTTP (możliwa blokada geograficzna)"}
 {"timestamp": "2026-09-11T20:02:09.560502+00:00", "source": "TradingEconomics_News", "target": "https://tradingeconomics.com/rss/news.aspx", "status_code": 403, "error": "Status HTTP 403"}
 {"timestamp": "2026-09-11T20:02:09.624433+00:00", "source": "TradingEconomics_Calendar", "target": "https://tradingeconomics.com/rss/calendar.aspx", "status_code": 403, "error": "Status HTTP 403"}
+{"timestamp": "2026-09-14T04:02:15.548758+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "HTTP 401: {\"Data\":{},\"Err\":{\"type\":2,\"message\":\"API key required, please refer to the documentation at https://developers.coindesk.com/\",\"http_status_code\":401,"}
+{"timestamp": "2026-09-14T04:02:18.377436+00:00", "source": "binance", "name": "ETHEREUM", "symbol": "ETHUSDT", "reason": "HTTP 451: {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please cont (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-14T04:02:19.050322+00:00", "source": "twelvedata", "name": "EUR/USD", "symbol": "EUR/USD", "reason": "cache dla 15m zbyt stary (57.0h)"}
+{"timestamp": "2026-09-14T04:02:19.126977+00:00", "source": "twelvedata", "name": "EUR/USD", "symbol": "EUR/USD", "reason": "cache dla 5m zbyt stary (56.7h)"}
+{"timestamp": "2026-09-14T04:02:19.186508+00:00", "source": "twelvedata", "name": "EUR/USD", "symbol": "EUR/USD", "reason": "cache dla 60m zbyt stary (56.7h)"}
+{"timestamp": "2026-09-14T04:02:26.084675+00:00", "source": "twelvedata", "name": "USD/JPY", "symbol": "USD/JPY", "reason": "cache dla 15m zbyt stary (57.0h)"}
+{"timestamp": "2026-09-14T04:02:26.148727+00:00", "source": "twelvedata", "name": "USD/JPY", "symbol": "USD/JPY", "reason": "cache dla 5m zbyt stary (56.7h)"}
+{"timestamp": "2026-09-14T04:02:26.305681+00:00", "source": "twelvedata", "name": "USD/JPY", "symbol": "USD/JPY", "reason": "cache dla 60m zbyt stary (56.7h)"}
+{"timestamp": "2026-09-14T04:02:30.632570+00:00", "source": "twelvedata", "name": "GBP/USD", "symbol": "GBP/USD", "reason": "cache dla 15m zbyt stary (57.0h)"}
+{"timestamp": "2026-09-14T04:02:30.690490+00:00", "source": "twelvedata", "name": "GBP/USD", "symbol": "GBP/USD", "reason": "cache dla 5m zbyt stary (56.7h)"}
+{"timestamp": "2026-09-14T04:02:30.768022+00:00", "source": "twelvedata", "name": "GBP/USD", "symbol": "GBP/USD", "reason": "cache dla 60m zbyt stary (56.7h)"}
+{"timestamp": "2026-09-14T04:02:34.886121+00:00", "source": "twelvedata", "name": "USD/CHF", "symbol": "USD/CHF", "reason": "cache dla 15m zbyt stary (57.0h)"}
+{"timestamp": "2026-09-14T04:02:34.955918+00:00", "source": "twelvedata", "name": "USD/CHF", "symbol": "USD/CHF", "reason": "cache dla 5m zbyt stary (56.7h)"}
+{"timestamp": "2026-09-14T04:02:35.015776+00:00", "source": "twelvedata", "name": "USD/CHF", "symbol": "USD/CHF", "reason": "cache dla 60m zbyt stary (56.7h)"}
+{"timestamp": "2026-09-14T04:02:39.276282+00:00", "source": "twelvedata", "name": "AUD/USD", "symbol": "AUD/USD", "reason": "cache dla 15m zbyt stary (58.0h)"}
+{"timestamp": "2026-09-14T04:02:39.336912+00:00", "source": "twelvedata", "name": "AUD/USD", "symbol": "AUD/USD", "reason": "cache dla 5m zbyt stary (56.7h)"}
+{"timestamp": "2026-09-14T04:02:39.418965+00:00", "source": "twelvedata", "name": "AUD/USD", "symbol": "AUD/USD", "reason": "cache dla 60m zbyt stary (56.7h)"}
+{"timestamp": "2026-09-14T04:02:43.716778+00:00", "source": "twelvedata", "name": "USD/CAD", "symbol": "USD/CAD", "reason": "cache dla 15m zbyt stary (58.0h)"}
+{"timestamp": "2026-09-14T04:02:43.775581+00:00", "source": "twelvedata", "name": "USD/CAD", "symbol": "USD/CAD", "reason": "cache dla 5m zbyt stary (56.7h)"}
+{"timestamp": "2026-09-14T04:02:43.834170+00:00", "source": "twelvedata", "name": "USD/CAD", "symbol": "USD/CAD", "reason": "cache dla 60m zbyt stary (56.7h)"}
+{"timestamp": "2026-09-14T04:02:47.935939+00:00", "source": "yahoo", "name": "GC=F", "symbol": "GC=F", "reason": "za mało wyrównanych świec (0)"}
+{"timestamp": "2026-09-14T04:02:47.937197+00:00", "source": "yahoo", "name": "GOLD", "symbol": "GC=F", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-14T04:02:47.989581+00:00", "source": "yahoo", "name": "CL=F", "symbol": "CL=F", "reason": "za mało wyrównanych świec (0)"}
+{"timestamp": "2026-09-14T04:02:47.990612+00:00", "source": "yahoo", "name": "OIL WTI", "symbol": "CL=F", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-14T04:02:50.666028+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "HTTP 401: {\"Data\":{},\"Err\":{\"type\":2,\"message\":\"API key required, please refer to the documentation at https://developers.coindesk.com/\",\"http_status_code\":401,"}
+{"timestamp": "2026-09-14T04:02:53.407660+00:00", "source": "binance", "name": "BITCOIN", "symbol": "BTCUSDT", "reason": "HTTP 451: {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please cont (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-14T04:02:56.138728+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "HTTP 401: {\"Data\":{},\"Err\":{\"type\":2,\"message\":\"API key required, please refer to the documentation at https://developers.coindesk.com/\",\"http_status_code\":401,"}
+{"timestamp": "2026-09-14T04:02:58.850053+00:00", "source": "binance", "name": "ETHEREUM", "symbol": "ETHUSDT", "reason": "HTTP 451: {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please cont (możliwa blokada geograficzna)"}
+{"timestamp": "2026-09-14T04:03:01.611813+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "HTTP 401: {\"Data\":{},\"Err\":{\"type\":2,\"message\":\"API key required, please refer to the documentation at https://developers.coindesk.com/\",\"http_status_code\":401,"}
+{"timestamp": "2026-09-14T04:03:04.246564+00:00", "source": "binance", "name": "SOLANA", "symbol": "SOLUSDT", "reason": "HTTP 451: {\n  \"code\": 0,\n  \"msg\": \"Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please cont (możliwa blokada geograficzna)"}
