@@ -52,13 +52,13 @@
       "threshold": 0.6
     },
     "OIL WTI": {
-      "confidence": 0.425,
+      "confidence": 0.475,
       "direction": "LONG",
       "threshold": 0.6
     },
     "DAX": {
       "confidence": 0.2,
-      "direction": "SHORT",
+      "direction": "LONG",
       "threshold": 0.6
     }
   }

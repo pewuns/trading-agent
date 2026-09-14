@@ -1586,3 +1586,15 @@
 {"name": "BITCOIN", "timestamp": "2026-09-14T11:52:29.635691+00:00", "production_confidence": 0.25, "production_direction": "LONG", "shadow_score": 0}
 {"name": "ETHEREUM", "timestamp": "2026-09-14T11:52:55.512761+00:00", "production_confidence": 0.275, "production_direction": "SHORT", "shadow_score": -1}
 {"name": "SOLANA", "timestamp": "2026-09-14T11:53:21.394495+00:00", "production_confidence": 0.2, "production_direction": "SHORT", "shadow_score": 0}
+{"name": "DAX", "timestamp": "2026-09-14T12:03:13.529794+00:00", "production_confidence": 0.2, "production_direction": "LONG", "shadow_score": 0}
+{"name": "EUR/USD", "timestamp": "2026-09-14T12:03:18.028337+00:00", "production_confidence": 0.25, "production_direction": "SHORT", "shadow_score": 0}
+{"name": "USD/JPY", "timestamp": "2026-09-14T12:03:22.120188+00:00", "production_confidence": 0.5, "production_direction": "LONG", "shadow_score": 1}
+{"name": "GBP/USD", "timestamp": "2026-09-14T12:03:26.249794+00:00", "production_confidence": 0.3, "production_direction": "SHORT", "shadow_score": 0}
+{"name": "USD/CHF", "timestamp": "2026-09-14T12:03:30.213951+00:00", "production_confidence": 0.3, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "AUD/USD", "timestamp": "2026-09-14T12:03:39.450478+00:00", "production_confidence": 0.4, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "USD/CAD", "timestamp": "2026-09-14T12:03:48.701837+00:00", "production_confidence": 0.55, "production_direction": "LONG", "shadow_score": 2}
+{"name": "GOLD", "timestamp": "2026-09-14T12:03:53.126167+00:00", "production_confidence": 0.45, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "OIL WTI", "timestamp": "2026-09-14T12:03:57.679837+00:00", "production_confidence": 0.475, "production_direction": "LONG", "shadow_score": 2}
+{"name": "BITCOIN", "timestamp": "2026-09-14T12:04:23.796464+00:00", "production_confidence": 0.525, "production_direction": "LONG", "shadow_score": 1}
+{"name": "ETHEREUM", "timestamp": "2026-09-14T12:04:49.727824+00:00", "production_confidence": 0.3, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "SOLANA", "timestamp": "2026-09-14T12:05:16.665986+00:00", "production_confidence": 0.425, "production_direction": "LONG", "shadow_score": 0}
