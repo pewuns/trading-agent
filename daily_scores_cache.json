@@ -32,7 +32,7 @@
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.575,
+      "confidence": 0.65,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -57,7 +57,7 @@
       "threshold": 0.6
     },
     "DAX": {
-      "confidence": 0.35,
+      "confidence": 0.4,
       "direction": "SHORT",
       "threshold": 0.6
     },
