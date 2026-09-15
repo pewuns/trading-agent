@@ -257,64 +257,65 @@
   "ETHEREUM_SHORT": {
     "name": "ETHEREUM",
     "direction": "SHORT",
-    "entry": 2421.93994140625,
-    "stop_loss": 2445.242440359933,
-    "take_profit": 2383.1024431501114,
-    "position_size": 4.291385237212722,
+    "entry": 2419.52001953125,
+    "stop_loss": 2438.2367728097097,
+    "take_profit": 2388.325430733817,
+    "position_size": 5.3428069768428115,
     "risk_amount": 100.0,
     "sizing_method": "stały_procent_ryzyka (za mało historii na Kelly)",
     "confidence": 0.6,
     "threshold_used": 0.6,
     "regime": "TREND",
-    "adx": 49.934586762602564,
+    "adx": 51.87982983665023,
     "model_used": false,
     "features": {
       "sma20": -1.0,
       "sma50": -1.0,
-      "rsi": -0.4536081855312372,
+      "rsi": -0.32782874467347456,
       "vwap": -1.0,
       "support_resistance": 0.5,
       "pattern": 0.0,
-      "order_flow": -0.09973915222859113,
+      "order_flow": -0.08860376034255417,
       "poc": -1.0,
-      "mtf_trend": -0.4934823091247672,
+      "mtf_trend": -0.5828677839851024,
       "news_sentiment": 0.0,
       "macro_sentiment": 0.0
     },
-    "rsi": 27.31959072343814,
-    "vwap": 2469.800733973849,
+    "rsi": 33.60856276632627,
+    "vwap": 2467.463457876602,
     "support": 2406.5400390625,
-    "resistance": 2479.260009765625,
+    "resistance": 2478.280029296875,
     "candlestick_patterns": [
       "DOJI (niezdecydowanie)"
     ],
-    "order_flow_delta": -9.973915222859112,
+    "order_flow_delta": -8.860376034255417,
     "volume_profile_poc": 2473.25,
     "news_sentiment": 0,
     "news_impact": "low",
     "news_reasoning": "",
-    "timeframe_alignment": 0.2532588454376164,
+    "timeframe_alignment": 0.20856610800744882,
     "timeframe_trends": {
-      "5m": "SIDEWAYS",
+      "5m": "DOWN",
       "15m": "DOWN",
       "1h": "DOWN",
       "4h": "SIDEWAYS",
       "1d": "UP"
     },
     "divergences": [
+      "⚠️ 5m DOWN vs 1d UP",
       "⚠️ 15m DOWN vs 1d UP"
     ],
-    "heatmap": "```\nINTERWAŁ | TREND | RSI | ZGODNOŚĆ\n---------|-------|-----|----------\n5m       | SIDEWAYS |  61 | ❌\n15m      | DOWN  |  27 | ✅\n1h       | DOWN  |  25 | ✅\n4h       | SIDEWAYS |  39 | ❌\n1d       | UP    |  50 | ✅\n```",
+    "heatmap": "```\nINTERWAŁ | TREND | RSI | ZGODNOŚĆ\n---------|-------|-----|----------\n5m       | DOWN  |  46 | ✅\n15m      | DOWN  |  34 | ✅\n1h       | DOWN  |  27 | ✅\n4h       | SIDEWAYS |  42 | ❌\n1d       | UP    |  50 | ✅\n```",
     "spread_source": "proxy_zmiennosci",
-    "spread_value": 0.0032480725337608292,
+    "spread_value": 0.002368817950258282,
     "price_source": "yahoo",
     "macro_sentiment": 0.0,
     "macro_impact": "low",
-    "timestamp": "2026-09-15T16:25:24.574708+00:00",
+    "timestamp": "2026-09-15T17:04:04.363147+00:00",
     "status": "open",
-    "risk_distance": 23.30249895368297,
-    "mae_percent": -0.028900434726246253,
-    "mfe_percent": 0.05326470076508029
+    "risk_distance": 18.71675327845969,
+    "mae_percent": 0.0,
+    "mfe_percent": 0.0
   },
   "BITCOIN_SHORT": {
     "name": "BITCOIN",
@@ -377,6 +378,6 @@
     "status": "open",
     "risk_distance": 505.7779017857101,
     "mae_percent": 0.0,
-    "mfe_percent": 0.101477364895802
+    "mfe_percent": 0.1442697636085347
   }
 }
