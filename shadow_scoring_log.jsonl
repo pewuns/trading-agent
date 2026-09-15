@@ -2403,3 +2403,14 @@
 {"name": "BITCOIN", "timestamp": "2026-09-15T17:34:43.304421+00:00", "production_confidence": 0.3, "production_direction": "LONG", "shadow_score": 1}
 {"name": "ETHEREUM", "timestamp": "2026-09-15T17:35:02.965859+00:00", "production_confidence": 0.55, "production_direction": "SHORT", "shadow_score": -1}
 {"name": "SOLANA", "timestamp": "2026-09-15T17:35:22.293015+00:00", "production_confidence": 0.5, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "EUR/USD", "timestamp": "2026-09-15T17:48:44.598283+00:00", "production_confidence": 0.375, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "USD/JPY", "timestamp": "2026-09-15T17:48:48.946143+00:00", "production_confidence": 0.375, "production_direction": "LONG", "shadow_score": 2}
+{"name": "GBP/USD", "timestamp": "2026-09-15T17:48:52.975450+00:00", "production_confidence": 0.425, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "USD/CHF", "timestamp": "2026-09-15T17:48:56.973821+00:00", "production_confidence": 0.35, "production_direction": "LONG", "shadow_score": 1}
+{"name": "AUD/USD", "timestamp": "2026-09-15T17:49:01.530382+00:00", "production_confidence": 0.4, "production_direction": "LONG", "shadow_score": 0}
+{"name": "USD/CAD", "timestamp": "2026-09-15T17:49:05.538516+00:00", "production_confidence": 0.375, "production_direction": "LONG", "shadow_score": 1}
+{"name": "GOLD", "timestamp": "2026-09-15T17:49:10.469784+00:00", "production_confidence": 0.475, "production_direction": "LONG", "shadow_score": 1}
+{"name": "OIL WTI", "timestamp": "2026-09-15T17:49:15.266045+00:00", "production_confidence": 0.65, "production_direction": "LONG", "shadow_score": 2}
+{"name": "BITCOIN", "timestamp": "2026-09-15T17:49:41.009921+00:00", "production_confidence": 0.45, "production_direction": "LONG", "shadow_score": 1}
+{"name": "ETHEREUM", "timestamp": "2026-09-15T17:50:06.881982+00:00", "production_confidence": 0.45, "production_direction": "SHORT", "shadow_score": 0}
+{"name": "SOLANA", "timestamp": "2026-09-15T17:50:32.443911+00:00", "production_confidence": 0.45, "production_direction": "LONG", "shadow_score": 0}
