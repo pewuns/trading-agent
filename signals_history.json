@@ -314,7 +314,7 @@
     "status": "open",
     "risk_distance": 23.30249895368297,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.05326470076508029
   },
   "BITCOIN_SHORT": {
     "name": "BITCOIN",
@@ -377,6 +377,6 @@
     "status": "open",
     "risk_distance": 505.7779017857101,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.101477364895802
   }
 }
