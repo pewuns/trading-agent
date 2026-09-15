@@ -252,7 +252,7 @@
     "status": "open",
     "risk_distance": 0.7799998692103856,
     "mae_percent": -0.41385249154370907,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.10093719029890948
   },
   "ETHEREUM_SHORT": {
     "name": "ETHEREUM",
@@ -315,7 +315,7 @@
     "status": "open",
     "risk_distance": 18.71675327845969,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.13266932745288412
   },
   "BITCOIN_SHORT": {
     "name": "BITCOIN",
@@ -378,6 +378,6 @@
     "status": "open",
     "risk_distance": 505.7779017857101,
     "mae_percent": 0.0,
-    "mfe_percent": 0.1442697636085347
+    "mfe_percent": 0.24099468871417173
   }
 }
