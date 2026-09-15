@@ -2452,3 +2452,23 @@
 {"name": "AMAZON", "timestamp": "2026-09-15T18:27:13.965745+00:00", "production_confidence": 0.5, "production_direction": "SHORT", "shadow_score": -1}
 {"name": "META", "timestamp": "2026-09-15T18:27:19.815480+00:00", "production_confidence": 0.4, "production_direction": "LONG", "shadow_score": 1}
 {"name": "GOOGLE", "timestamp": "2026-09-15T18:27:27.678292+00:00", "production_confidence": 0.4, "production_direction": "SHORT", "shadow_score": 0}
+{"name": "S&P500", "timestamp": "2026-09-15T18:37:40.650072+00:00", "production_confidence": 0.55, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "NASDAQ", "timestamp": "2026-09-15T18:37:46.758327+00:00", "production_confidence": 0.55, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "EUR/USD", "timestamp": "2026-09-15T18:37:52.732378+00:00", "production_confidence": 0.275, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "USD/JPY", "timestamp": "2026-09-15T18:37:59.674895+00:00", "production_confidence": 0.275, "production_direction": "LONG", "shadow_score": 1}
+{"name": "GBP/USD", "timestamp": "2026-09-15T18:38:04.690965+00:00", "production_confidence": 0.425, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "USD/CHF", "timestamp": "2026-09-15T18:38:09.734476+00:00", "production_confidence": 0.225, "production_direction": "LONG", "shadow_score": 0}
+{"name": "AUD/USD", "timestamp": "2026-09-15T18:38:14.678132+00:00", "production_confidence": 0.3, "production_direction": "LONG", "shadow_score": 1}
+{"name": "USD/CAD", "timestamp": "2026-09-15T18:38:19.539266+00:00", "production_confidence": 0.325, "production_direction": "LONG", "shadow_score": 0}
+{"name": "GOLD", "timestamp": "2026-09-15T18:38:25.135094+00:00", "production_confidence": 0.525, "production_direction": "LONG", "shadow_score": 1}
+{"name": "OIL WTI", "timestamp": "2026-09-15T18:38:31.176005+00:00", "production_confidence": 0.65, "production_direction": "LONG", "shadow_score": 2}
+{"name": "BITCOIN", "timestamp": "2026-09-15T18:38:59.486825+00:00", "production_confidence": 0.375, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "ETHEREUM", "timestamp": "2026-09-15T18:39:26.964880+00:00", "production_confidence": 0.6, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "SOLANA", "timestamp": "2026-09-15T18:39:56.345351+00:00", "production_confidence": 0.5, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "APPLE", "timestamp": "2026-09-15T18:40:05.720539+00:00", "production_confidence": 0.55, "production_direction": "LONG", "shadow_score": 2}
+{"name": "MICROSOFT", "timestamp": "2026-09-15T18:40:11.528231+00:00", "production_confidence": 0.5, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "NVIDIA", "timestamp": "2026-09-15T18:40:17.375565+00:00", "production_confidence": 0.4, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "TESLA", "timestamp": "2026-09-15T18:40:23.065805+00:00", "production_confidence": 0.5, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "AMAZON", "timestamp": "2026-09-15T18:40:29.010849+00:00", "production_confidence": 0.5, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "META", "timestamp": "2026-09-15T18:40:34.773458+00:00", "production_confidence": 0.5, "production_direction": "LONG", "shadow_score": 2}
+{"name": "GOOGLE", "timestamp": "2026-09-15T18:40:40.428944+00:00", "production_confidence": 0.35, "production_direction": "LONG", "shadow_score": 0}
