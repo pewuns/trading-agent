@@ -3,7 +3,7 @@
   "scores": {
     "EUR/USD": {
       "confidence": 0.45,
-      "direction": "LONG",
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "USD/JPY": {
@@ -48,7 +48,7 @@
     },
     "GOLD": {
       "confidence": 0.3,
-      "direction": "SHORT",
+      "direction": "LONG",
       "threshold": 0.6
     },
     "OIL WTI": {
