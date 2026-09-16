@@ -379,7 +379,7 @@
     "timestamp": "2026-09-16T18:52:53.550889+00:00",
     "status": "open",
     "risk_distance": 584.0382254464348,
-    "mae_percent": 0.0,
+    "mae_percent": -0.34782592530588263,
     "mfe_percent": 0.0
   },
   "OIL WTI_LONG": {
@@ -509,7 +509,7 @@
     "status": "open",
     "risk_distance": 0.9117826734270409,
     "mae_percent": -0.04885018704538357,
-    "mfe_percent": 0.04885018704538357
+    "mfe_percent": 0.07815731787578457
   },
   "GOLD_LONG": {
     "name": "GOLD",

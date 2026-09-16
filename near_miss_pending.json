@@ -54094,5 +54094,131 @@
       "macro_sentiment": 0.0
     },
     "created_at": "2026-09-16T18:53:27.957506+00:00"
+  },
+  "OIL WTI_2026-09-16T19:02:33.169983+00:00": {
+    "name": "OIL WTI",
+    "direction": "SHORT",
+    "confidence": 0.5,
+    "entry": 102.27999877929688,
+    "atr": 0.4785701206752232,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.044641914421855375,
+      "vwap": -1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.1651786629702386,
+      "poc": -1.0,
+      "mtf_trend": -0.04283054003724385,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-16T19:02:33.169998+00:00"
+  },
+  "BITCOIN_2026-09-16T19:02:59.152947+00:00": {
+    "name": "BITCOIN",
+    "direction": "LONG",
+    "confidence": 0.4,
+    "entry": 75878.046875,
+    "atr": 410.51339285714283,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.07602367204159378,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.02474113603338374,
+      "poc": 1.0,
+      "mtf_trend": 0.04655493482309159,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-16T19:02:59.152984+00:00"
+  },
+  "ETHEREUM_2026-09-16T19:03:25.025431+00:00": {
+    "name": "ETHEREUM",
+    "direction": "LONG",
+    "confidence": 0.4,
+    "entry": 2409.280029296875,
+    "atr": 17.996442522321427,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.18441805463441482,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.008847703217232588,
+      "poc": 1.0,
+      "mtf_trend": 0.04655493482309159,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-16T19:03:25.025462+00:00"
+  },
+  "SOLANA_2026-09-16T19:03:50.946486+00:00": {
+    "name": "SOLANA",
+    "direction": "LONG",
+    "confidence": 0.525,
+    "entry": 98.30999755859375,
+    "atr": 0.7850003923688617,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.26488627231041334,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.31988538717834614,
+      "poc": 1.0,
+      "mtf_trend": 0.17318435754189965,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-16T19:03:50.946514+00:00"
+  },
+  "APPLE_2026-09-16T19:03:56.029195+00:00": {
+    "name": "APPLE",
+    "direction": "SHORT",
+    "confidence": 0.3,
+    "entry": 332.3399963378906,
+    "atr": 0.8167659214564732,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.08150551736613593,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.02543013462062258,
+      "poc": -1.0,
+      "mtf_trend": 0.26256983240223497,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-16T19:03:56.029219+00:00"
+  },
+  "MICROSOFT_2026-09-16T19:04:00.808721+00:00": {
+    "name": "MICROSOFT",
+    "direction": "SHORT",
+    "confidence": 0.45,
+    "entry": 491.8599853515625,
+    "atr": 1.2615138462611608,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.313670473656247,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.30544626797367014,
+      "poc": -1.0,
+      "mtf_trend": -0.4748603351955306,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-16T19:04:00.808748+00:00"
   }
 }
