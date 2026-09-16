@@ -3138,3 +3138,11 @@
 {"name": "TESLA", "timestamp": "2026-09-16T18:27:43.807276+00:00", "production_confidence": 0.45, "production_direction": "SHORT", "shadow_score": -2}
 {"name": "AMAZON", "timestamp": "2026-09-16T18:27:49.746658+00:00", "production_confidence": 0.5, "production_direction": "SHORT", "shadow_score": -2}
 {"name": "GOOGLE", "timestamp": "2026-09-16T18:27:56.218419+00:00", "production_confidence": 0.45, "production_direction": "LONG", "shadow_score": -1}
+{"name": "S&P500", "timestamp": "2026-09-16T18:38:53.252777+00:00", "production_confidence": 0.55, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "NASDAQ", "timestamp": "2026-09-16T18:38:58.161979+00:00", "production_confidence": 0.45, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "OIL WTI", "timestamp": "2026-09-16T18:39:03.916654+00:00", "production_confidence": 0.35, "production_direction": "SHORT", "shadow_score": 1}
+{"name": "BITCOIN", "timestamp": "2026-09-16T18:39:29.985322+00:00", "production_confidence": 0.4, "production_direction": "LONG", "shadow_score": 0}
+{"name": "APPLE", "timestamp": "2026-09-16T18:39:45.730322+00:00", "production_confidence": 0.55, "production_direction": "LONG", "shadow_score": 2}
+{"name": "MICROSOFT", "timestamp": "2026-09-16T18:39:51.214700+00:00", "production_confidence": 0.45, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "AMAZON", "timestamp": "2026-09-16T18:39:56.238467+00:00", "production_confidence": 0.55, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "GOOGLE", "timestamp": "2026-09-16T18:40:01.382249+00:00", "production_confidence": 0.45, "production_direction": "SHORT", "shadow_score": -2}
