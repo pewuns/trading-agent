@@ -17,8 +17,8 @@
       "threshold": 0.6
     },
     "USD/CHF": {
-      "confidence": 0.35,
-      "direction": "SHORT",
+      "confidence": 0.375,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "AUD/USD": {
@@ -47,7 +47,7 @@
       "threshold": 0.6
     },
     "GOLD": {
-      "confidence": 0.5,
+      "confidence": 0.55,
       "direction": "LONG",
       "threshold": 0.6
     },
