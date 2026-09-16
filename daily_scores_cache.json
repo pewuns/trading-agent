@@ -47,12 +47,12 @@
       "threshold": 0.6
     },
     "GOLD": {
-      "confidence": 0.3,
+      "confidence": 0.5,
       "direction": "LONG",
       "threshold": 0.6
     },
     "OIL WTI": {
-      "confidence": 0.4,
+      "confidence": 0.5,
       "direction": "LONG",
       "threshold": 0.6
     }
