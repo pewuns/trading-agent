@@ -513,7 +513,7 @@
     "timestamp": "2026-09-16T17:49:13.058664+00:00",
     "status": "open",
     "risk_distance": 0.9117826734270409,
-    "mae_percent": 0.0,
+    "mae_percent": -0.019535602722909724,
     "mfe_percent": 0.04885018704538357
   },
   "GOLD_LONG": {
@@ -571,9 +571,13 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-16T18:03:23.806339+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 14.250156947544383,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -0.8178958818308818,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 4353.39990234375,
+    "closed_at": "2026-09-16T18:25:16.764658+00:00",
+    "r_multiple": -2.5192636457198
   }
 }
