@@ -2,7 +2,7 @@
   "date": "2026-09-16",
   "scores": {
     "EUR/USD": {
-      "confidence": 0.3,
+      "confidence": 0.375,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -38,7 +38,7 @@
     },
     "ETHEREUM": {
       "confidence": 0.35,
-      "direction": "SHORT",
+      "direction": "LONG",
       "threshold": 0.6
     },
     "SOLANA": {
