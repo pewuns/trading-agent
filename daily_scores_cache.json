@@ -33,7 +33,7 @@
     },
     "BITCOIN": {
       "confidence": 0.525,
-      "direction": "LONG",
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "ETHEREUM": {
@@ -42,7 +42,7 @@
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.55,
+      "confidence": 0.575,
       "direction": "SHORT",
       "threshold": 0.6
     },
@@ -94,6 +94,16 @@
     "GOOGLE": {
       "confidence": 0.5,
       "direction": "LONG",
+      "threshold": 0.6
+    },
+    "S&P500": {
+      "confidence": 0.4,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "NASDAQ": {
+      "confidence": 0.55,
+      "direction": "SHORT",
       "threshold": 0.6
     }
   }
