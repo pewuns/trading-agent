@@ -37,6 +37,20 @@ logging.basicConfig(
 )
 logger = logging.getLogger('trading_bot')
 
+# --- Signal Engine (opcja C: model-cień - patrz compute_signal_engine_shadow) ---
+# Opcjonalna zależność (pandas + signal_engine.py) - agent MUSI działać nawet
+# gdy jej brak (np. jeszcze nie doinstalowane w środowisku), więc import jest
+# osłonięty, a brak loguje się RAZ przy starcie, nie za każdy rynek/cykl.
+try:
+    import pandas as pd
+    import signal_engine
+    SIGNAL_ENGINE_AVAILABLE = True
+except ImportError as _sig_eng_err:
+    pd = None
+    signal_engine = None
+    SIGNAL_ENGINE_AVAILABLE = False
+    logger.warning(f"Signal Engine (model-cień) niedostępny - brak pandas/signal_engine.py: {_sig_eng_err}")
+
 # Tokeny
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
@@ -145,8 +159,9 @@ XTB_SYMBOLS = {
 
 # ============================================
 # Ceny (OHLCV) - routing wg kategorii rynku (patrz get_price_data):
-#   - krypto: CryptoCompare (główne) -> Binance (fallback) -> Yahoo (ostatnia deska ratunku)
-#   - forex/reszta: Yahoo (na razie - Twelve Data dla forexu w kolejnym kroku)
+#   - krypto: CryptoCompare (główne) -> Yahoo (fallback)
+#   - forex: Twelve Data (główne) -> Yahoo (fallback)
+#   - reszta: Yahoo bezpośrednio
 #
 # Investing.com zostało CAŁKOWICIE USUNIĘTE z kodu: nie odpowiedziało ani
 # razu z IP GitHub Actions (błąd "brak odpowiedzi HTTP" dla WSZYSTKICH
@@ -1384,18 +1399,65 @@ def compute_shadow_score(ind, combined):
     return score  # zakres -2..2
 
 
-def log_shadow_comparison(name, production_confidence, production_direction, shadow_score):
+def log_shadow_comparison(name, production_confidence, production_direction, shadow_score,
+                           signal_engine_result=None):
+    """signal_engine_result: opcjonalny dict {'direction': 'LONG'/'SHORT'/None,
+    'tier': 'strong'/'normal'/None} z compute_signal_engine_shadow - model-cień
+    (opcja C), logowany obok istniejącego prostego baseline (shadow_score),
+    żeby dało się porównać OBA podejścia względem produkcyjnego scoringu."""
     try:
+        record = {
+            'name': name,
+            'timestamp': datetime.now(pytz.utc).isoformat(),
+            'production_confidence': production_confidence,
+            'production_direction': production_direction,
+            'shadow_score': shadow_score,
+        }
+        if signal_engine_result is not None:
+            record['signal_engine_direction'] = signal_engine_result.get('direction')
+            record['signal_engine_tier'] = signal_engine_result.get('tier')
         with open(SHADOW_LOG_FILE, 'a', encoding='utf-8') as f:
-            f.write(json.dumps({
-                'name': name,
-                'timestamp': datetime.now(pytz.utc).isoformat(),
-                'production_confidence': production_confidence,
-                'production_direction': production_direction,
-                'shadow_score': shadow_score,
-            }, ensure_ascii=False) + "\n")
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
     except Exception as e:
         logger.error(f"Nie udało się zapisać do {SHADOW_LOG_FILE}: {e}")
+
+
+def compute_signal_engine_shadow(main_data):
+    """Model-cień (opcja C z rozmowy): niezależny sygnał z proponowanego
+    Signal Engine (Kalman-filtered Supertrend + Smart Trail + RSI/Volume -
+    patrz signal_engine.py) liczony na TYCH SAMYCH świecach 15m/1d co
+    produkcyjny scoring, żeby porównanie było miarodajne. Logowany obok
+    compute_shadow_score w log_shadow_comparison - NIE wpływa na to, co
+    faktycznie jest wysyłane na Telegram.
+
+    Wymaga pandas (patrz requirements.txt) i signal_engine.py w repo. Jeśli
+    któregoś brakuje, zwraca None po zalogowaniu tego RAZ (SIGNAL_ENGINE_AVAILABLE),
+    nie za każdy rynek/cykl - nie chcemy zaśmiecać logów tym samym błędem
+    setki razy dziennie."""
+    if not SIGNAL_ENGINE_AVAILABLE:
+        return None
+    prices = main_data.get('prices') or []
+    # Za mało świec na sensowną konwergencję Kalmana/ATR(10)/Supertrend/
+    # RSI(14)/średniej wolumenu(20) - poniżej tego zwracalibyśmy szum, nie sygnał.
+    if len(prices) < 30:
+        return None
+    try:
+        df = pd.DataFrame({
+            'close': prices,
+            'high': main_data.get('highs') or prices,
+            'low': main_data.get('lows') or prices,
+            'volume': main_data.get('volumes') or [0] * len(prices),
+        })
+        sig_df = signal_engine.generate_signals(df)
+        last_sig = sig_df['signal'].iloc[-1]
+        if not isinstance(last_sig, str):
+            return {'direction': None, 'tier': None}
+        direction = 'LONG' if last_sig.startswith('BUY') else 'SHORT'
+        tier = 'strong' if last_sig.endswith('+') else 'normal'
+        return {'direction': direction, 'tier': tier}
+    except Exception as e:
+        logger.warning(f"Signal Engine (model-cień) zwrócił błąd: {e}")
+        return None
 
 
 def log_near_miss(name, stage, reason, long_conf=None, short_conf=None, direction=None,
@@ -1801,9 +1863,13 @@ def send_telegram(message, add_disclaimer=True):
 
 
 # ============================================
-# CryptoCompare (GŁÓWNE) + Binance (fallback) - dane cenowe dla krypto
+# CryptoCompare - GŁÓWNE (jedyne) źródło cen dla krypto
 # ============================================
+# Binance USUNIĘTE (patrz historia zmian) - potwierdzona trwała blokada
+# geograficzna (HTTP 451 "Service unavailable from [location]") z IP GitHub
+# Actions, nie do naprawienia bez zmiany regionu hostowania.
 CRYPTOCOMPARE_BASE_URL = "https://min-api.cryptocompare.com/data/v2"
+CRYPTOCOMPARE_API_KEY = os.environ.get('CRYPTOCOMPARE_API_KEY', '')  # wymagane od pewnego czasu nawet do danych historycznych
 
 
 def _cryptocompare_params(interval):
@@ -1823,12 +1889,18 @@ def _cryptocompare_params(interval):
 
 
 def fetch_cryptocompare_data(name, interval='15m', range_period='1d'):
-    """GŁÓWNE źródło cen dla krypto (BITCOIN/ETHEREUM/SOLANA) - oficjalne,
-    udokumentowane, darmowe API (nie wymaga klucza do danych historycznych).
-    W przeciwieństwie do Binance (patrz fetch_binance_data) nie ma znanych
-    blokad geograficznych, więc jest tu źródłem GŁÓWNYM, nie fallbackiem."""
+    """GŁÓWNE (jedyne) źródło cen dla krypto (BITCOIN/ETHEREUM/SOLANA).
+    NAPRAWIONE: CryptoCompare zwracało HTTP 401 "API key required" -
+    darmowy klucz jest teraz wymagany nawet do danych historycznych
+    (wcześniejsze założenie, że nie jest potrzebny, okazało się błędne -
+    potwierdzone realnymi błędami w data_fetch_errors.jsonl). Bez ustawionego
+    CRYPTOCOMPARE_API_KEY funkcja od razu loguje to i spada na Yahoo,
+    zamiast wysyłać skazane na porażkę zapytania."""
     fsym = CRYPTO_SYMBOLS.get(name)
     if not fsym:
+        return None
+    if not CRYPTOCOMPARE_API_KEY:
+        log_data_error('cryptocompare', name, fsym, 'brak CRYPTOCOMPARE_API_KEY')
         return None
     endpoint, aggregate, limit = _cryptocompare_params(interval)
     if endpoint is None:
@@ -1837,7 +1909,8 @@ def fetch_cryptocompare_data(name, interval='15m', range_period='1d'):
 
     url = f"{CRYPTOCOMPARE_BASE_URL}/{endpoint}"
     params = {'fsym': fsym, 'tsym': 'USD', 'aggregate': aggregate, 'limit': limit}
-    resp, err = http_get_with_retry(url, params=params, timeout=10, retries=2)
+    headers = {'authorization': f'Apikey {CRYPTOCOMPARE_API_KEY}'}
+    resp, err = http_get_with_retry(url, params=params, headers=headers, timeout=10, retries=2)
     if resp is None:
         log_data_error('cryptocompare', name, fsym, err)
         return None
@@ -1861,51 +1934,6 @@ def fetch_cryptocompare_data(name, interval='15m', range_period='1d'):
         return {'prices': closes, 'highs': highs, 'lows': lows, 'volumes': volumes, 'opens': opens}
     except (ValueError, KeyError, TypeError, json.JSONDecodeError) as e:
         log_data_error('cryptocompare', name, fsym, f'błąd parsowania: {e}')
-        return None
-
-
-BINANCE_SYMBOLS = {
-    'BITCOIN': 'BTCUSDT',
-    'ETHEREUM': 'ETHUSDT',
-    'SOLANA': 'SOLUSDT',
-}
-BINANCE_INTERVAL_MAP = {'5m': '5m', '15m': '15m', '60m': '1h', '1d': '1d'}
-BINANCE_BASE_URL = "https://api.binance.com/api/v3/klines"
-
-
-def fetch_binance_data(name, interval='15m', range_period='1d'):
-    """Fallback #1 dla krypto (po CryptoCompare) - oficjalne, udokumentowane
-    API Binance. UWAGA: Binance.com geo-blokuje ruch z USA (regulacje CFTC) -
-    runnery GitHub Actions bywają hostowane w regionach US bez gwarancji,
-    który akurat trafi, więc to NIE jest pewniak w 100% przypadków. Dlatego
-    fallback #1, nie źródło główne (tę rolę pełni CryptoCompare, bez znanych
-    blokad geograficznych)."""
-    symbol = BINANCE_SYMBOLS.get(name)
-    b_interval = BINANCE_INTERVAL_MAP.get(interval)
-    if not symbol or not b_interval:
-        return None
-    limit = {'5m': 200, '15m': 200, '60m': 500, '1d': 120}.get(interval, 200)
-    params = {'symbol': symbol, 'interval': b_interval, 'limit': limit}
-    resp, err = http_get_with_retry(BINANCE_BASE_URL, params=params, timeout=10, retries=2)
-    if resp is None:
-        log_data_error('binance', name, symbol, f'{err} (możliwa blokada geograficzna)')
-        return None
-    try:
-        rows = resp.json()
-        if not isinstance(rows, list):
-            log_data_error('binance', name, symbol, f'nieoczekiwana odpowiedź: {rows}')
-            return None
-        opens, highs, lows, closes, volumes = [], [], [], [], []
-        for r in rows:
-            # format klines: [openTime, open, high, low, close, volume, closeTime, ...]
-            opens.append(float(r[1])); highs.append(float(r[2])); lows.append(float(r[3]))
-            closes.append(float(r[4])); volumes.append(float(r[5]))
-        if len(closes) < 10:
-            log_data_error('binance', name, symbol, f'za mało świec w odpowiedzi ({len(closes)})')
-            return None
-        return {'prices': closes, 'highs': highs, 'lows': lows, 'volumes': volumes, 'opens': opens}
-    except (ValueError, KeyError, IndexError, TypeError, json.JSONDecodeError) as e:
-        log_data_error('binance', name, symbol, f'błąd parsowania: {e}')
         return None
 
 
@@ -2063,25 +2091,24 @@ def fetch_twelvedata_data(name, interval='15m', range_period='1d'):
 
 def get_price_data(name, symbol, interval='15m', range_period='1d'):
     """Punkt wejścia do pobierania świec, routing wg kategorii rynku:
-    - krypto (BITCOIN/ETHEREUM/SOLANA): CryptoCompare (główne) -> Binance
-      (fallback #1) -> Yahoo (fallback #2, ostatnia deska ratunku).
+    - krypto (BITCOIN/ETHEREUM/SOLANA): CryptoCompare (główne) -> Yahoo
+      (fallback, ostatnia deska ratunku).
     - forex (6 par - patrz FOREX_SYMBOLS): Twelve Data (główne, wg
       harmonogramu + cache - patrz fetch_twelvedata_data) -> Yahoo (fallback).
     - pozostałe (indeksy/surowce/akcje): Yahoo bezpośrednio.
 
     Investing.com zostało CAŁKOWICIE USUNIĘTE z kodu - patrz komentarz przy
-    CRYPTO_SYMBOLS wyżej. Zwraca (data, source)."""
+    CRYPTO_SYMBOLS wyżej. Binance zostało CAŁKOWICIE USUNIĘTE - potwierdzona
+    trwała blokada geograficzna (HTTP 451) z IP GitHub Actions. Zwraca
+    (data, source)."""
     if name in CRYPTO_SYMBOLS:
         data = fetch_cryptocompare_data(name, interval, range_period)
         if data:
             return data, 'cryptocompare'
-        data = fetch_binance_data(name, interval, range_period)
-        if data:
-            return data, 'binance'
         data = fetch_yahoo_data(symbol, interval, range_period)
         if data:
             return data, 'yahoo'
-        log_data_error('all_sources', name, symbol, 'CryptoCompare, Binance i Yahoo zawiodły w tym cyklu')
+        log_data_error('all_sources', name, symbol, 'CryptoCompare i Yahoo zawiodły w tym cyklu')
         return None, None
 
     if name in FOREX_SYMBOLS:
@@ -2904,8 +2931,10 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
 
     # --- Punkt C: shadow scoring - logowane zawsze, nigdy nie wpływa na decyzję ---
     shadow_score = compute_shadow_score(ind, combined)
+    signal_engine_result = compute_signal_engine_shadow(main_data)
     log_shadow_comparison(name, max(long_conf, short_conf),
-                           'LONG' if long_conf >= short_conf else 'SHORT', shadow_score)
+                           'LONG' if long_conf >= short_conf else 'SHORT', shadow_score,
+                           signal_engine_result)
 
     # --- Punkt B: próg pewności skalibrowany per rynek (domyślnie AdaptiveThreshold.DEFAULT) ---
     threshold = adaptive_threshold.get_threshold(name) if adaptive_threshold else AdaptiveThreshold.DEFAULT
