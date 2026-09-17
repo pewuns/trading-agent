@@ -120,7 +120,7 @@
     "timestamp": "2026-09-17T14:37:37.061041+00:00",
     "status": "open",
     "risk_distance": 21.968601771763588,
-    "mae_percent": -0.8762154810880372,
+    "mae_percent": -0.8887640400589526,
     "mfe_percent": 0.0
   },
   "BITCOIN_LONG": {
@@ -444,7 +444,7 @@
     "status": "open",
     "risk_distance": 0.6546429225376613,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.24565196840559442
   },
   "OIL WTI_SHORT": {
     "name": "OIL WTI",
