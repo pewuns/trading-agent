@@ -514,10 +514,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-16T17:49:13.058664+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.9117826734270409,
     "mae_percent": -0.21492889741237114,
-    "mfe_percent": 1.162565879553059
+    "mfe_percent": 1.8855024361738841,
+    "outcome": "win",
+    "closed_price": 100.43000030517578,
+    "closed_at": "2026-09-17T06:44:40.709754+00:00",
+    "r_multiple": 2.11673281520217
   },
   "GOLD_LONG": {
     "name": "GOLD",
