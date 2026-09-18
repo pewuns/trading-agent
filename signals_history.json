@@ -2,39 +2,39 @@
   "SOLANA_LONG": {
     "name": "SOLANA",
     "direction": "LONG",
-    "entry": 111.26000213623047,
-    "stop_loss": 109.82321684701103,
-    "take_profit": 113.65464428492955,
-    "position_size": 69.599821734204,
+    "entry": 112.0,
+    "stop_loss": 110.49249921526227,
+    "take_profit": 114.5125013078962,
+    "position_size": 66.33495717708546,
     "risk_amount": 100.0,
     "sizing_method": "stały_procent_ryzyka (za mało historii na Kelly)",
     "confidence": 0.65,
     "threshold_used": 0.6,
     "regime": "TREND",
-    "adx": 53.24621564999477,
+    "adx": 61.8133200555443,
     "model_used": false,
     "features": {
       "sma20": 1.0,
       "sma50": 1.0,
-      "rsi": 0.7095556184050548,
+      "rsi": 0.72792368417938,
       "vwap": 1.0,
       "support_resistance": -0.5,
       "pattern": 0.0,
-      "order_flow": 0.48339899710859346,
+      "order_flow": 0.5313959940597258,
       "poc": 1.0,
       "mtf_trend": 1.0,
       "news_sentiment": 0.0,
       "macro_sentiment": 0.0
     },
-    "rsi": 85.47778092025274,
-    "vwap": 106.94412377706072,
+    "rsi": 86.396184208969,
+    "vwap": 107.29413651606734,
     "support": 105.44000244140625,
-    "resistance": 111.26000213623047,
+    "resistance": 112.1500015258789,
     "candlestick_patterns": [
       "DOJI (niezdecydowanie)"
     ],
-    "order_flow_delta": 48.33989971085935,
-    "volume_profile_poc": 105.04,
+    "order_flow_delta": 53.13959940597258,
+    "volume_profile_poc": 105.4,
     "news_sentiment": 0,
     "news_impact": "low",
     "news_reasoning": "",
@@ -47,17 +47,17 @@
       "1d": "UP"
     },
     "divergences": [],
-    "heatmap": "```\nINTERWAŁ | TREND | RSI | ZGODNOŚĆ\n---------|-------|-----|----------\n5m       | UP    |  56 | ✅\n15m      | UP    |  85 | ✅\n1h       | UP    |  87 | ✅\n4h       | UP    |  92 | ✅\n1d       | UP    |  61 | ✅\n```",
+    "heatmap": "```\nINTERWAŁ | TREND | RSI | ZGODNOŚĆ\n---------|-------|-----|----------\n5m       | UP    |  75 | ✅\n15m      | UP    |  86 | ✅\n1h       | UP    |  87 | ✅\n4h       | UP    |  92 | ✅\n1d       | UP    |  62 | ✅\n```",
     "spread_source": "proxy_zmiennosci",
-    "spread_value": 0.0060657334461238326,
+    "spread_value": 0.005849136228086767,
     "price_source": "yahoo",
     "macro_sentiment": 0.0,
     "macro_impact": "low",
-    "timestamp": "2026-09-18T16:03:03.556961+00:00",
+    "timestamp": "2026-09-18T16:35:40.751046+00:00",
     "status": "open",
-    "risk_distance": 1.4367852892194435,
+    "risk_distance": 1.5075007847377293,
     "mae_percent": 0.0,
-    "mfe_percent": 0.44939779831010906
+    "mfe_percent": 0.0
   },
   "ETHEREUM_LONG": {
     "name": "ETHEREUM",
@@ -117,7 +117,7 @@
     "status": "open",
     "risk_distance": 27.047084263392662,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.4267054443376132
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
@@ -177,7 +177,7 @@
     "status": "open",
     "risk_distance": 672.5951450892899,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.2102135980746089
   },
   "SOLANA_SHORT": {
     "name": "SOLANA",
