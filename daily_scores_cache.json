@@ -2,7 +2,7 @@
   "date": "2026-09-18",
   "scores": {
     "EUR/USD": {
-      "confidence": 0.425,
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     },
@@ -12,7 +12,7 @@
       "threshold": 0.6
     },
     "GBP/USD": {
-      "confidence": 0.375,
+      "confidence": 0.45,
       "direction": "SHORT",
       "threshold": 0.6
     },
@@ -42,7 +42,7 @@
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.55,
+      "confidence": 0.575,
       "direction": "LONG",
       "threshold": 0.6
     },
