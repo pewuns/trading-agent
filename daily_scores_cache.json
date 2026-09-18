@@ -22,13 +22,28 @@
       "threshold": 0.6
     },
     "AUD/USD": {
-      "confidence": 0.325,
-      "direction": "SHORT",
+      "confidence": 0.5,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "USD/CAD": {
       "confidence": 0.3,
       "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "BITCOIN": {
+      "confidence": 0.55,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "ETHEREUM": {
+      "confidence": 0.55,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "SOLANA": {
+      "confidence": 0.55,
+      "direction": "LONG",
       "threshold": 0.6
     }
   }
