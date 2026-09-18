@@ -3848,3 +3848,11 @@
 {"name": "BITCOIN", "timestamp": "2026-09-18T06:53:45.708187+00:00", "production_confidence": 0.5, "production_direction": "LONG", "shadow_score": 2}
 {"name": "ETHEREUM", "timestamp": "2026-09-18T06:53:51.277215+00:00", "production_confidence": 0.55, "production_direction": "LONG", "shadow_score": 2}
 {"name": "SOLANA", "timestamp": "2026-09-18T06:53:56.639683+00:00", "production_confidence": 0.55, "production_direction": "LONG", "shadow_score": 2}
+{"name": "EUR/USD", "timestamp": "2026-09-18T07:03:00.073572+00:00", "production_confidence": 0.275, "production_direction": "SHORT", "shadow_score": -2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "GBP/USD", "timestamp": "2026-09-18T07:03:04.686452+00:00", "production_confidence": 0.25, "production_direction": "SHORT", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/CHF", "timestamp": "2026-09-18T07:03:08.822684+00:00", "production_confidence": 0.425, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "AUD/USD", "timestamp": "2026-09-18T07:03:13.042496+00:00", "production_confidence": 0.4, "production_direction": "LONG", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/CAD", "timestamp": "2026-09-18T07:03:19.782961+00:00", "production_confidence": 0.45, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "BITCOIN", "timestamp": "2026-09-18T07:03:24.741478+00:00", "production_confidence": 0.55, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "ETHEREUM", "timestamp": "2026-09-18T07:03:29.653283+00:00", "production_confidence": 0.55, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "SOLANA", "timestamp": "2026-09-18T07:03:34.633759+00:00", "production_confidence": 0.55, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
