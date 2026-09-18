@@ -56,7 +56,7 @@
     "timestamp": "2026-09-18T18:25:51.287367+00:00",
     "status": "open",
     "risk_distance": 0.9578590393066406,
-    "mae_percent": 0.0,
+    "mae_percent": -0.20418654899264765,
     "mfe_percent": 0.1686811456283718
   },
   "ETHEREUM_LONG": {
@@ -116,7 +116,7 @@
     "timestamp": "2026-09-18T18:37:34.543452+00:00",
     "status": "open",
     "risk_distance": 17.78785923549094,
-    "mae_percent": 0.0,
+    "mae_percent": -0.3119005184236982,
     "mfe_percent": 0.0
   },
   "BITCOIN_LONG": {
@@ -176,7 +176,7 @@
     "timestamp": "2026-09-18T18:37:29.321791+00:00",
     "status": "open",
     "risk_distance": 339.1004464285652,
-    "mae_percent": 0.0,
+    "mae_percent": -0.064880882017457,
     "mfe_percent": 0.0
   },
   "SOLANA_SHORT": {
@@ -568,6 +568,66 @@
     "timestamp": "2026-09-18T18:37:19.552682+00:00",
     "status": "open",
     "risk_distance": 11.067836216518117,
+    "mae_percent": -0.08128282443097337,
+    "mfe_percent": 0.0
+  },
+  "META_LONG": {
+    "name": "META",
+    "direction": "LONG",
+    "entry": 673.4550170898438,
+    "stop_loss": 670.7634190150669,
+    "take_profit": 677.9410138811384,
+    "position_size": 37.152649549391285,
+    "risk_amount": 100.0,
+    "sizing_method": "stały_procent_ryzyka (za mało historii na Kelly)",
+    "confidence": 0.6,
+    "threshold_used": 0.6,
+    "regime": "UNKNOWN",
+    "adx": null,
+    "model_used": false,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.049255396929233794,
+      "vwap": 1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.13223124966499591,
+      "poc": 1.0,
+      "mtf_trend": 0.28119180633147134,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "rsi": 52.46276984646169,
+    "vwap": 672.9663144666846,
+    "support": 669.8200073242188,
+    "resistance": 679.8400268554688,
+    "candlestick_patterns": [
+      "DOJI (niezdecydowanie)"
+    ],
+    "order_flow_delta": 13.223124966499592,
+    "volume_profile_poc": 672.83,
+    "news_sentiment": 0,
+    "news_impact": "low",
+    "news_reasoning": "",
+    "timeframe_alignment": 0.6405959031657357,
+    "timeframe_trends": {
+      "5m": "UP",
+      "15m": "SIDEWAYS",
+      "1h": "UP",
+      "4h": "SIDEWAYS",
+      "1d": "UP"
+    },
+    "divergences": [],
+    "heatmap": "```\nINTERWAŁ | TREND | RSI | ZGODNOŚĆ\n---------|-------|-----|----------\n5m       | UP    |  64 | ✅\n15m      | SIDEWAYS |  52 | ❌\n1h       | UP    |  50 | ✅\n4h       | SIDEWAYS |  80 | ❌\n1d       | UP    |  82 | ✅\n```",
+    "spread_source": "proxy_zmiennosci",
+    "spread_value": 0.0018048059941188344,
+    "price_source": "yahoo",
+    "macro_sentiment": 0.0,
+    "macro_impact": "low",
+    "timestamp": "2026-09-18T18:50:08.099120+00:00",
+    "status": "open",
+    "risk_distance": 2.6915980747768344,
     "mae_percent": 0.0,
     "mfe_percent": 0.0
   }
