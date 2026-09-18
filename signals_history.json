@@ -118,10 +118,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-17T14:37:37.061041+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 21.968601771763588,
     "mae_percent": -0.8887640400589526,
-    "mfe_percent": 1.3687414803189193
+    "mfe_percent": 1.9074204865995223,
+    "outcome": "win",
+    "closed_price": 2518.0,
+    "closed_at": "2026-09-18T09:23:09.046856+00:00",
+    "r_multiple": 2.145329197649547
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
