@@ -2,7 +2,7 @@
   "date": "2026-09-18",
   "scores": {
     "EUR/USD": {
-      "confidence": 0.375,
+      "confidence": 0.425,
       "direction": "SHORT",
       "threshold": 0.6
     },
@@ -12,8 +12,8 @@
       "threshold": 0.6
     },
     "GBP/USD": {
-      "confidence": 0.3,
-      "direction": "LONG",
+      "confidence": 0.375,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "USD/CHF": {
