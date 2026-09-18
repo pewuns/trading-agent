@@ -76207,5 +76207,131 @@
       "macro_sentiment": 0.0
     },
     "created_at": "2026-09-18T17:33:02.037203+00:00"
+  },
+  "EUR/USD_2026-09-18T17:46:56.467768+00:00": {
+    "name": "EUR/USD",
+    "direction": "LONG",
+    "confidence": 0.25,
+    "entry": 1.14837,
+    "atr": 0.0004828571428571341,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.5025380710659217,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": -1.0,
+      "mtf_trend": -0.0837988826815641,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-18T17:46:56.467802+00:00"
+  },
+  "GBP/USD_2026-09-18T17:47:00.753836+00:00": {
+    "name": "GBP/USD",
+    "direction": "LONG",
+    "confidence": 0.3,
+    "entry": 1.33921,
+    "atr": 0.0006857142857143213,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.7862318840579456,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": 0.04283054003724418,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-18T17:47:00.753867+00:00"
+  },
+  "USD/CHF_2026-09-18T17:47:05.154651+00:00": {
+    "name": "USD/CHF",
+    "direction": "SHORT",
+    "confidence": 0.3,
+    "entry": 0.82202,
+    "atr": 0.000538571428571412,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.5776892430279011,
+      "vwap": 0.0,
+      "support_resistance": 0.5,
+      "pattern": -1.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": -0.04283054003724385,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-18T17:47:05.154682+00:00"
+  },
+  "AUD/USD_2026-09-18T17:47:09.858317+00:00": {
+    "name": "AUD/USD",
+    "direction": "LONG",
+    "confidence": 0.5,
+    "entry": 0.71239,
+    "atr": 0.00033999999999998317,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.37627118644068647,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": 0.5307262569832403,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-18T17:47:09.858348+00:00"
+  },
+  "USD/CAD_2026-09-18T17:47:14.278222+00:00": {
+    "name": "USD/CAD",
+    "direction": "LONG",
+    "confidence": 0.375,
+    "entry": 1.40034,
+    "atr": 0.0005707142857142974,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 1.0,
+      "rsi": 0.07395498392282093,
+      "vwap": 0.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": 0.24394785847299816,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-18T17:47:14.278264+00:00"
+  },
+  "OIL WTI_2026-09-18T17:47:24.730555+00:00": {
+    "name": "OIL WTI",
+    "direction": "SHORT",
+    "confidence": 0.55,
+    "entry": 95.91999816894531,
+    "atr": 0.3999988010951451,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.7414430800560453,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.03986030038696137,
+      "poc": 1.0,
+      "mtf_trend": -0.4189944134078212,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0
+    },
+    "created_at": "2026-09-18T17:47:24.730590+00:00"
   }
 }
