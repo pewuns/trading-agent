@@ -10173,3 +10173,13 @@
 {"timestamp": "2026-09-17T19:22:12.208780+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
 {"timestamp": "2026-09-17T20:02:17.525925+00:00", "source": "TradingEconomics_News", "target": "https://tradingeconomics.com/rss/news.aspx", "status_code": 403, "error": "Status HTTP 403"}
 {"timestamp": "2026-09-17T20:02:17.557554+00:00", "source": "TradingEconomics_Calendar", "target": "https://tradingeconomics.com/rss/calendar.aspx", "status_code": 403, "error": "Status HTTP 403"}
+{"timestamp": "2026-09-18T04:02:11.604790+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-18T04:02:11.750720+00:00", "source": "yahoo", "name": "CL=F", "symbol": "CL=F", "reason": "za mało wyrównanych świec (0)"}
+{"timestamp": "2026-09-18T04:02:11.751902+00:00", "source": "yahoo", "name": "OIL WTI", "symbol": "CL=F", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-18T04:02:41.096044+00:00", "source": "yahoo", "name": "GC=F", "symbol": "GC=F", "reason": "za mało wyrównanych świec (0)"}
+{"timestamp": "2026-09-18T04:02:41.097032+00:00", "source": "yahoo", "name": "GOLD", "symbol": "GC=F", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-18T04:02:41.192772+00:00", "source": "yahoo", "name": "CL=F", "symbol": "CL=F", "reason": "za mało wyrównanych świec (0)"}
+{"timestamp": "2026-09-18T04:02:41.193699+00:00", "source": "yahoo", "name": "OIL WTI", "symbol": "CL=F", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-18T04:02:41.193904+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-18T04:02:41.263072+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-18T04:02:41.333525+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
