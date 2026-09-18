@@ -121,7 +121,7 @@
     "status": "open",
     "risk_distance": 21.968601771763588,
     "mae_percent": -0.8887640400589526,
-    "mfe_percent": 0.545150900867965
+    "mfe_percent": 0.5524330173731341
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
@@ -441,10 +441,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-17T19:04:08.754715+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.5839282444545262,
-    "mae_percent": -0.3929287955674568,
-    "mfe_percent": 0.0
+    "mae_percent": -0.9626751744155981,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 100.81999969482422,
+    "closed_at": "2026-09-18T06:27:32.163709+00:00",
+    "r_multiple": -1.6782941504209292
   },
   "OIL WTI_SHORT": {
     "name": "OIL WTI",
