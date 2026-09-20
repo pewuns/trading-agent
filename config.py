@@ -60,6 +60,15 @@ CYCLE_MINUTES = 15
 # +1h co 4 cykle (godzinowo), +15m co 2 cykle (co 30 min).
 FOREX_1H_EVERY_N_CYCLES = 4
 FOREX_15M_EVERY_N_CYCLES = 2
+
+# --- Analiza wykresów przez Groq Vision (Kalman... nie, to osobna funkcja) ---
+# Raz na godzinę, dla WSZYSTKICH rynków (ustalone w rozmowie) - wynik wpięty
+# do scoringu jako dodatkowa cecha ORAZ jako osobny alert na Telegram, ale
+# TYLKO gdy pewność jest wysoka (CHART_AI_ALERT_MIN_CONFIDENCE) i AI
+# faktycznie przewiduje odwrócenie trendu (nie samo "trend będzie trwał").
+CHART_AI_CACHE_MAX_AGE_HOURS = 1.5  # dłużej niż godzina odstępu, żeby jeden spóźniony cykl nie unieważnił cache
+CHART_AI_MIN_SCORING_CONFIDENCE = 0.5   # próg pewności, od którego wynik w ogóle wchodzi do scoringu
+CHART_AI_ALERT_MIN_CONFIDENCE = 0.75    # próg dla SAMODZIELNEGO alertu na Telegram (wyższy niż do scoringu)
 # z 21:50 na 21:30, żeby po poszerzeniu okna do 20 min (21:30-21:49) nie
 # nachodzić na okno makro 'post_us' (22:00+) sprawdzane zaraz po tym w main().
 
