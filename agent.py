@@ -10,6 +10,8 @@ from datetime import datetime, timedelta
 import pytz
 import re
 import xml.etree.ElementTree as ET
+import io
+import base64
 
 from config import (
     AGENT_MODE, RunMode, is_feature_enabled, get_mode_prefix,
@@ -18,6 +20,7 @@ from config import (
     MACRO_HOURS, DAILY_SUMMARY_HOUR,
     TRADING_WINDOW_START, TRADING_WINDOW_END, CYCLE_MINUTES,
     FOREX_1H_EVERY_N_CYCLES, FOREX_15M_EVERY_N_CYCLES,
+    CHART_AI_CACHE_MAX_AGE_HOURS, CHART_AI_MIN_SCORING_CONFIDENCE, CHART_AI_ALERT_MIN_CONFIDENCE,
 )
 from modes import (
     log_signal_per_mode, log_trade_outcome, get_notification_message,
@@ -51,6 +54,19 @@ except ImportError as _sig_eng_err:
     SIGNAL_ENGINE_AVAILABLE = False
     logger.warning(f"Signal Engine (model-cień) niedostępny - brak pandas/signal_engine.py: {_sig_eng_err}")
 
+# --- Analiza wykresów przez Groq Vision (opcja: wpięta do scoringu + osobny alert) ---
+try:
+    import matplotlib
+    matplotlib.use('Agg')  # bez wyświetlacza - generujemy tylko do bufora w pamięci
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle
+    CHART_AI_AVAILABLE = True
+except ImportError as _chart_ai_err:
+    plt = None
+    Rectangle = None
+    CHART_AI_AVAILABLE = False
+    logger.warning(f"Analiza wykresów Groq Vision niedostępna - brak matplotlib: {_chart_ai_err}")
+
 # Tokeny
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
@@ -75,6 +91,7 @@ NEAR_MISS_PENDING_FILE = 'near_miss_pending.json'      # sygnały "co by było g
 MACRO_DATA_FILE = 'macro_data_history.jsonl'           # WSZYSTKIE dane makro (append-only, do nauki)
 MACRO_STATE_FILE = 'macro_state.json'                  # ostatnie pobrania/analizy makro + cache sentymentu
 DAILY_SCORES_CACHE_FILE = 'daily_scores_cache.json'     # max confidence per rynek DZIŚ, do podsumowania Top 3
+CHART_AI_STATE_FILE = 'chart_ai_state.json'              # cache analiz wykresów Groq Vision per rynek + ostatnie uruchomienie
 
 TIMEZONE = pytz.timezone('Europe/Warsaw')
 
@@ -944,7 +961,7 @@ class FeatureWeights:
     FEATURE_NAMES = [
         'sma20', 'sma50', 'rsi', 'vwap', 'support_resistance',
         'pattern', 'order_flow', 'poc', 'mtf_trend', 'news_sentiment',
-        'macro_sentiment',
+        'macro_sentiment', 'chart_ai_sentiment',
     ]
 
     def __init__(self, file_path=FEATURE_WEIGHTS_FILE):
@@ -1008,7 +1025,7 @@ class FeatureWeights:
         self.save()
 
 
-def build_feature_vector(ind, combined, news_analysis, divergences, macro_analysis=None):
+def build_feature_vector(ind, combined, news_analysis, divergences, macro_analysis=None, chart_ai_analysis=None):
     """Cechy w konwencji ZNAKOWANEJ: dodatnie = przechylenie w górę (byczo),
     ujemne = w dół (niedźwiedzio), 0 = brak/neutralne. Dzięki temu ta sama
     regresja logistyczna przewiduje P(ruch w górę) niezależnie od tego, czy
@@ -1034,6 +1051,12 @@ def build_feature_vector(ind, combined, news_analysis, divergences, macro_analys
     if macro_analysis and macro_analysis.get('impact') in ('high', 'medium'):
         macro_val = max(-1.0, min(1.0, macro_analysis.get('sentiment', 0)))
 
+    chart_ai_val = 0.0
+    if chart_ai_analysis and chart_ai_analysis.get('confidence', 0) >= CHART_AI_MIN_SCORING_CONFIDENCE:
+        pred = chart_ai_analysis.get('prediction_30min')
+        conf = chart_ai_analysis.get('confidence', 0)
+        chart_ai_val = conf if pred == 'up' else (-conf if pred == 'down' else 0.0)
+
     return {
         'sma20': 1.0 if (ind.get('sma20') and ind['price'] > ind['sma20']) else (
             -1.0 if ind.get('sma20') else 0.0),
@@ -1050,6 +1073,7 @@ def build_feature_vector(ind, combined, news_analysis, divergences, macro_analys
         'mtf_trend': (combined.get('trend_score', 0.5) - 0.5) * 2 if combined else 0.0,
         'news_sentiment': news_val,
         'macro_sentiment': macro_val,
+        'chart_ai_sentiment': chart_ai_val,
     }
 
 
@@ -2457,8 +2481,21 @@ def fetch_market_news(market_name):
     return unique_articles[:30]
 
 
+_groq_missing_key_warned = False
+
+
 def call_groq(system_prompt, user_prompt, temperature=0.3, max_tokens=800):
+    """NAPRAWIONE: brak GROQ_API_KEY wcześniej kończył się cichym `return None`,
+    bez żadnego śladu w logach - stąd sentyment newsów zawsze wychodził 0.00
+    na Telegramie, bez żadnego widocznego błędu. Teraz loguje to RAZ (nie za
+    każde wywołanie - są ich dziesiątki na cykl) jako WARNING, żeby dało się
+    to od razu zauważyć w logach uruchomienia."""
+    global _groq_missing_key_warned
     if not GROQ_API_KEY:
+        if not _groq_missing_key_warned:
+            logger.warning("GROQ_API_KEY nie jest ustawiony - analiza newsów/makro/raportów "
+                            "przez AI będzie zawsze zwracać wartości domyślne (sentyment 0.00 itp.)")
+            _groq_missing_key_warned = True
         return None
     url = "https://api.groq.com/openai/v1/chat/completions"
     headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
@@ -2479,6 +2516,232 @@ def call_groq(system_prompt, user_prompt, temperature=0.3, max_tokens=800):
     except (KeyError, IndexError, TypeError) as e:
         logger.warning(f"Błąd parsowania odpowiedzi Groq: {e}")
         return None
+
+
+GROQ_VISION_MODEL = 'qwen/qwen3.8-27b'  # podane przez użytkownika - NIEZWERYFIKOWANE (brak sieci w tym
+# środowisku); jeśli Groq zwróci błąd "model not found"/400, sprawdź aktualną nazwę na
+# console.groq.com/docs/models i podmień tę stałą - reszta kodu (call_groq_vision) się nie zmienia.
+
+
+def call_groq_vision(system_prompt, user_prompt, images_base64, temperature=0.3, max_tokens=800):
+    """Jak call_groq, ale z obrazami (multimodalny format wiadomości OpenAI-
+    -compatible, który Groq też obsługuje). images_base64: lista stringów
+    base64 (bez prefiksu data:...), każdy dołączany jako osobny blok
+    image_url. Dzieli logikę braku klucza z call_groq (ten sam licznik
+    _groq_missing_key_warned, żeby nie logować tego dwa razy)."""
+    global _groq_missing_key_warned
+    if not GROQ_API_KEY:
+        if not _groq_missing_key_warned:
+            logger.warning("GROQ_API_KEY nie jest ustawiony - analiza newsów/makro/raportów/wykresów "
+                            "przez AI będzie zawsze zwracać wartości domyślne (sentyment 0.00 itp.)")
+            _groq_missing_key_warned = True
+        return None
+    url = "https://api.groq.com/openai/v1/chat/completions"
+    headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
+    content = [{"type": "text", "text": user_prompt}]
+    for b64 in images_base64:
+        content.append({"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}})
+    payload = {
+        "model": GROQ_VISION_MODEL,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": content},
+        ],
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+    }
+    resp = http_post_with_retry(url, json_payload=payload, headers=headers, timeout=40, retries=2)
+    if resp is None:
+        return None
+    try:
+        return resp.json()['choices'][0]['message']['content']
+    except (KeyError, IndexError, TypeError) as e:
+        logger.warning(f"Błąd parsowania odpowiedzi Groq Vision: {e}")
+        return None
+
+
+def generate_chart_image(data, title, max_bars=80):
+    """Generuje świecowy wykres PNG (zwrócony jako base64) z ostatnich
+    max_bars świec. data: {'prices','highs','lows','opens'} - ten sam format
+    co reszta kodu (prices = close). Zwraca None, gdy matplotlib niedostępny
+    albo za mało świec do sensownego wykresu."""
+    if not CHART_AI_AVAILABLE:
+        return None
+    opens = (data.get('opens') or [])[-max_bars:]
+    highs = (data.get('highs') or [])[-max_bars:]
+    lows = (data.get('lows') or [])[-max_bars:]
+    closes = (data.get('prices') or [])[-max_bars:]
+    n = len(closes)
+    if n < 10 or len(opens) != n or len(highs) != n or len(lows) != n:
+        return None
+    fig, ax = plt.subplots(figsize=(8, 4), dpi=100)
+    for i in range(n):
+        up = closes[i] >= opens[i]
+        color = '#26a69a' if up else '#ef5350'
+        ax.plot([i, i], [lows[i], highs[i]], color=color, linewidth=0.8)
+        body_bottom = min(opens[i], closes[i])
+        body_height = abs(closes[i] - opens[i])
+        if body_height <= 0:
+            body_height = max((highs[i] - lows[i]) * 0.01, 1e-9)
+        ax.add_patch(Rectangle((i - 0.3, body_bottom), 0.6, body_height, color=color))
+    ax.set_xlim(-1, n)
+    ax.set_title(title, fontsize=10)
+    ax.set_xticks([])
+    ax.grid(True, alpha=0.2)
+    fig.tight_layout()
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    plt.close(fig)
+    buf.seek(0)
+    return base64.b64encode(buf.read()).decode('utf-8')
+
+
+def analyze_charts_with_ai(name, data_15m, data_1h, data_1d):
+    """Wysyła 3 wykresy świecowe (15m/1h/1d) do Groq Vision z prośbą o:
+    ocenę trendu na każdym interwale, rozpoznanie formacji świecowych, i
+    PRZEWIDYWANIE kierunku na najbliższe 30 minut - zgodnie z ustaleniem w
+    rozmowie. Zwraca dict albo None (brak matplotlib/klucza/błąd)."""
+    img_15m = generate_chart_image(data_15m, f"{name} - 15 minut")
+    img_1h = generate_chart_image(data_1h, f"{name} - 1 godzina")
+    img_1d = generate_chart_image(data_1d, f"{name} - 1 dzień")
+    images = [img for img in (img_15m, img_1h, img_1d) if img]
+    if not images:
+        return None
+
+    prompt = f"""Przeanalizuj załączone wykresy świecowe rynku {name} w interwałach 15 minut, 1 godzina i 1 dzień (w tej kolejności).
+
+Szukaj:
+1. Zmiany kierunku trendu (odwrócenia) - czy obecny trend wygląda na wyczerpany/odwracający się?
+2. Rozpoznawalnych formacji świecowych (np. młot, spadająca gwiazda, objęcie bessy/hossy, doji) - głównie na wykresie 15-minutowym.
+3. Przewidywanego kierunku ceny w najbliższe 30 minut.
+
+Odpowiedz WYŁĄCZNIE w JSON, bez żadnego dodatkowego tekstu:
+{{
+  "trend_15m": "up"/"down"/"neutral",
+  "trend_1h": "up"/"down"/"neutral",
+  "trend_1d": "up"/"down"/"neutral",
+  "patterns_detected": [<lista nazw formacji po polsku, pusta lista jeśli brak>],
+  "reversal_expected": <true/false>,
+  "prediction_30min": "up"/"down"/"neutral",
+  "confidence": <liczba 0-1>,
+  "reasoning": <krótkie uzasadnienie po polsku, 1-2 zdania>
+}}"""
+    result = call_groq_vision(
+        "Jesteś analitykiem technicznym rynków finansowych. Analizujesz wyłącznie to, co widać na "
+        "załączonych wykresach świecowych. Odpowiadaj tylko w formacie JSON.",
+        prompt, images, max_tokens=500,
+    )
+    if not result:
+        return None
+    json_match = re.search(r'\{.*\}', result, re.DOTALL)
+    if not json_match:
+        return None
+    try:
+        parsed = json.loads(json_match.group())
+        parsed['confidence'] = max(0.0, min(1.0, float(parsed.get('confidence', 0) or 0)))
+        return parsed
+    except (json.JSONDecodeError, TypeError, ValueError) as e:
+        logger.warning(f"Nie udało się sparsować JSON analizy wykresu ({name}): {e}")
+        return None
+
+
+def load_chart_ai_state():
+    try:
+        if os.path.exists(CHART_AI_STATE_FILE):
+            with open(CHART_AI_STATE_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+    except Exception as e:
+        logger.warning(f"Nie udało się wczytać {CHART_AI_STATE_FILE}: {e}")
+    return {'last_run': None, 'markets': {}}
+
+
+def save_chart_ai_state(state):
+    try:
+        with open(CHART_AI_STATE_FILE, 'w', encoding='utf-8') as f:
+            json.dump(state, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        logger.error(f"Nie udało się zapisać {CHART_AI_STATE_FILE}: {e}")
+
+
+def get_cached_chart_ai_analysis(name, max_age_hours=CHART_AI_CACHE_MAX_AGE_HOURS):
+    """Zwraca ostatnią zapisaną analizę wykresu dla rynku, o ile nie jest
+    starsza niż max_age_hours - starsza jest traktowana jak brak (podobnie
+    jak get_cached_macro_analysis), żeby nieaktualna analiza nie wpływała
+    cicho na scoring przez wiele godzin, gdyby cykl analizy padł."""
+    state = load_chart_ai_state()
+    entry = state.get('markets', {}).get(name)
+    if not entry:
+        return None
+    try:
+        age_hours = (datetime.now(pytz.utc) - datetime.fromisoformat(entry['analyzed_at'])).total_seconds() / 3600
+    except Exception:
+        return None
+    if age_hours > max_age_hours:
+        return None
+    return entry.get('result')
+
+
+def is_chart_ai_fetch_time(state):
+    """Raz na godzinę (ustalone w rozmowie), dla WSZYSTKICH rynków na raz -
+    sprawdza, czy jesteśmy w pierwszych CYCLE_MINUTES minut godziny i czy w
+    TEJ godzinie jeszcze nie analizowaliśmy (żeby cykl co 15 min nie odpalał
+    tego 4x w tej samej godzinie)."""
+    now = datetime.now(TIMEZONE)
+    if now.minute >= CYCLE_MINUTES:
+        return False
+    hour_key = now.strftime('%Y-%m-%d %H')
+    return state.get('last_run') != hour_key
+
+
+def run_chart_ai_analysis_cycle():
+    """Dla WSZYSTKICH rynków: pobiera świece 15m/1h/1d (przez get_price_data -
+    dla forexu to i tak w większości trafi w cache Twelve Data, nie nowe
+    zapytania - patrz fetch_twelvedata_data), generuje wykresy, pyta Groq
+    Vision, zapisuje wynik do cache (używany przez analyze_market) i wysyła
+    OSOBNY alert na Telegram, gdy AI przewiduje odwrócenie trendu z wysoką
+    pewnością (CHART_AI_ALERT_MIN_CONFIDENCE)."""
+    if not CHART_AI_AVAILABLE:
+        logger.warning("Pomijam analizę wykresów - matplotlib niedostępny.")
+        return
+    logger.info("Analiza wykresów przez Groq Vision (cykl godzinowy, wszystkie rynki)...")
+    state = load_chart_ai_state()
+    alerts = []
+
+    for name, info in MARKETS.items():
+        data_15m, _ = get_price_data(name, info['symbol'], '15m', '1d')
+        data_1h, _ = get_price_data(name, info['symbol'], '60m', '1mo')
+        data_1d, _ = get_price_data(name, info['symbol'], '1d', '3mo')
+        if not data_15m and not data_1h and not data_1d:
+            continue
+
+        result = analyze_charts_with_ai(name, data_15m or {}, data_1h or {}, data_1d or {})
+        if not result:
+            continue
+
+        state.setdefault('markets', {})[name] = {
+            'analyzed_at': datetime.now(pytz.utc).isoformat(),
+            'result': result,
+        }
+
+        if (result.get('reversal_expected') and result.get('confidence', 0) >= CHART_AI_ALERT_MIN_CONFIDENCE
+                and result.get('prediction_30min') in ('up', 'down')):
+            alerts.append((name, result))
+
+    now_local = datetime.now(TIMEZONE)
+    state['last_run'] = now_local.strftime('%Y-%m-%d %H')
+    save_chart_ai_state(state)
+
+    if alerts and should_send_notifications():
+        msg = "🔮 *AI: PRZEWIDYWANA ZMIANA TRENDU*\n\n"
+        for name, r in alerts:
+            arrow = '📈' if r['prediction_30min'] == 'up' else '📉'
+            msg += f"{arrow} *{name}* - {r['prediction_30min'].upper()} (pewność: {r['confidence']:.0%})\n"
+            patterns = r.get('patterns_detected') or []
+            if patterns:
+                msg += f"   Formacje: {', '.join(patterns[:3])}\n"
+            msg += f"   {r.get('reasoning', '')}\n\n"
+        msg += "_Przewidywanie na ~30 min, na podstawie analizy wykresu przez AI - nie jest to samodzielna rekomendacja transakcyjna._"
+        send_telegram(get_notification_message(msg), add_disclaimer=False)
 
 
 def analyze_news_with_ai(articles, market_name, memory_context):
@@ -2810,6 +3073,12 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
     # żeby nie odpytywać Trading Economics/Groq per rynek per cykl (10 min). ---
     macro_analysis = get_cached_macro_analysis(name)
 
+    # --- Analiza wykresu przez Groq Vision (punkt: silnik sygnałów/AI na
+    # wykresach). Pobierana osobno, raz na godzinę dla wszystkich rynków
+    # (patrz run_chart_ai_analysis_cycle / main()), tutaj tylko odczyt
+    # ostatniej ZAPISANEJ analizy z CHART_AI_STATE_FILE. ---
+    chart_ai_analysis = get_cached_chart_ai_analysis(name)
+
     # --- Cena "na żywo": jeśli mamy bid/ask z XTB, użyj mid-price zamiast
     # ostatniego (delikatnie opóźnionego) zamknięcia z Yahoo do entry/SL/TP.
     # UWAGA: to wciąż jest odpytywanie request/response raz na cykl, nie
@@ -2910,6 +3179,22 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
         long_score += max(0, macro_sentiment) * macro_weight
         short_score += max(0, -macro_sentiment) * macro_weight
 
+    # --- Analiza wykresu przez Groq Vision (tylko przy pewności >= CHART_AI_MIN_SCORING_CONFIDENCE).
+    # Waga skalowana samą pewnością AI (0.5-1.0) i podwyższona (x1.5), gdy AI
+    # wprost sygnalizuje odwrócenie trendu (reversal_expected) - to jest
+    # dokładnie ten przypadek, w którym ten sygnał wnosi coś, czego reszta
+    # scoringu (oparta o wskaźniki historyczne) może jeszcze nie widzieć. ---
+    chart_ai_sentiment = 0.0
+    chart_ai_impact = 'low'
+    if chart_ai_analysis and chart_ai_analysis.get('confidence', 0) >= CHART_AI_MIN_SCORING_CONFIDENCE:
+        conf = chart_ai_analysis.get('confidence', 0)
+        pred = chart_ai_analysis.get('prediction_30min')
+        chart_ai_sentiment = conf if pred == 'up' else (-conf if pred == 'down' else 0.0)
+        chart_ai_weight = 1.5 if chart_ai_analysis.get('reversal_expected') else 1.0
+        chart_ai_impact = 'high' if chart_ai_analysis.get('reversal_expected') else 'medium'
+        long_score += max(0, chart_ai_sentiment) * chart_ai_weight
+        short_score += max(0, -chart_ai_sentiment) * chart_ai_weight
+
     # Confidence bazowe, jawnie ograniczone do [0, 1]
     long_conf = min(1.0, max(0.0, long_score / TOTAL_SCORE_POINTS))
     short_conf = min(1.0, max(0.0, short_score / TOTAL_SCORE_POINTS))
@@ -2917,7 +3202,7 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
     # --- Punkt A: model uczący się (regresja logistyczna na cechach).
     # Dopóki nie ma wystarczająco zamkniętych sygnałów (is_ready()==False),
     # NIE wpływa na confidence - baseline działa samodzielnie. ---
-    features = build_feature_vector(ind, combined, news_analysis, divergences, macro_analysis)
+    features = build_feature_vector(ind, combined, news_analysis, divergences, macro_analysis, chart_ai_analysis)
     model_used = False
     if feature_weights is not None and feature_weights.is_ready():
         p_up = feature_weights.predict_proba_up(features)
@@ -2999,6 +3284,9 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
             'price_source': price_source,
             'macro_sentiment': macro_sentiment,
             'macro_impact': macro_analysis.get('impact', 'low') if macro_analysis else 'low',
+            'chart_ai_sentiment': chart_ai_sentiment,
+            'chart_ai_impact': chart_ai_impact,
+            'chart_ai_reasoning': chart_ai_analysis.get('reasoning', '') if chart_ai_analysis else '',
         }
     return None
 
@@ -3129,6 +3417,14 @@ def main():
     if is_macro_fetch_time(macro_state):
         fetch_and_analyze_macro()
 
+    # Analiza wykresów Groq Vision: raz na godzinę, dla wszystkich rynków
+    # (ustalone w rozmowie) - osobny harmonogram, niezależny od okna 6-22,
+    # bo krypto handluje 24/7 i warto mieć świeżą analizę nawet poza oknem
+    # forexu/akcji.
+    chart_ai_state = load_chart_ai_state()
+    if is_chart_ai_fetch_time(chart_ai_state):
+        run_chart_ai_analysis_cycle()
+
     if not is_within_trading_window():
         logger.info(f"Poza oknem {TRADING_WINDOW_START[0]}:{TRADING_WINDOW_START[1]:02d}-"
                      f"{TRADING_WINDOW_END[0]}:{TRADING_WINDOW_END[1]:02d} - pomijam analizę rynków w tym cyklu.")
@@ -3214,6 +3510,8 @@ def main():
             msg += f"   Sentyment: {s['news_sentiment']:.2f}\n"
             if s.get('macro_impact', 'low') != 'low':
                 msg += f"   Makro: {s['macro_sentiment']:+.2f} (wpływ: {s['macro_impact']})\n"
+            if s.get('chart_ai_impact', 'low') != 'low':
+                msg += f"   AI (wykres): {s['chart_ai_sentiment']:+.2f} (wpływ: {s['chart_ai_impact']})\n"
             if s['divergences']:
                 msg += f"   ⚠️ Dywergencje: {len(s['divergences'])}\n"
             msg += f"\n{s['heatmap']}\n\n"
