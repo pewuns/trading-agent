@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-21 21",
+  "last_run": "2026-09-21 22",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-21T19:02:19.085485+00:00",
+      "analyzed_at": "2026-09-21T20:02:29.723483+00:00",
       "result": {
-        "trend_15m": "neutral",
+        "trend_15m": "up",
         "trend_1h": "up",
-        "trend_1d": "down",
+        "trend_1d": "neutral",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać konsolidację po spadku, co sugeruje brak wyraźnego kierunku w krótkim terminie, podczas gdy interwał 1h wskazuje na odbicie, a 1d na dalszy spadek."
+        "prediction_30min": "up",
+        "confidence": 0.65,
+        "reasoning": "Na interwale 15-minutowym widać silny ruch wzrostowy po korekcie, a ostatnia świeca typu doji sugeruje chwilową konsolidację, ale impet byczy jest wciąż obecny. Wykres 1-godzinowy potwierdza trend wzrostowy po dołku, co wspiera krótkoterminowy scenariusz kontynuacji wzrostu."
       }
     },
     "AMAZON": {
@@ -62,7 +62,7 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-09-21T18:04:00.007110+00:00",
+      "analyzed_at": "2026-09-21T20:03:27.833110+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "up",
@@ -71,9 +71,9 @@
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "up",
-        "confidence": 0.75,
-        "reasoning": "Na wykresie 15-minutowym widać wyraźny wzrostowy trend, który po silnym impulsie zakończył się świecami typu doji, sugerując krótką konsolidację przy wsparciu. Wyższe interwały (1h i 1d) potwierdzają silny trend wzrostowy, co wskazuje na kontynuację ruchu w górę po krótkim odpoczynku."
+        "prediction_30min": "neutral",
+        "confidence": 0.6,
+        "reasoning": "Wykres 15-minutowy wykazuje wyraźny trend wzrostowy, jednak ostatnie świece (doji) sugerują chwilowe wyczerpanie popytu i konsolidację. Trendy na wyższych interwałach (1h, 1d) pozostają wzrostowe, co wspiera utrzymanie obecnych poziomów lub dalszy wzrost po krótkiej pauzie."
       }
     },
     "MICROSOFT": {
