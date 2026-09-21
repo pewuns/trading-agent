@@ -125,7 +125,7 @@
     "status": "open",
     "risk_distance": 20.528529575892662,
     "mae_percent": 0.0,
-    "mfe_percent": 0.22529967745558996
+    "mfe_percent": 0.36186843968027277
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
@@ -188,7 +188,7 @@
     "timestamp": "2026-09-21T18:05:22.773978+00:00",
     "status": "open",
     "risk_distance": 407.61328125,
-    "mae_percent": 0.0,
+    "mae_percent": -0.016459105620743673,
     "mfe_percent": 0.0
   },
   "SOLANA_SHORT": {
@@ -518,7 +518,7 @@
     "timestamp": "2026-09-21T17:20:55.000415+00:00",
     "status": "open",
     "risk_distance": 0.7328575679234035,
-    "mae_percent": -0.5679919450930286,
+    "mae_percent": -0.753680818144408,
     "mfe_percent": 0.0
   },
   "GOLD_LONG": {
@@ -711,7 +711,7 @@
     "status": "open",
     "risk_distance": 0.8495521545410156,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.07480173779590613
   },
   "GOLD_SHORT": {
     "name": "GOLD",
@@ -777,7 +777,7 @@
     "timestamp": "2026-09-21T17:20:48.320549+00:00",
     "status": "open",
     "risk_distance": 13.810756138393117,
-    "mae_percent": 0.0,
+    "mae_percent": -0.10950073412606919,
     "mfe_percent": 0.15511211712334855
   }
 }
