@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-21 07",
+  "last_run": "2026-09-21 08",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-21T05:02:56.948759+00:00",
+      "analyzed_at": "2026-09-21T06:03:22.667454+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
-        "trend_1d": "down",
+        "trend_1d": "neutral",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
         "confidence": 0.85,
-        "reasoning": "Wykresy na wszystkich interwałach (15m, 1h, 1d) pokazują wyraźny trend spadkowy, a obecne formacje (doji) sugerują jedynie chwilowe wyczerpanie, nie odwrócenie trendu."
+        "reasoning": "Wykresy 15-minutowy i 1-godzinowy wykazują wyraźny silny trend spadkowy z ciągłą serią świec bearish, co sugeruje dalsze obniżki w krótkim terminie. Na wykresie dziennym widać ostatnią świecę wzrostową, ale nie jest ona wystarczająca do zmiany krótkoterminowego momentum."
       }
     },
     "AMAZON": {
@@ -32,19 +32,18 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-09-21T05:03:54.277092+00:00",
+      "analyzed_at": "2026-09-21T06:04:20.884470+00:00",
       "result": {
         "trend_15m": "neutral",
-        "trend_1h": "down",
+        "trend_1h": "neutral",
         "trend_1d": "up",
         "patterns_detected": [
-          "doji",
-          "młot"
+          "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "neutral",
-        "confidence": 0.45,
-        "reasoning": "Na wykresie 15-minutowym widać konsolidację po spadku, z formacją młota sugerującą lokalne wsparcie, ale brak silnego sygnału odwrócenia. Wyższe interwały (1h) wskazują na trend spadkowy, co ogranicza potencjał wzrostowy w krótkim terminie."
+        "confidence": 0.6,
+        "reasoning": "Na interwale 15-minutowym po spadku nastąpiło wyhamowanie i konsolidacja (doji), co wskazuje na brak wyraźnego kierunku w krótkim terminie. Wyższe interwały (1h, 1d) sugerują stabilizację lub dalszy wzrost, ale na chwilę obecną rynek jest w fazie konsolidacji."
       }
     }
   }

@@ -2,12 +2,12 @@
   "date": "2026-09-21",
   "scores": {
     "EUR/USD": {
-      "confidence": 0.425,
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "USD/JPY": {
-      "confidence": 0.425,
+      "confidence": 0.475,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -27,12 +27,12 @@
       "threshold": 0.6
     },
     "USD/CAD": {
-      "confidence": 0.5,
+      "confidence": 0.55,
       "direction": "LONG",
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.5,
+      "confidence": 0.55,
       "direction": "LONG",
       "threshold": 0.6
     },
