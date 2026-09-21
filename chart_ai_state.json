@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-21 09",
+  "last_run": "2026-09-21 10",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-21T07:04:09.607579+00:00",
+      "analyzed_at": "2026-09-21T08:02:11.396696+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
-        "trend_1d": "down",
+        "trend_1d": "neutral",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.8,
-        "reasoning": "Wykres 15-minutowy pokazuje wyraźny trend spadkowy z ostatnią świecą w formie doji, sugerując chwilową konsolidację, ale dominacja świec czerwonych wskazuje na kontynuację spadków. Wyższe interwały (1h, 1d) potwierdzają silny trend niedźwiedzi."
+        "confidence": 0.7,
+        "reasoning": "Dominuje silny trend spadkowy na interwałach 15-minutowym i godzinowym, gdzie ostatnie świece kontynuują ruch w dół. Wykres dzienny wskazuje na konsolidację po spadkach, ale krótkoterminowy impet jest wyraźnie negatywny."
       }
     },
     "AMAZON": {
@@ -47,18 +47,18 @@
       }
     },
     "APPLE": {
-      "analyzed_at": "2026-09-21T07:04:58.754788+00:00",
+      "analyzed_at": "2026-09-21T08:02:58.943406+00:00",
       "result": {
-        "trend_15m": "neutral",
+        "trend_15m": "up",
         "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać formację doji po krótkim wzroście, co sugeruje chwilową konsolidację i brak zdecydowanego kierunku w najbliższym czasie, mimo że wyższe interwały (1h i 1d) utrzymują silny trend wzrostowy."
+        "prediction_30min": "up",
+        "confidence": 0.65,
+        "reasoning": "Wszystkie interwały wykazują silny trend wzrostowy, a obecne doji na wykresie 15-minutowym sugeruje chwilową konsolidację, ale nie odwrócenie trendu."
       }
     }
   }
