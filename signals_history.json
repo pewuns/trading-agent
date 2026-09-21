@@ -54,10 +54,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-18T19:22:13.655470+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.8625027792794384,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -2.081865068014473,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 111.47000122070312,
+    "closed_at": "2026-09-21T04:03:14.521966+00:00",
+    "r_multiple": -2.747811571305854
   },
   "ETHEREUM_LONG": {
     "name": "ETHEREUM",
@@ -114,10 +118,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-18T19:22:08.894776+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 16.26640973772328,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 1.3885296403210046,
+    "outcome": "win",
+    "closed_price": 2665.179931640625,
+    "closed_at": "2026-09-21T04:03:14.521966+00:00",
+    "r_multiple": 2.2438879008041455
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
@@ -174,10 +182,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-18T19:22:04.052370+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 338.0834263392899,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.3154885142462782,
+    "outcome": "timeout",
+    "closed_price": 81400.0,
+    "closed_at": "2026-09-21T04:03:14.521966+00:00",
+    "r_multiple": 0.7572095526004474
   },
   "SOLANA_SHORT": {
     "name": "SOLANA",
@@ -620,9 +632,13 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-18T18:50:08.099120+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 2.6915980747768344,
-    "mae_percent": -0.2587574079741799,
-    "mfe_percent": 0.0
+    "mae_percent": -1.1441027083202864,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 665.75,
+    "closed_at": "2026-09-21T04:03:14.521966+00:00",
+    "r_multiple": -2.8626179971103554
   }
 }

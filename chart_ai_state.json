@@ -1,0 +1,35 @@
+{
+  "last_run": "2026-09-21 06",
+  "markets": {
+    "DAX": {
+      "analyzed_at": "2026-09-21T04:02:10.224200+00:00",
+      "result": {
+        "trend_15m": "down",
+        "trend_1h": "down",
+        "trend_1d": "down",
+        "patterns_detected": [
+          "doji"
+        ],
+        "reversal_expected": false,
+        "prediction_30min": "down",
+        "confidence": 0.75,
+        "reasoning": "Wykresy na wszystkich interwałach (15m, 1h, 1d) wykazują wyraźny trend spadkowy z dominacją świec czerwonych. Na wykresie 15-minutowym widoczne jest dalsze osłabienie popytu, a ostatnie doji sugeruje jedynie chwilowe wahanie, nie odwrócenie trendu."
+      }
+    },
+    "AMAZON": {
+      "analyzed_at": "2026-09-21T04:03:07.239825+00:00",
+      "result": {
+        "trend_15m": "up",
+        "trend_1h": "up",
+        "trend_1d": "up",
+        "patterns_detected": [
+          "doji"
+        ],
+        "reversal_expected": false,
+        "prediction_30min": "neutral",
+        "confidence": 0.6,
+        "reasoning": "Na wykresie 15-minutowym widoczny jest silny wzrost w ostatnich świecach, jednak ostatnia świeca jest czerwona z długim cieniem, co sugeruje chwilowe wyczerpanie popytu. Na wykresie dziennym trend jest wyraźnie wzrostowy, co wspiera utrzymanie kierunku, ale krótkoterminowo możliwa jest konsolidacja lub korekta."
+      }
+    }
+  }
+}
