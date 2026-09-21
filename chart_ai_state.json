@@ -1,20 +1,19 @@
 {
-  "last_run": "2026-09-21 19",
+  "last_run": "2026-09-21 20",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-21T17:02:09.583545+00:00",
+      "analyzed_at": "2026-09-21T18:03:01.840304+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "up",
         "trend_1d": "down",
         "patterns_detected": [
-          "doji",
-          "młot"
+          "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "up",
-        "confidence": 0.6,
-        "reasoning": "Na interwale 15-minutowym i godzinowym widać wyraźny ruch wzrostowy po korekcie, co sugeruje kontynuację wzrostu w krótkim terminie, mimo że trend dzienny pozostaje spadkowy."
+        "confidence": 0.65,
+        "reasoning": "Na interwale 15-minutowym widoczne jest odbicie od lokalnego dołka, a świeca zamykająca wykres jest neutralna (doji), co przy wsparciu ze strony trendu wzrostowego na wykresie 1-godzinnym sugeruje kontynuację ruchu w górę."
       }
     },
     "AMAZON": {
@@ -63,19 +62,18 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-09-21T16:03:16.703529+00:00",
+      "analyzed_at": "2026-09-21T18:04:00.007110+00:00",
       "result": {
-        "trend_15m": "neutral",
+        "trend_15m": "up",
         "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
-          "doji",
-          "spadająca gwiazda"
+          "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać wyraźne wyczerpanie popytu po silnym wzroście, co potwierdzają formacje doji i spadającej gwiazdy, sugerujące konsolidację lub krótkoterminową korektę. Wyższe interwały (1h i 1d) pozostają w trendzie wzrostowym, co wskazuje, że obecna konsolidacja jest prawdopodobnie tylko oddechem w ramach szerszego ruchu wzrostowego."
+        "prediction_30min": "up",
+        "confidence": 0.75,
+        "reasoning": "Na wykresie 15-minutowym widać wyraźny wzrostowy trend, który po silnym impulsie zakończył się świecami typu doji, sugerując krótką konsolidację przy wsparciu. Wyższe interwały (1h i 1d) potwierdzają silny trend wzrostowy, co wskazuje na kontynuację ruchu w górę po krótkim odpoczynku."
       }
     }
   }
