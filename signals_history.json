@@ -60,7 +60,7 @@
     "timestamp": "2026-09-21T16:04:36.616109+00:00",
     "status": "open",
     "risk_distance": 1.3285724094935887,
-    "mae_percent": 0.0,
+    "mae_percent": -0.3481984391587049,
     "mfe_percent": 0.0
   },
   "ETHEREUM_LONG": {
@@ -125,7 +125,7 @@
     "status": "open",
     "risk_distance": 25.9918212890625,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.09898621894420248
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
@@ -188,7 +188,7 @@
     "timestamp": "2026-09-21T16:24:21.922757+00:00",
     "status": "open",
     "risk_distance": 599.1997767857101,
-    "mae_percent": 0.0,
+    "mae_percent": -0.023215943508234967,
     "mfe_percent": 0.0
   },
   "SOLANA_SHORT": {
