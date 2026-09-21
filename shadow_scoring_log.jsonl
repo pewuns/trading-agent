@@ -4395,3 +4395,9 @@
 {"name": "USD/CHF", "timestamp": "2026-09-21T04:03:36.209724+00:00", "production_confidence": 0.25, "production_direction": "LONG", "shadow_score": 1}
 {"name": "AUD/USD", "timestamp": "2026-09-21T04:03:40.599700+00:00", "production_confidence": 0.4, "production_direction": "LONG", "shadow_score": 0}
 {"name": "USD/CAD", "timestamp": "2026-09-21T04:03:44.873177+00:00", "production_confidence": 0.4, "production_direction": "LONG", "shadow_score": 2}
+{"name": "EUR/USD", "timestamp": "2026-09-21T04:24:16.880999+00:00", "production_confidence": 0.4, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "USD/JPY", "timestamp": "2026-09-21T04:24:21.165410+00:00", "production_confidence": 0.4, "production_direction": "LONG", "shadow_score": 2}
+{"name": "GBP/USD", "timestamp": "2026-09-21T04:24:25.410835+00:00", "production_confidence": 0.4, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "USD/CHF", "timestamp": "2026-09-21T04:24:29.828210+00:00", "production_confidence": 0.4, "production_direction": "LONG", "shadow_score": 2}
+{"name": "AUD/USD", "timestamp": "2026-09-21T04:24:34.018248+00:00", "production_confidence": 0.25, "production_direction": "LONG", "shadow_score": 1}
+{"name": "USD/CAD", "timestamp": "2026-09-21T04:24:38.202289+00:00", "production_confidence": 0.4, "production_direction": "LONG", "shadow_score": 2}
