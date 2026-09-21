@@ -1,20 +1,19 @@
 {
-  "last_run": "2026-09-21 16",
+  "last_run": "2026-09-21 17",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-21T14:02:32.224389+00:00",
+      "analyzed_at": "2026-09-21T15:02:30.435558+00:00",
       "result": {
-        "trend_15m": "down",
+        "trend_15m": "neutral",
         "trend_1h": "neutral",
-        "trend_1d": "neutral",
+        "trend_1d": "down",
         "patterns_detected": [
-          "Spadająca gwiazda",
-          "Doji"
+          "doji"
         ],
-        "reversal_expected": true,
+        "reversal_expected": false,
         "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest silna świeca spadkowa zakończona doji, co sugeruje wyczerpanie spadków i potencjalny zwrot w górę, jednak trend na 1h pozostaje mieszany."
+        "confidence": 0.4,
+        "reasoning": "Na wykresie 15-minutowym widać formację doji po spadkowej świecy, co sugeruje chwilową konsolidację i brak wyraźnego kierunku. Wyższy interwał dzienny wskazuje na trend spadkowy, co utrudnia prognozowanie silnego odbicia w krótkim terminie."
       }
     },
     "AMAZON": {
@@ -48,7 +47,7 @@
       }
     },
     "APPLE": {
-      "analyzed_at": "2026-09-21T14:03:23.236335+00:00",
+      "analyzed_at": "2026-09-21T15:03:17.110406+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "up",
@@ -59,7 +58,7 @@
         "reversal_expected": false,
         "prediction_30min": "up",
         "confidence": 0.7,
-        "reasoning": "Na wykresie 15-minutowym widać silny impuls wzrostowy zakończony świecą doji, co sugeruje chwilową konsolidację, ale nie odwrócenie trendu. Wyższe interwały (1h, 1d) potwierdzają dominację byków, co wskazuje na kontynuację wzrostu po krótkiej przerwie."
+        "reasoning": "Na wykresie dziennym widać wyraźny wzrostowy trend z silnym wybiciem w górę, co wspiera byczy scenariusz. Na interwale 15-minutowym ostatnie świece pokazują kontynuację wzrostu, choć pojawia się doji, co sugeruje chwilową konsolidację, ale nie odwrócenie trendu."
       }
     },
     "NVIDIA": {
