@@ -37,13 +37,13 @@
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.35,
+      "confidence": 0.4,
       "direction": "LONG",
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.35,
-      "direction": "SHORT",
+      "confidence": 0.4,
+      "direction": "LONG",
       "threshold": 0.6
     }
   }
