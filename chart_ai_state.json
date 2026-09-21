@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-21 10",
+  "last_run": "2026-09-21 11",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-21T08:02:11.396696+00:00",
+      "analyzed_at": "2026-09-21T09:02:30.529879+00:00",
       "result": {
-        "trend_15m": "down",
+        "trend_15m": "up",
         "trend_1h": "down",
         "trend_1d": "neutral",
         "patterns_detected": [
-          "doji"
+          "młot"
         ],
-        "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.7,
-        "reasoning": "Dominuje silny trend spadkowy na interwałach 15-minutowym i godzinowym, gdzie ostatnie świece kontynuują ruch w dół. Wykres dzienny wskazuje na konsolidację po spadkach, ale krótkoterminowy impet jest wyraźnie negatywny."
+        "reversal_expected": true,
+        "prediction_30min": "up",
+        "confidence": 0.65,
+        "reasoning": "Na wykresie 15-minutowym widoczna jest świeca typu młot po silnym spadku, co sugeruje krótkoterminowe odwrócenie trendu spadkowego. Na wykresie dziennym rynek znajduje się w konsolidacji, co pozwala na lokalne odbicie."
       }
     },
     "AMAZON": {
@@ -47,18 +47,18 @@
       }
     },
     "APPLE": {
-      "analyzed_at": "2026-09-21T08:02:58.943406+00:00",
+      "analyzed_at": "2026-09-21T09:03:18.881081+00:00",
       "result": {
-        "trend_15m": "up",
+        "trend_15m": "neutral",
         "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "up",
-        "confidence": 0.65,
-        "reasoning": "Wszystkie interwały wykazują silny trend wzrostowy, a obecne doji na wykresie 15-minutowym sugeruje chwilową konsolidację, ale nie odwrócenie trendu."
+        "prediction_30min": "neutral",
+        "confidence": 0.6,
+        "reasoning": "Na wykresie 15-minutowym widać konsolidację po wcześniejszym spadku, co sugeruje neutralny kierunek w krótkim terminie, podczas gdy wyższe interwały (1h i 1d) utrzymują silny trend wzrostowy."
       }
     }
   }
