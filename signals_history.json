@@ -512,10 +512,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-18T19:03:39.998483+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.5099994114467137,
     "mae_percent": -0.07329810976357984,
-    "mfe_percent": 0.0
+    "mfe_percent": 1.5392682939299738,
+    "outcome": "win",
+    "closed_price": 94.02999877929688,
+    "closed_at": "2026-09-21T06:30:24.087418+00:00",
+    "r_multiple": 2.8823586610289946
   },
   "GOLD_LONG": {
     "name": "GOLD",
@@ -572,10 +576,14 @@
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "timestamp": "2026-09-18T18:37:19.552682+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 11.067836216518117,
-    "mae_percent": -0.21901052355156886,
-    "mfe_percent": 0.0
+    "mae_percent": -0.9460138949201486,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 4387.2001953125,
+    "closed_at": "2026-09-21T06:30:24.087418+00:00",
+    "r_multiple": -3.7857356690205424
   },
   "META_LONG": {
     "name": "META",
