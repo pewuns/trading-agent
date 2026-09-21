@@ -47,7 +47,7 @@
       "threshold": 0.6
     },
     "GOLD": {
-      "confidence": 0.6,
+      "confidence": 0.625,
       "direction": "SHORT",
       "threshold": 0.6
     },
@@ -98,6 +98,11 @@
     },
     "TESLA": {
       "confidence": 0.5,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "META": {
+      "confidence": 0.55,
       "direction": "LONG",
       "threshold": 0.6
     }
