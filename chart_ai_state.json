@@ -1,19 +1,20 @@
 {
-  "last_run": "2026-09-21 18",
+  "last_run": "2026-09-21 19",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-21T16:02:18.880649+00:00",
+      "analyzed_at": "2026-09-21T17:02:09.583545+00:00",
       "result": {
-        "trend_15m": "neutral",
+        "trend_15m": "up",
         "trend_1h": "up",
-        "trend_1d": "up",
+        "trend_1d": "down",
         "patterns_detected": [
-          "doji"
+          "doji",
+          "młot"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
+        "prediction_30min": "up",
         "confidence": 0.6,
-        "reasoning": "Wykres 15-minutowy pokazuje konsolidację po silnym wzroście, z obecnością doji sugerującej chwilowy brak kierunku, podczas gdy wyższe interwały (1h i 1d) utrzymują trend wzrostowy."
+        "reasoning": "Na interwale 15-minutowym i godzinowym widać wyraźny ruch wzrostowy po korekcie, co sugeruje kontynuację wzrostu w krótkim terminie, mimo że trend dzienny pozostaje spadkowy."
       }
     },
     "AMAZON": {
@@ -32,18 +33,18 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-09-21T06:04:20.884470+00:00",
+      "analyzed_at": "2026-09-21T17:03:08.357834+00:00",
       "result": {
-        "trend_15m": "neutral",
+        "trend_15m": "down",
         "trend_1h": "neutral",
         "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Na interwale 15-minutowym po spadku nastąpiło wyhamowanie i konsolidacja (doji), co wskazuje na brak wyraźnego kierunku w krótkim terminie. Wyższe interwały (1h, 1d) sugerują stabilizację lub dalszy wzrost, ale na chwilę obecną rynek jest w fazie konsolidacji."
+        "prediction_30min": "down",
+        "confidence": 0.65,
+        "reasoning": "Na interwale 15-minutowym widoczny jest wyraźny trend spadkowy z serią świec czerwonych i formacją doji sugerującą kontynuację ruchu w dół, podczas gdy na wykresie dziennym utrzymuje się trend wzrostowy."
       }
     },
     "APPLE": {
