@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-21 13",
+  "last_run": "2026-09-21 14",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-21T11:02:17.405290+00:00",
+      "analyzed_at": "2026-09-21T12:02:57.241738+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "up",
-        "trend_1d": "neutral",
+        "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "up",
-        "confidence": 0.7,
-        "reasoning": "Wykres 15-minutowy pokazuje wyraźny trend wzrostowy z serią świec hossy, co potwierdza krótkoterminowy zryw. Na interwale 1-godzinnym widać odbicie od wsparcia, co wspiera kontynuację ruchu w górę w najbliższym czasie."
+        "confidence": 0.8,
+        "reasoning": "Wykres 15-minutowy pokazuje wyraźny wzrostowy trend z sekwencją wyższych dołków i szczytów, a obecne doji sugeruje jedynie krótką konsolidację przed kontynuacją ruchu w górę."
       }
     },
     "AMAZON": {
@@ -62,18 +62,18 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-09-21T11:03:16.183434+00:00",
+      "analyzed_at": "2026-09-21T12:03:54.825079+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
-          "objęcie hossy"
+          "Objęcie hossy"
         ],
         "reversal_expected": false,
         "prediction_30min": "up",
         "confidence": 0.85,
-        "reasoning": "Wykres 15-minutowy pokazuje silny impuls wzrostowy po konsolidacji, co potwierdza trend widoczny na wykresie godzinowym i dziennym. Ostatnia świeca jest dużą białą świecą, sugerującą kontynuację ruchu w górę."
+        "reasoning": "Na wykresie 15-minutowym pojawiła się silna świeca wzrostowa (objęcie hossy) przełamująca lokalny opór, co potwierdza zmianę trendu na wzrostowy, zgodną z kierunkiem na wykresie godzinowym i dziennym."
       }
     }
   }
