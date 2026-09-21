@@ -125,7 +125,7 @@
     "status": "open",
     "risk_distance": 17.35716901506703,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.08908538091678585
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
@@ -189,7 +189,7 @@
     "status": "open",
     "risk_distance": 338.9891183035652,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.044688145453778715
   },
   "SOLANA_SHORT": {
     "name": "SOLANA",
@@ -656,10 +656,10 @@
   "NVIDIA_LONG": {
     "name": "NVIDIA",
     "direction": "LONG",
-    "entry": 227.54820251464844,
-    "stop_loss": 226.7487051827567,
-    "take_profit": 228.88069806780135,
-    "position_size": 125.07859127357588,
+    "entry": 228.33990478515625,
+    "stop_loss": 227.50099890572685,
+    "take_profit": 229.73808125087194,
+    "position_size": 119.20288372280409,
     "risk_amount": 100.0,
     "sizing_method": "stały_procent_ryzyka (za mało historii na Kelly)",
     "confidence": 0.625,
@@ -670,26 +670,26 @@
     "features": {
       "sma20": 1.0,
       "sma50": 0.0,
-      "rsi": 0.853076759185729,
+      "rsi": 0.9071512211441953,
       "vwap": 1.0,
       "support_resistance": -0.5,
       "pattern": 0.0,
-      "order_flow": 0.5182620647259252,
+      "order_flow": 0.5406112156798218,
       "poc": 1.0,
       "mtf_trend": 0.5679702048417135,
       "news_sentiment": 0.0,
       "macro_sentiment": 0.0,
       "chart_ai_sentiment": 0.75
     },
-    "rsi": 92.65383795928645,
-    "vwap": 225.25525720017822,
-    "support": 223.3300018310547,
-    "resistance": 227.6103057861328,
+    "rsi": 95.35756105720976,
+    "vwap": 225.36481275462367,
+    "support": 223.63999938964844,
+    "resistance": 228.33990478515625,
     "candlestick_patterns": [
       "DOJI (niezdecydowanie)"
     ],
-    "order_flow_delta": 51.82620647259252,
-    "volume_profile_poc": 223.76,
+    "order_flow_delta": 54.061121567982184,
+    "volume_profile_poc": 223.83,
     "news_sentiment": 0,
     "news_impact": "low",
     "news_reasoning": "",
@@ -702,18 +702,18 @@
       "1d": "UP"
     },
     "divergences": [],
-    "heatmap": "```\nINTERWAŁ | TREND | RSI | ZGODNOŚĆ\n---------|-------|-----|----------\n5m       | UP    |  66 | ✅\n15m      | SIDEWAYS |  93 | ❌\n1h       | UP    |  90 | ✅\n4h       | SIDEWAYS |  66 | ❌\n1d       | UP    |  56 | ✅\n```",
+    "heatmap": "```\nINTERWAŁ | TREND | RSI | ZGODNOŚĆ\n---------|-------|-----|----------\n5m       | UP    |  67 | ✅\n15m      | SIDEWAYS |  95 | ❌\n1h       | UP    |  92 | ✅\n4h       | SIDEWAYS |  67 | ❌\n1d       | UP    |  57 | ✅\n```",
     "spread_source": "proxy_zmiennosci",
-    "spread_value": 0.0015221490987398988,
+    "spread_value": 0.0016686553824935702,
     "price_source": "yahoo",
     "macro_sentiment": 0.0,
     "macro_impact": "low",
     "chart_ai_sentiment": 0.75,
     "chart_ai_impact": "medium",
     "chart_ai_reasoning": "Na wykresie 15-minutowym widać wyraźny wzrostowy trend, który po silnym impulsie zakończył się świecami typu doji, sugerując krótką konsolidację przy wsparciu. Wyższe interwały (1h i 1d) potwierdzają silny trend wzrostowy, co wskazuje na kontynuację ruchu w górę po krótkim odpoczynku.",
-    "timestamp": "2026-09-21T18:40:27.745827+00:00",
+    "timestamp": "2026-09-21T18:53:35.803140+00:00",
     "status": "open",
-    "risk_distance": 0.7994973318917289,
+    "risk_distance": 0.8389058794294044,
     "mae_percent": 0.0,
     "mfe_percent": 0.0
   },
