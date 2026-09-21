@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-21 11",
+  "last_run": "2026-09-21 12",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-21T09:02:30.529879+00:00",
+      "analyzed_at": "2026-09-21T10:02:19.620766+00:00",
       "result": {
         "trend_15m": "up",
-        "trend_1h": "down",
+        "trend_1h": "up",
         "trend_1d": "neutral",
         "patterns_detected": [
-          "młot"
+          "doji"
         ],
-        "reversal_expected": true,
+        "reversal_expected": false,
         "prediction_30min": "up",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest świeca typu młot po silnym spadku, co sugeruje krótkoterminowe odwrócenie trendu spadkowego. Na wykresie dziennym rynek znajduje się w konsolidacji, co pozwala na lokalne odbicie."
+        "confidence": 0.7,
+        "reasoning": "Wykres 15-minutowy pokazuje wyraźny wzrostowy trend z serią zielonych świec, a ostatnia świeca w kształcie doji sugeruje chwilową konsolidację, ale nie odwrócenie. Na interwale 1-godzinnym widoczne jest odbicie od dołka, co wspiera krótkoterminowy ruch w górę."
       }
     },
     "AMAZON": {
@@ -59,6 +59,22 @@
         "prediction_30min": "neutral",
         "confidence": 0.6,
         "reasoning": "Na wykresie 15-minutowym widać konsolidację po wcześniejszym spadku, co sugeruje neutralny kierunek w krótkim terminie, podczas gdy wyższe interwały (1h i 1d) utrzymują silny trend wzrostowy."
+      }
+    },
+    "NVIDIA": {
+      "analyzed_at": "2026-09-21T10:03:16.792904+00:00",
+      "result": {
+        "trend_15m": "up",
+        "trend_1h": "up",
+        "trend_1d": "up",
+        "patterns_detected": [
+          "Objęcie hossy",
+          "Młot"
+        ],
+        "reversal_expected": false,
+        "prediction_30min": "up",
+        "confidence": 0.85,
+        "reasoning": "Wykres 15-minutowy pokazuje silny impuls wzrostowy zakończony dużą świecą zieloną, co sugeruje kontynuację ruchu w górę. Wyższe interwały (1h i 1d) potwierdzają trend wzrostowy, a brak sygnałów odwrócenia na krótkim terminie wskazuje na dalsze wzrosty."
       }
     }
   }
