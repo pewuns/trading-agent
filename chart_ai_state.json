@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-21 20",
+  "last_run": "2026-09-21 21",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-21T18:03:01.840304+00:00",
+      "analyzed_at": "2026-09-21T19:02:19.085485+00:00",
       "result": {
-        "trend_15m": "up",
+        "trend_15m": "neutral",
         "trend_1h": "up",
         "trend_1d": "down",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "up",
-        "confidence": 0.65,
-        "reasoning": "Na interwale 15-minutowym widoczne jest odbicie od lokalnego dołka, a świeca zamykająca wykres jest neutralna (doji), co przy wsparciu ze strony trendu wzrostowego na wykresie 1-godzinnym sugeruje kontynuację ruchu w górę."
+        "prediction_30min": "neutral",
+        "confidence": 0.6,
+        "reasoning": "Na wykresie 15-minutowym widać konsolidację po spadku, co sugeruje brak wyraźnego kierunku w krótkim terminie, podczas gdy interwał 1h wskazuje na odbicie, a 1d na dalszy spadek."
       }
     },
     "AMAZON": {
@@ -74,6 +74,21 @@
         "prediction_30min": "up",
         "confidence": 0.75,
         "reasoning": "Na wykresie 15-minutowym widać wyraźny wzrostowy trend, który po silnym impulsie zakończył się świecami typu doji, sugerując krótką konsolidację przy wsparciu. Wyższe interwały (1h i 1d) potwierdzają silny trend wzrostowy, co wskazuje na kontynuację ruchu w górę po krótkim odpoczynku."
+      }
+    },
+    "MICROSOFT": {
+      "analyzed_at": "2026-09-21T19:03:15.734829+00:00",
+      "result": {
+        "trend_15m": "up",
+        "trend_1h": "up",
+        "trend_1d": "up",
+        "patterns_detected": [
+          "doji"
+        ],
+        "reversal_expected": false,
+        "prediction_30min": "up",
+        "confidence": 0.75,
+        "reasoning": "Wykres 15-minutowy wykazuje wyraźny trend wzrostowy z silnymi świecami hossy, a ostatnia świeca doji sugeruje jedynie krótką konsolidację przed kontynuacją ruchu w górę, co jest zgodne z kierunkiem na wyższych interwałach."
       }
     }
   }
