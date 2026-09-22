@@ -58,10 +58,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-21T19:23:47.845984+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.8260713304792091,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -0.883302984879167,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 116.69999694824219,
+    "closed_at": "2026-09-22T04:03:39.191596+00:00",
+    "r_multiple": -1.2589722910780994
   },
   "ETHEREUM_LONG": {
     "name": "ETHEREUM",
@@ -122,10 +126,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-21T19:23:42.007487+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 15.484235491071558,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -0.8553649728887227,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 2740.080078125,
+    "closed_at": "2026-09-22T04:03:39.191596+00:00",
+    "r_multiple": -1.5267071203971365
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
@@ -186,10 +194,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-21T19:23:36.385976+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 334.482421875,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -0.575233937868351,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 85660.921875,
+    "closed_at": "2026-09-22T04:03:39.191596+00:00",
+    "r_multiple": -1.4816968847624887
   },
   "SOLANA_SHORT": {
     "name": "SOLANA",
@@ -714,7 +726,7 @@
     "timestamp": "2026-09-21T19:05:07.225487+00:00",
     "status": "open",
     "risk_distance": 0.839451926095137,
-    "mae_percent": -0.08346132501673953,
+    "mae_percent": -0.11201688236725839,
     "mfe_percent": 0.0
   },
   "GOLD_SHORT": {
@@ -845,9 +857,13 @@
     "chart_ai_impact": "medium",
     "chart_ai_reasoning": "Wykres 15-minutowy wykazuje wyraźny trend wzrostowy z silnymi świecami hossy, a ostatnia świeca doji sugeruje jedynie krótką konsolidację przed kontynuacją ruchu w górę, co jest zgodne z kierunkiem na wyższych interwałach.",
     "timestamp": "2026-09-21T19:05:01.455867+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 1.686489650181386,
     "mae_percent": 0.0,
-    "mfe_percent": 0.2609340604237028
+    "mfe_percent": 0.6361040704317468,
+    "outcome": "win",
+    "closed_price": 501.6099853515625,
+    "closed_at": "2026-09-22T04:03:39.191596+00:00",
+    "r_multiple": 1.879995682972466
   }
 }

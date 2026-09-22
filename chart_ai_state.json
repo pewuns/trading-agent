@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-21 23",
+  "last_run": "2026-09-22 06",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-21T21:02:25.167475+00:00",
+      "analyzed_at": "2026-09-22T04:02:23.609826+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "up",
-        "trend_1d": "down",
+        "trend_1d": "neutral",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "up",
         "confidence": 0.6,
-        "reasoning": "Wykres 15-minutowy i 1-godzinny wykazują silny trend wzrostowy z odbiciem od dołków, co sugeruje kontynuację ruchu w górę w krótkim terminie, mimo że trend dzienny pozostaje spadkowy."
+        "reasoning": "Wykres 15-minutowy pokazuje silny wzrost po korekcie, a interwał 1-godzinowy potwierdza trend wzrostowy po dołku. Ostatnia świeca 15-minutowa jest doji, co sugeruje chwilową konsolidację, ale impet wzrostowy pozostaje dominujący."
       }
     },
     "AMAZON": {
@@ -77,7 +77,7 @@
       }
     },
     "MICROSOFT": {
-      "analyzed_at": "2026-09-21T19:03:15.734829+00:00",
+      "analyzed_at": "2026-09-22T04:03:20.965845+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "up",
@@ -87,8 +87,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "up",
-        "confidence": 0.75,
-        "reasoning": "Wykres 15-minutowy wykazuje wyraźny trend wzrostowy z silnymi świecami hossy, a ostatnia świeca doji sugeruje jedynie krótką konsolidację przed kontynuacją ruchu w górę, co jest zgodne z kierunkiem na wyższych interwałach."
+        "confidence": 0.85,
+        "reasoning": "Na wykresie 15-minutowym widoczna jest wyraźna formacja odwrócenia trendu spadkowego w wzrostowy (V-shape) z silnymi świecami hossy, a ostatnia świeca to doji sugerujące chwilową konsolidację przed kontynuacją ruchu w górę. Wykresy wyższych interwałów (1h, 1d) potwierdzają dominację byków i wsparcie dla dalszych wzrostów."
       }
     }
   }
