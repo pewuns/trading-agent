@@ -92,13 +92,18 @@
       "threshold": 0.6
     },
     "GOOGLE": {
-      "confidence": 0.3,
+      "confidence": 0.35,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "OIL WTI": {
       "confidence": 0.45,
       "direction": "LONG",
+      "threshold": 0.6
+    },
+    "META": {
+      "confidence": 0.35,
+      "direction": "SHORT",
       "threshold": 0.6
     }
   }
