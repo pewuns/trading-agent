@@ -52,8 +52,48 @@
       "threshold": 0.6
     },
     "DAX": {
+      "confidence": 0.475,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "S&P500": {
+      "confidence": 0.55,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "NASDAQ": {
+      "confidence": 0.55,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "APPLE": {
       "confidence": 0.4,
       "direction": "LONG",
+      "threshold": 0.6
+    },
+    "MICROSOFT": {
+      "confidence": 0.635,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "NVIDIA": {
+      "confidence": 0.55,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "TESLA": {
+      "confidence": 0.55,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "AMAZON": {
+      "confidence": 0.5,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "GOOGLE": {
+      "confidence": 0.3,
+      "direction": "SHORT",
       "threshold": 0.6
     }
   }
