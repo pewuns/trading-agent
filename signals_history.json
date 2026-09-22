@@ -727,7 +727,7 @@
     "status": "open",
     "risk_distance": 0.839451926095137,
     "mae_percent": -0.11201688236725839,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.3628633770083657
   },
   "GOLD_SHORT": {
     "name": "GOLD",
@@ -861,9 +861,13 @@
     "chart_ai_impact": "medium",
     "chart_ai_reasoning": "Na wykresie 15-minutowym widoczna jest wyraźna formacja odwrócenia od dołka (V-shape) z silnym wzrostem w ostatnich świecach, wspierana przez trend wzrostowy na interwałach 1h i 1d. Brak sygnałów wyczerpania trendu.",
     "timestamp": "2026-09-22T13:05:58.694996+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 1.8560714721679688,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -1.3616129606109624,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 494.7799987792969,
+    "closed_at": "2026-09-22T15:34:44.160128+00:00",
+    "r_multiple": -3.679807957119192
   }
 }
