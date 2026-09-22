@@ -724,10 +724,14 @@
     "chart_ai_impact": "medium",
     "chart_ai_reasoning": "Na wykresie 15-minutowym widać wyraźny wzrostowy trend, który po silnym impulsie zakończył się świecami typu doji, sugerując krótką konsolidację przy wsparciu. Wyższe interwały (1h i 1d) potwierdzają silny trend wzrostowy, co wskazuje na kontynuację ruchu w górę po krótkim odpoczynku.",
     "timestamp": "2026-09-21T19:05:07.225487+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.839451926095137,
     "mae_percent": -0.11201688236725839,
-    "mfe_percent": 0.5776802658374919
+    "mfe_percent": 0.9532796895514881,
+    "outcome": "win",
+    "closed_price": 229.80499267578125,
+    "closed_at": "2026-09-22T17:03:40.168909+00:00",
+    "r_multiple": 2.5850177973138413
   },
   "GOLD_SHORT": {
     "name": "GOLD",
