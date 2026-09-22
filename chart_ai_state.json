@@ -1,19 +1,20 @@
 {
-  "last_run": "2026-09-22 09",
+  "last_run": "2026-09-22 10",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-22T07:03:32.691037+00:00",
+      "analyzed_at": "2026-09-22T08:02:23.076916+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "neutral",
         "trend_1d": "down",
         "patterns_detected": [
-          "doji"
+          "doji",
+          "młot"
         ],
         "reversal_expected": false,
         "prediction_30min": "up",
         "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać silny wzrostowy ruch po korekcie, co sugeruje kontynuację wzrostu w krótkim terminie, mimo że trend dzienny pozostaje spadkowy."
+        "reasoning": "Na wykresie 15-minutowym widać silny wzrost po dołku, co sugeruje krótkoterminową korektę wzrostową, podczas gdy wyższe interwały (1h, 1d) pozostają w konsolidacji lub trendzie spadkowym."
       }
     },
     "AMAZON": {
@@ -92,18 +93,18 @@
       }
     },
     "SOLANA": {
-      "analyzed_at": "2026-09-22T07:04:20.449217+00:00",
+      "analyzed_at": "2026-09-22T08:03:10.856821+00:00",
       "result": {
         "trend_15m": "down",
-        "trend_1h": "neutral",
+        "trend_1h": "down",
         "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczny jest wyraźny trend spadkowy z formacją doji na końcu, sugerującą kontynuację spadków lub konsolidację. Wykres dzienny wskazuje na silny trend wzrostowy, ale krótkoterminowy spadek na 15m i 1h sugeruje korektę."
+        "confidence": 0.6,
+        "reasoning": "Na interwale 15-minutowym widoczna jest wyraźna tendencja spadkowa z formacją doji sugerującą chwilową konsolidację, podczas gdy na wykresie 1-godzinnym cena odbija się od lokalnego szczytu, co wskazuje na kontynuację korekty w dół."
       }
     }
   }
