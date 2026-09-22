@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-09-22 20",
+  "last_run": "2026-09-22 21",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-22T18:02:46.001250+00:00",
+      "analyzed_at": "2026-09-22T19:02:07.382893+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
@@ -13,7 +13,7 @@
         "reversal_expected": false,
         "prediction_30min": "down",
         "confidence": 0.75,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest wyraźne wybicie z lokalnego szczytu i spadek w kierunku wsparcia, co potwierdza krótkoterminowy trend spadkowy. Ostatnie świece (doji) sugerują chwilowe wyczerpanie popytu, ale brak silnych sygnałów odwrócenia trendu."
+        "reasoning": "Na wykresie 15-minutowym widoczne jest wyraźne odwrócenie trendu z szczytu w dół, a ostatnie świece (doji) sugerują kontynuację spadków lub konsolidację w obszarze wsparcia. Wyższe interwały (1h i 1d) potwierdzają dominację niedźwiedzi, co zwiększa prawdopodobieństwo dalszego ruchu w dół."
       }
     },
     "AMAZON": {
