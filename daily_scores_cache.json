@@ -17,8 +17,8 @@
       "threshold": 0.6
     },
     "USD/CHF": {
-      "confidence": 0.4,
-      "direction": "SHORT",
+      "confidence": 0.425,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "AUD/USD": {
@@ -94,6 +94,11 @@
     "GOOGLE": {
       "confidence": 0.3,
       "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "OIL WTI": {
+      "confidence": 0.35,
+      "direction": "LONG",
       "threshold": 0.6
     }
   }
