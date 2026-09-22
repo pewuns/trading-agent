@@ -1,20 +1,19 @@
 {
-  "last_run": "2026-09-22 11",
+  "last_run": "2026-09-22 12",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-22T09:02:09.929599+00:00",
+      "analyzed_at": "2026-09-22T10:02:41.120030+00:00",
       "result": {
-        "trend_15m": "neutral",
-        "trend_1h": "neutral",
-        "trend_1d": "down",
+        "trend_15m": "up",
+        "trend_1h": "up",
+        "trend_1d": "up",
         "patterns_detected": [
-          "doji",
-          "młot"
+          "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.45,
-        "reasoning": "Na wykresie dziennym widać wyraźny trend spadkowy, podczas gdy interwały krótkoterminowe (15m i 1h) pokazują konsolidację z elementami odbicia (młot), co sugeruje brak jednoznacznego kierunku w najbliższym czasie."
+        "prediction_30min": "up",
+        "confidence": 0.75,
+        "reasoning": "Na interwale 15-minutowym widoczne jest wyraźne odbicie od dołka z silnymi świecami wzrostowymi, co potwierdza krótkoterminowy trend wzrostowy. Wyższe interwały (1h, 1d) również wskazują na kontynuację ruchu w górę po wcześniejszym spadku."
       }
     },
     "AMAZON": {
@@ -63,7 +62,7 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-09-22T06:03:49.891267+00:00",
+      "analyzed_at": "2026-09-22T10:03:38.932244+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "up",
@@ -73,8 +72,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "up",
-        "confidence": 0.75,
-        "reasoning": "Wykres 15-minutowy wykazuje wyraźny trend wzrostowy z serią zielonych świec, a obecne doji sugeruje jedynie krótkotrwałą konsolidację, nie odwrócenie trendu. Sygnały wzrostowe są wspierane przez silny trend w interwale 1-godzinnym i dziennym."
+        "confidence": 0.7,
+        "reasoning": "Na wykresie 15-minutowym widoczny jest wyraźny trend wzrostowy, jednak ostatnie świece (doji) sugerują chwilowe wyczerpanie popytu i konsolidację. Mimo to, wsparcie z niższych interwałów (1h, 1d) pozostaje wzrostowe, co wskazuje na prawdopodobne kontynuowanie ruchu w górę po krótkiej przerwie."
       }
     },
     "MICROSOFT": {
