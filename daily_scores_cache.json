@@ -2,7 +2,7 @@
   "date": "2026-09-22",
   "scores": {
     "EUR/USD": {
-      "confidence": 0.425,
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     },
@@ -22,8 +22,8 @@
       "threshold": 0.6
     },
     "AUD/USD": {
-      "confidence": 0.35,
-      "direction": "LONG",
+      "confidence": 0.525,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "USD/CAD": {
