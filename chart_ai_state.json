@@ -1,19 +1,20 @@
 {
-  "last_run": "2026-09-23 10",
+  "last_run": "2026-09-23 11",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-23T08:02:24.355426+00:00",
+      "analyzed_at": "2026-09-23T09:02:18.368037+00:00",
       "result": {
         "trend_15m": "down",
-        "trend_1h": "neutral",
+        "trend_1h": "down",
         "trend_1d": "up",
         "patterns_detected": [
-          "doji"
+          "spadająca gwiazda",
+          "objęcie bessy"
         ],
-        "reversal_expected": false,
+        "reversal_expected": true,
         "prediction_30min": "down",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać wyraźny spadek z szczytu, zakończony świecą doji, co sugeruje kontynuację krótkoterminowej korekty mimo wsparcia ze strony trendu dziennego."
+        "confidence": 0.75,
+        "reasoning": "Na wykresie 15-minutowym widoczne jest silne wybicie w dół z formacją spadającej gwiazdy, co wskazuje na kontynuację spadków w krótkim terminie, mimo że trend dzienny pozostaje wzrostowy."
       }
     },
     "AMAZON": {
@@ -93,7 +94,7 @@
       }
     },
     "SOLANA": {
-      "analyzed_at": "2026-09-23T08:03:12.190691+00:00",
+      "analyzed_at": "2026-09-23T09:03:06.564817+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "up",
@@ -102,9 +103,9 @@
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać silny spadek zakończony świecą w kształcie doji, co sugeruje chwilowe wyczerpanie podaży i konsolidację, podczas gdy wyższe interwały (1h, 1d) utrzymują silny trend wzrostowy."
+        "prediction_30min": "down",
+        "confidence": 0.65,
+        "reasoning": "Na wykresie 15-minutowym widoczna jest wyraźna fala spadkowa z ostatniej godziny, która dominuje nad krótkoterminowym ruchem, mimo że trend na wyższych interwałach (1h i 1d) pozostaje wzrostowy. Ostatnia świeca ma postać doji, co sugeruje chwilowe wyczerpanie popytu, ale brak silnego sygnału odwrócenia w górę."
       }
     }
   }
