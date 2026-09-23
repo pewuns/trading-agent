@@ -112603,5 +112603,71 @@
       "chart_ai_sentiment": 0.0
     },
     "created_at": "2026-09-23T14:51:57.487192+00:00"
+  },
+  "GOLD_2026-09-23T15:03:34.779141+00:00": {
+    "name": "GOLD",
+    "direction": "SHORT",
+    "confidence": 0.5,
+    "entry": 4330.7001953125,
+    "atr": 11.185756138392858,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.1099774257386359,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.4496066988074093,
+      "poc": 1.0,
+      "mtf_trend": -0.6573556797020483,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-23T15:03:34.779167+00:00"
+  },
+  "BITCOIN_2026-09-23T15:03:40.093509+00:00": {
+    "name": "BITCOIN",
+    "direction": "SHORT",
+    "confidence": 0.55,
+    "entry": 84559.75,
+    "atr": 379.94698660714283,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.32900631601092045,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.007723774635042135,
+      "poc": 1.0,
+      "mtf_trend": -0.32960893854748596,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-23T15:03:40.093535+00:00"
+  },
+  "SOLANA_2026-09-23T15:03:49.767506+00:00": {
+    "name": "SOLANA",
+    "direction": "SHORT",
+    "confidence": 0.55,
+    "entry": 115.27999877929688,
+    "atr": 0.9664301191057477,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.23017920279731185,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.22434100989124015,
+      "poc": 1.0,
+      "mtf_trend": -0.13221601489757906,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-23T15:03:49.767520+00:00"
   }
 }

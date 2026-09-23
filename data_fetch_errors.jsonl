@@ -14839,3 +14839,62 @@
 {"timestamp": "2026-09-23T14:52:04.264403+00:00", "source": "yahoo", "name": "META", "symbol": "META", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
 {"timestamp": "2026-09-23T14:52:04.365459+00:00", "source": "yahoo", "name": "GOOGL", "symbol": "GOOGL", "reason": "za mało wyrównanych świec (7)"}
 {"timestamp": "2026-09-23T14:52:04.366025+00:00", "source": "yahoo", "name": "GOOGLE", "symbol": "GOOGL", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:02:16.199308+00:00", "source": "yahoo", "name": "^GSPC", "symbol": "^GSPC", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:02:16.200563+00:00", "source": "yahoo", "name": "S&P500", "symbol": "^GSPC", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:02:19.480637+00:00", "source": "yahoo", "name": "^IXIC", "symbol": "^IXIC", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:02:19.481759+00:00", "source": "yahoo", "name": "NASDAQ", "symbol": "^IXIC", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:02:51.872867+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:02:51.964583+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:02:52.032543+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:02:55.577589+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:02:55.762382+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:02:55.869934+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:02:59.228716+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:02:59.318974+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:02:59.468098+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:02.846835+00:00", "source": "yahoo", "name": "AAPL", "symbol": "AAPL", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:02.848095+00:00", "source": "yahoo", "name": "APPLE", "symbol": "AAPL", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:06.272153+00:00", "source": "yahoo", "name": "MSFT", "symbol": "MSFT", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:06.273134+00:00", "source": "yahoo", "name": "MICROSOFT", "symbol": "MSFT", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:09.587428+00:00", "source": "yahoo", "name": "NVDA", "symbol": "NVDA", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:09.588621+00:00", "source": "yahoo", "name": "NVIDIA", "symbol": "NVDA", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:12.937836+00:00", "source": "yahoo", "name": "TSLA", "symbol": "TSLA", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:12.939189+00:00", "source": "yahoo", "name": "TESLA", "symbol": "TSLA", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:16.373003+00:00", "source": "yahoo", "name": "AMZN", "symbol": "AMZN", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:16.374171+00:00", "source": "yahoo", "name": "AMAZON", "symbol": "AMZN", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:20.150310+00:00", "source": "yahoo", "name": "META", "symbol": "META", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:20.151508+00:00", "source": "yahoo", "name": "META", "symbol": "META", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:23.554166+00:00", "source": "yahoo", "name": "GOOGL", "symbol": "GOOGL", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:23.555353+00:00", "source": "yahoo", "name": "GOOGLE", "symbol": "GOOGL", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:26.902023+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:27.112145+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:27.637288+00:00", "source": "yahoo", "name": "^GSPC", "symbol": "^GSPC", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:27.638311+00:00", "source": "yahoo", "name": "S&P500", "symbol": "^GSPC", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:27.693598+00:00", "source": "yahoo", "name": "^IXIC", "symbol": "^IXIC", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:27.694966+00:00", "source": "yahoo", "name": "NASDAQ", "symbol": "^IXIC", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:34.968481+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:35.035514+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:35.096481+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:35.182118+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:40.213784+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:40.273460+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:40.335215+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:40.421279+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:44.909844+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:44.971336+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:45.031785+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:45.141042+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-23T15:03:49.951816+00:00", "source": "yahoo", "name": "AAPL", "symbol": "AAPL", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:49.952822+00:00", "source": "yahoo", "name": "APPLE", "symbol": "AAPL", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:49.985826+00:00", "source": "yahoo", "name": "MSFT", "symbol": "MSFT", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:49.986574+00:00", "source": "yahoo", "name": "MICROSOFT", "symbol": "MSFT", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:50.058123+00:00", "source": "yahoo", "name": "NVDA", "symbol": "NVDA", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:50.059238+00:00", "source": "yahoo", "name": "NVIDIA", "symbol": "NVDA", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:50.162540+00:00", "source": "yahoo", "name": "TSLA", "symbol": "TSLA", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:50.163861+00:00", "source": "yahoo", "name": "TESLA", "symbol": "TSLA", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:50.227887+00:00", "source": "yahoo", "name": "AMZN", "symbol": "AMZN", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:50.229189+00:00", "source": "yahoo", "name": "AMAZON", "symbol": "AMZN", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:50.293095+00:00", "source": "yahoo", "name": "META", "symbol": "META", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:50.294372+00:00", "source": "yahoo", "name": "META", "symbol": "META", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-23T15:03:50.350434+00:00", "source": "yahoo", "name": "GOOGL", "symbol": "GOOGL", "reason": "za mało wyrównanych świec (8)"}
+{"timestamp": "2026-09-23T15:03:50.351731+00:00", "source": "yahoo", "name": "GOOGLE", "symbol": "GOOGL", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
