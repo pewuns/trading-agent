@@ -336,7 +336,7 @@
     "timestamp": "2026-09-23T16:04:58.135584+00:00",
     "status": "open",
     "risk_distance": 27.17677525111594,
-    "mae_percent": -0.5830273523096811,
+    "mae_percent": -0.5879347109538138,
     "mfe_percent": 0.0
   },
   "BITCOIN_SHORT": {
@@ -405,7 +405,7 @@
     "timestamp": "2026-09-23T16:50:43.737240+00:00",
     "status": "open",
     "risk_distance": 690.8370535714348,
-    "mae_percent": -0.36468422546090046,
+    "mae_percent": -0.47914627385568914,
     "mfe_percent": 0.0
   },
   "OIL WTI_LONG": {
@@ -812,7 +812,7 @@
     "status": "open",
     "risk_distance": 12.267752511160325,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.06250913640728145
   },
   "MICROSOFT_LONG": {
     "name": "MICROSOFT",
