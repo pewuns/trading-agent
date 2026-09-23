@@ -55,6 +55,11 @@
       "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
+    },
+    "DAX": {
+      "confidence": 0.425,
+      "direction": "SHORT",
+      "threshold": 0.6
     }
   }
 }
