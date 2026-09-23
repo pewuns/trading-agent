@@ -1,19 +1,20 @@
 {
-  "last_run": "2026-09-23 15",
+  "last_run": "2026-09-23 16",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-23T13:04:12.624957+00:00",
+      "analyzed_at": "2026-09-23T14:02:45.000797+00:00",
       "result": {
-        "trend_15m": "down",
+        "trend_15m": "neutral",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
-          "doji"
+          "doji",
+          "młot"
         ],
-        "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.75,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest wyraźna struktura spadkowa (niższe szczyty i dołki), a ostatnie świece, mimo małego odbicia, nie przełamały oporu. Wykres 1-godzinowy potwierdza silny trend spadkowy po niedawnym szczycie, co sugeruje kontynuację ruchu w dół lub przynajmniej konsolidację w dolnym zakresie."
+        "reversal_expected": true,
+        "prediction_30min": "up",
+        "confidence": 0.65,
+        "reasoning": "Na wykresie 15-minutowym po silnym spadku pojawiły się świece sygnalizujące wyczerpanie podaży (młot, doji) oraz odbicie, co sugeruje krótkoterminowy ruch wzrostowy, mimo że trend na wyższych interwałach (1h, 1d) pozostaje spadkowy."
       }
     },
     "AMAZON": {
