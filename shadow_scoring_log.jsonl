@@ -5640,3 +5640,9 @@
 {"name": "AMAZON", "timestamp": "2026-09-22T19:22:34.168925+00:00", "production_confidence": 0.2, "production_direction": "LONG", "shadow_score": 1}
 {"name": "META", "timestamp": "2026-09-22T19:22:39.006561+00:00", "production_confidence": 0.35, "production_direction": "SHORT", "shadow_score": -1}
 {"name": "GOOGLE", "timestamp": "2026-09-22T19:22:43.921502+00:00", "production_confidence": 0.5, "production_direction": "SHORT", "shadow_score": 0}
+{"name": "EUR/USD", "timestamp": "2026-09-23T04:03:52.183594+00:00", "production_confidence": 0.225, "production_direction": "SHORT", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/JPY", "timestamp": "2026-09-23T04:03:57.211632+00:00", "production_confidence": 0.325, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "GBP/USD", "timestamp": "2026-09-23T04:04:02.071929+00:00", "production_confidence": 0.3, "production_direction": "LONG", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/CHF", "timestamp": "2026-09-23T04:04:07.177124+00:00", "production_confidence": 0.2, "production_direction": "LONG", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "AUD/USD", "timestamp": "2026-09-23T04:04:12.247768+00:00", "production_confidence": 0.35, "production_direction": "LONG", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/CAD", "timestamp": "2026-09-23T04:04:17.126162+00:00", "production_confidence": 0.35, "production_direction": "LONG", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
