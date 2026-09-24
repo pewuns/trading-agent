@@ -32,18 +32,18 @@
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.5,
+      "confidence": 0.6,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.5,
+      "confidence": 0.55,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.55,
-      "direction": "LONG",
+      "confidence": 0.6,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "GOLD": {
