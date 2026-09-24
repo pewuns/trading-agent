@@ -1,20 +1,20 @@
 {
-  "last_run": "2026-09-24 10",
+  "last_run": "2026-09-24 11",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-24T08:02:27.803619+00:00",
+      "analyzed_at": "2026-09-24T09:02:52.660758+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
-          "duża świeca spadkowa",
-          "doji"
+          "spadająca gwiazda",
+          "objęcie bessy"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.75,
-        "reasoning": "Wykres 15-minutowy pokazuje silny ruch spadkowy zakończony dużą czerwoną świecą, co sugeruje kontynuację trendu w dół. Wyższe interwały (1h i 1d) również potwierdzają dominację podaży, co zwiększa prawdopodobieństwo dalszego spadku w najbliższym czasie."
+        "confidence": 0.85,
+        "reasoning": "Na wykresie 15-minutowym widoczne jest silne wybicie w dół po formacji spadającej gwiazdy, co potwierdza kontynuację spadków z interwału 1-godzinnego. Brak sygnałów odwrócenia trendu na krótkim terminie."
       }
     },
     "AMAZON": {
@@ -48,10 +48,10 @@
       }
     },
     "APPLE": {
-      "analyzed_at": "2026-09-24T08:03:15.948500+00:00",
+      "analyzed_at": "2026-09-24T09:03:40.956473+00:00",
       "result": {
         "trend_15m": "neutral",
-        "trend_1h": "neutral",
+        "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
           "doji",
@@ -60,7 +60,7 @@
         "reversal_expected": false,
         "prediction_30min": "neutral",
         "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać konsolidację z formacją młota, co sugeruje potencjalne odbicie, ale brak silnego impulsu. Wykres dzienny pozostaje w silnym trendzie wzrostowym, co wspiera neutralny do lekko wzrostowy scenariusz w krótkim terminie."
+        "reasoning": "Na wykresie 15-minutowym widać konsolidację po spadku, z formacjami doji sugerującymi brak wyraźnego kierunku w krótkim terminie, podczas gdy wyższe interwały (1h, 1d) utrzymują silny trend wzrostowy."
       }
     },
     "NVIDIA": {
