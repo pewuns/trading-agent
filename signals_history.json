@@ -61,7 +61,7 @@
     "status": "open",
     "risk_distance": 0.85821533203125,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.2475466596244827
   },
   "ETHEREUM_LONG": {
     "name": "ETHEREUM",
@@ -950,6 +950,6 @@
     "status": "open",
     "risk_distance": 2.4743728637695312,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.06725071355784044
   }
 }
