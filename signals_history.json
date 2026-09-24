@@ -61,7 +61,7 @@
     "status": "open",
     "risk_distance": 0.9932147434779637,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.01705684913808918
   },
   "ETHEREUM_LONG": {
     "name": "ETHEREUM",
@@ -817,7 +817,7 @@
     "timestamp": "2026-09-24T17:48:41.404545+00:00",
     "status": "open",
     "risk_distance": 16.82142857142844,
-    "mae_percent": -0.17217083163680783,
+    "mae_percent": -0.26059086348301536,
     "mfe_percent": 0.03722888916356445
   },
   "MICROSOFT_LONG": {
