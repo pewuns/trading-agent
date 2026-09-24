@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-09-23 23",
+  "last_run": "2026-09-24 06",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-23T21:02:34.239566+00:00",
+      "analyzed_at": "2026-09-24T04:02:23.919945+00:00",
       "result": {
         "trend_15m": "neutral",
         "trend_1h": "down",
@@ -13,7 +13,7 @@
         "reversal_expected": false,
         "prediction_30min": "neutral",
         "confidence": 0.55,
-        "reasoning": "Na wykresie 15-minutowym widać konsolidację po spadku, co sugeruje neutralny kierunek w krótkim terminie, podczas gdy na wykresie godzinowym dominuje trend spadkowy."
+        "reasoning": "Na interwale 15-minutowym po silnym spadku nastąpiła konsolidacja z formacją doji, co sugeruje wyczerpanie ruchu spadkowego i brak wyraźnego kierunku w najbliższym czasie. Wyższe interwały (1h) wskazują na kontynuację spadków, podczas gdy dzienny wykres pozostaje w trendzie wzrostowym, co tworzy mieszany sygnał."
       }
     },
     "AMAZON": {
@@ -62,19 +62,18 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-09-23T05:03:20.158382+00:00",
+      "analyzed_at": "2026-09-24T04:03:21.722757+00:00",
       "result": {
-        "trend_15m": "down",
-        "trend_1h": "up",
+        "trend_15m": "neutral",
+        "trend_1h": "down",
         "trend_1d": "up",
         "patterns_detected": [
-          "spadająca gwiazda",
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest silne wybicie w dół po dotknięciu lokalnego szczytu, co sugeruje krótkoterminową korektę w ramach szerszego trendu wzrostowego."
+        "prediction_30min": "neutral",
+        "confidence": 0.6,
+        "reasoning": "Wykres 15-minutowy pokazuje konsolidację po spadku z szczytu, co sugeruje neutralny kierunek w krótkim terminie, podczas gdy na wykresie dziennym utrzymuje się silny trend wzrostowy."
       }
     },
     "MICROSOFT": {
