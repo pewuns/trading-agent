@@ -813,10 +813,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-23T18:39:14.930702+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 11.442836216518117,
     "mae_percent": -0.12497170649153376,
-    "mfe_percent": 0.21754501507084875
+    "mfe_percent": 0.5276633387210126,
+    "outcome": "win",
+    "closed_price": 4298.10009765625,
+    "closed_at": "2026-09-24T08:37:20.880864+00:00",
+    "r_multiple": 1.9924959386019805
   },
   "MICROSOFT_LONG": {
     "name": "MICROSOFT",
