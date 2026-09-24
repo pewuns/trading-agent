@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-24 21",
+  "last_run": "2026-09-24 22",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-24T19:02:45.681350+00:00",
+      "analyzed_at": "2026-09-24T20:02:45.726507+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
-        "trend_1d": "down",
+        "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.7,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest silna formacja spadkowa (spadek z szczytu 25400 do 25250), a ostatnia świeca ma postać doji, co sugeruje chwilowe wyczerpanie, ale nie odwrócenie trendu. Wyższe interwały (1h, 1d) potwierdzają dominację niedźwiedzi i kontynuację spadków."
+        "confidence": 0.65,
+        "reasoning": "Wykres 15-minutowy i 1-godzinny wyraźnie pokazują silny ruch spadkowy po osiągnięciu lokalnych szczytów, co sugeruje kontynuację korekty mimo wzrostowego trendu na wykresie dziennym."
       }
     },
     "AMAZON": {
