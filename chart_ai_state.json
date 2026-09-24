@@ -1,20 +1,20 @@
 {
-  "last_run": "2026-09-24 11",
+  "last_run": "2026-09-24 12",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-24T09:02:52.660758+00:00",
+      "analyzed_at": "2026-09-24T10:02:42.016153+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
-          "spadająca gwiazda",
-          "objęcie bessy"
+          "doji",
+          "spadająca gwiazda"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.85,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest silne wybicie w dół po formacji spadającej gwiazdy, co potwierdza kontynuację spadków z interwału 1-godzinnego. Brak sygnałów odwrócenia trendu na krótkim terminie."
+        "confidence": 0.75,
+        "reasoning": "Wykres 15-minutowy pokazuje wyraźny spadek z formacją spadającej gwiazdy na szczycie, co sugeruje kontynuację ruchu w dół. Na interwale 1-godzinnym widoczne jest silne wybicie w dół, potwierdzające negatywny trend."
       }
     },
     "AMAZON": {
