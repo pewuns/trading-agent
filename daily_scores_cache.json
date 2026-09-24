@@ -62,13 +62,13 @@
       "threshold": 0.6
     },
     "S&P500": {
-      "confidence": 0.3,
-      "direction": "SHORT",
+      "confidence": 0.55,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "NASDAQ": {
-      "confidence": 0.25,
-      "direction": "SHORT",
+      "confidence": 0.55,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "APPLE": {
@@ -82,7 +82,7 @@
       "threshold": 0.6
     },
     "NVIDIA": {
-      "confidence": 0.4,
+      "confidence": 0.55,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -99,6 +99,11 @@
     "GOOGLE": {
       "confidence": 0.55,
       "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "META": {
+      "confidence": 0.55,
+      "direction": "LONG",
       "threshold": 0.6
     }
   }

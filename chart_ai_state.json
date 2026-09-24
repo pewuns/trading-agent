@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-09-24 19",
+  "last_run": "2026-09-24 20",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-24T17:02:23.677712+00:00",
+      "analyzed_at": "2026-09-24T18:02:38.720438+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
@@ -12,8 +12,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest silne spadkowe impetowanie po osiągnięciu lokalnego szczytu, a obecna świeca doji sugeruje jedynie chwilową konsolidację, nie odwrócenie trendu. Wyższe interwały (1h i 1d) potwierdzają dominację strony popytowej w krótkim terminie, co wskazuje na dalszy spadek."
+        "confidence": 0.75,
+        "reasoning": "Na wykresie 15-minutowym widoczne jest silne spadkowe impultowanie po osiągnięciu lokalnego szczytu, a ostatnia świeca typu doji sugeruje jedynie chwilową konsolidację. Wykres 1-godzinowy potwierdza kontynuację spadków z wyraźnym brakiem siły kupujących, co wskazuje na dalsze obniżanie cen."
       }
     },
     "AMAZON": {
