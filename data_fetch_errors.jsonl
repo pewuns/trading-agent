@@ -15547,3 +15547,30 @@
 {"timestamp": "2026-09-24T07:50:25.836123+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
 {"timestamp": "2026-09-24T07:50:25.965540+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
 {"timestamp": "2026-09-24T07:50:26.165564+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:02:26.347542+00:00", "source": "yahoo", "name": "^GDAXI", "symbol": "^GDAXI", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-24T08:02:26.348890+00:00", "source": "yahoo", "name": "DAX", "symbol": "^GDAXI", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-24T08:03:02.453952+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:02.581041+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:02.780396+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:06.083850+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:06.209044+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:06.411890+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:09.616914+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:09.739828+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:09.876360+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:37.517422+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:38.334157+00:00", "source": "yahoo", "name": "^GDAXI", "symbol": "^GDAXI", "reason": "za mało wyrównanych świec (5)"}
+{"timestamp": "2026-09-24T08:03:38.335345+00:00", "source": "yahoo", "name": "DAX", "symbol": "^GDAXI", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-09-24T08:03:51.960238+00:00", "source": "twelvedata", "name": "USD/CAD", "symbol": "USD/CAD", "reason": "HTTP 429: {\"code\":429,\"message\":\"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 8. Wait for the "}
+{"timestamp": "2026-09-24T08:03:56.064458+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:56.186821+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:56.310431+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:03:56.446177+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:04:00.771761+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:04:00.895170+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:04:01.022700+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:04:01.223717+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:04:05.616481+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:04:05.741652+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:04:05.870898+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-09-24T08:04:06.008091+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
