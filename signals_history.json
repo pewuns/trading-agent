@@ -267,10 +267,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-24T12:05:23.348326+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.6010698590959862,
-    "mae_percent": -0.3797247556407428,
-    "mfe_percent": 0.0
+    "mae_percent": -0.7947735277791421,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 114.13999938964844,
+    "closed_at": "2026-09-24T13:06:55.344259+00:00",
+    "r_multiple": -1.4973326515365712
   },
   "ETHEREUM_SHORT": {
     "name": "ETHEREUM",
@@ -409,10 +413,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-24T12:05:13.683760+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 292.7670200892899,
-    "mae_percent": -0.18370013855055595,
-    "mfe_percent": 0.0
+    "mae_percent": -0.38499905586956285,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 83689.6796875,
+    "closed_at": "2026-09-24T13:06:55.344259+00:00",
+    "r_multiple": -1.0963282336313325
   },
   "OIL WTI_LONG": {
     "name": "OIL WTI",

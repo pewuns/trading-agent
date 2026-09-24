@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-24 14",
+  "last_run": "2026-09-24 15",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-24T12:03:07.248969+00:00",
+      "analyzed_at": "2026-09-24T13:05:47.856360+00:00",
       "result": {
         "trend_15m": "neutral",
         "trend_1h": "down",
-        "trend_1d": "up",
+        "trend_1d": "down",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "neutral",
         "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym po silnym odbiciu od dołka widać spadek pędu (małe świece, doji), co sugeruje konsolidację. Wyższy interwał 1h wskazuje na trend spadkowy, co ogranicza potencjał dalszego wzrostu w krótkim terminie."
+        "reasoning": "Na wykresie 15-minutowym widać konsolidację po spadku (doji), co sugeruje chwilowy brak kierunku, podczas gdy wyższe interwały (1h, 1d) utrzymują wyraźny trend spadkowy, co uniemożliwia oczekiwanie silnego odbicia w krótkim terminie."
       }
     },
     "AMAZON": {
