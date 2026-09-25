@@ -2,23 +2,43 @@
   "date": "2026-09-25",
   "scores": {
     "EUR/USD": {
-      "confidence": 0.3,
-      "direction": "LONG",
+      "confidence": 0.425,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "GBP/USD": {
-      "confidence": 0.3,
-      "direction": "LONG",
+      "confidence": 0.375,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "USD/CHF": {
-      "confidence": 0.325,
+      "confidence": 0.425,
       "direction": "LONG",
       "threshold": 0.6
     },
     "USD/CAD": {
-      "confidence": 0.325,
+      "confidence": 0.425,
       "direction": "LONG",
+      "threshold": 0.6
+    },
+    "USD/JPY": {
+      "confidence": 0.25,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "BITCOIN": {
+      "confidence": 0.45,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "ETHEREUM": {
+      "confidence": 0.3,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "SOLANA": {
+      "confidence": 0.3,
+      "direction": "SHORT",
       "threshold": 0.6
     }
   }
