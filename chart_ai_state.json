@@ -1,19 +1,20 @@
 {
-  "last_run": "2026-09-25 10",
+  "last_run": "2026-09-25 11",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-25T08:02:17.119990+00:00",
+      "analyzed_at": "2026-09-25T09:02:36.721028+00:00",
       "result": {
-        "trend_15m": "down",
+        "trend_15m": "up",
         "trend_1h": "neutral",
-        "trend_1d": "up",
+        "trend_1d": "down",
         "patterns_detected": [
-          "spadająca gwiazda"
+          "młot",
+          "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
+        "prediction_30min": "up",
         "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest silne spadkowe odchylenie po dotknięciu lokalnego szczytu, co sugeruje dalszy ruch w dół w krótkim terminie, mimo że wyższe interwały (1D) wskazują na trend wzrostowy."
+        "reasoning": "Na wykresie 15-minutowym widoczne jest silne odbicie od wsparcia (formacja młota), co sugeruje krótkoterminowy ruch wzrostowy, mimo że wyższe interwały (1h i 1d) pozostają w konsolidacji lub trendzie spadkowym."
       }
     },
     "AMAZON": {
@@ -78,7 +79,7 @@
       }
     },
     "MICROSOFT": {
-      "analyzed_at": "2026-09-25T06:03:49.551673+00:00",
+      "analyzed_at": "2026-09-25T09:03:26.686230+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "up",
@@ -88,8 +89,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "up",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widać wyraźny wzrostowy trend z serią świec hossy, choć ostatnie formacje sugerują lekkie spowolnienie (doji). Wyższe interwały (1h i 1d) potwierdzają silny trend wzrostowy, co wskazuje na kontynuację ruchu w górę."
+        "confidence": 0.75,
+        "reasoning": "Na wykresie 15-minutowym widoczna jest wyraźna struktura wzrostowa z kolejnymi wyższymi dołkami, a obecne doji sugeruje chwilową konsolidację przed kontynuacją ruchu w górę. Wyższe interwały (1h, 1d) potwierdzają silny trend wzrostowy, co wspiera scenariusz dalszego wzrostu."
       }
     },
     "SOLANA": {
