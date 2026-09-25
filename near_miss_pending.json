@@ -132579,5 +132579,225 @@
       "chart_ai_sentiment": 0.0
     },
     "created_at": "2026-09-25T10:37:29.287518+00:00"
+  },
+  "EUR/USD_2026-09-25T10:50:25.817025+00:00": {
+    "name": "EUR/USD",
+    "direction": "LONG",
+    "confidence": 0.25,
+    "entry": 1.13978,
+    "atr": 0.0005085714285714296,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.40664961636822683,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": -1.0,
+      "mtf_trend": 0.04283054003724418,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-25T10:50:25.817043+00:00"
+  },
+  "GBP/USD_2026-09-25T10:50:30.331105+00:00": {
+    "name": "GBP/USD",
+    "direction": "LONG",
+    "confidence": 0.3,
+    "entry": 1.3244,
+    "atr": 0.000681428571428563,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.4188679245283339,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": -1.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": 0.04283054003724418,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-25T10:50:30.331129+00:00"
+  },
+  "USD/CHF_2026-09-25T10:50:35.019053+00:00": {
+    "name": "USD/CHF",
+    "direction": "SHORT",
+    "confidence": 0.35,
+    "entry": 0.82908,
+    "atr": 0.0004914285714285792,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 1.0,
+      "rsi": -0.05357142857140602,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": -1.0,
+      "mtf_trend": 0.7839851024208566,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-25T10:50:35.019076+00:00"
+  },
+  "AUD/USD_2026-09-25T10:50:39.489750+00:00": {
+    "name": "AUD/USD",
+    "direction": "LONG",
+    "confidence": 0.45,
+    "entry": 0.70303,
+    "atr": 0.0003557142857142846,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.24344569288393472,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": 0.20670391061452542,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-25T10:50:39.489768+00:00"
+  },
+  "USD/CAD_2026-09-25T10:50:43.917404+00:00": {
+    "name": "USD/CAD",
+    "direction": "LONG",
+    "confidence": 0.325,
+    "entry": 1.41464,
+    "atr": 0.0004500000000000456,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 1.0,
+      "rsi": -0.0029673590504646088,
+      "vwap": 0.0,
+      "support_resistance": 0.5,
+      "pattern": 1.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": 0.6052141527001864,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-25T10:50:43.917425+00:00"
+  },
+  "GOLD_2026-09-25T10:50:49.703097+00:00": {
+    "name": "GOLD",
+    "direction": "LONG",
+    "confidence": 0.4,
+    "entry": 4338.0,
+    "atr": 6.978585379464286,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.596670388793016,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.4979490235949935,
+      "poc": 1.0,
+      "mtf_trend": 0.04283054003724418,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-25T10:50:49.703124+00:00"
+  },
+  "OIL WTI_2026-09-25T10:50:55.417374+00:00": {
+    "name": "OIL WTI",
+    "direction": "LONG",
+    "confidence": 0.3,
+    "entry": 93.05000305175781,
+    "atr": 0.3928576878138951,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": -0.1585751568468173,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.03156791178069426,
+      "poc": 1.0,
+      "mtf_trend": 0.027932960893854997,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-25T10:50:55.417396+00:00"
+  },
+  "BITCOIN_2026-09-25T10:51:01.104416+00:00": {
+    "name": "BITCOIN",
+    "direction": "LONG",
+    "confidence": 0.475,
+    "entry": 84737.1171875,
+    "atr": 198.50613839285714,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.47686334782937023,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.12215971853891762,
+      "poc": 1.0,
+      "mtf_trend": 0.6573556797020486,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-25T10:51:01.104433+00:00"
+  },
+  "ETHEREUM_2026-09-25T10:51:06.958014+00:00": {
+    "name": "ETHEREUM",
+    "direction": "LONG",
+    "confidence": 0.5,
+    "entry": 2715.389892578125,
+    "atr": 9.122174944196429,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.5698397575241814,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.05038876600013613,
+      "poc": 1.0,
+      "mtf_trend": 0.7467411545623839,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-25T10:51:06.958033+00:00"
+  },
+  "SOLANA_2026-09-25T10:51:12.427992+00:00": {
+    "name": "SOLANA",
+    "direction": "LONG",
+    "confidence": 0.55,
+    "entry": 119.0,
+    "atr": 0.5257137843540737,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.6635932305885703,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.15734499425621082,
+      "poc": 1.0,
+      "mtf_trend": 0.7467411545623839,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-25T10:51:12.428016+00:00"
   }
 }
