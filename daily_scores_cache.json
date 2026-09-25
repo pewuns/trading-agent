@@ -22,7 +22,7 @@
       "threshold": 0.6
     },
     "USD/JPY": {
-      "confidence": 0.3,
+      "confidence": 0.45,
       "direction": "SHORT",
       "threshold": 0.6
     },
@@ -32,7 +32,7 @@
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.3,
+      "confidence": 0.45,
       "direction": "SHORT",
       "threshold": 0.6
     },
