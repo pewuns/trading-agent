@@ -1,19 +1,20 @@
 {
-  "last_run": "2026-09-25 08",
+  "last_run": "2026-09-25 09",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-25T06:02:52.804520+00:00",
+      "analyzed_at": "2026-09-25T07:07:05.236810+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
         "trend_1d": "up",
         "patterns_detected": [
+          "spadająca gwiazda",
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.6,
-        "reasoning": "Wykres 15-minutowy i 1-godzinny wyraźnie pokazują kontynuację spadków po osiągnięciu lokalnych szczytów, co sugeruje dalszy ruch w dół w krótkim terminie, mimo że trend dzienny pozostaje wzrostowy."
+        "confidence": 0.75,
+        "reasoning": "Na interwałach 15-minutowym i godzinowym widoczna jest wyraźna korekta spadkowa po wcześniejszym wzroście, z obecnością świec sygnałowych (spadająca gwiazda) potwierdzających presję podaży. Długoterminowy trend dzienny pozostaje wzrostowy, ale krótkoterminowa dynamika wskazuje na dalsze spadki."
       }
     },
     "AMAZON": {
@@ -47,19 +48,19 @@
       }
     },
     "APPLE": {
-      "analyzed_at": "2026-09-24T09:03:40.956473+00:00",
+      "analyzed_at": "2026-09-25T07:07:54.670657+00:00",
       "result": {
-        "trend_15m": "neutral",
-        "trend_1h": "up",
+        "trend_15m": "down",
+        "trend_1h": "neutral",
         "trend_1d": "up",
         "patterns_detected": [
-          "doji",
-          "młot"
+          "spadająca gwiazda",
+          "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać konsolidację po spadku, z formacjami doji sugerującymi brak wyraźnego kierunku w krótkim terminie, podczas gdy wyższe interwały (1h, 1d) utrzymują silny trend wzrostowy."
+        "prediction_30min": "down",
+        "confidence": 0.65,
+        "reasoning": "Na wykresie 15-minutowym widoczne jest wyraźne osłabienie popytu, zakończone silną świecą spadkową, co sugeruje kontynuację ruchu w dół w krótkim terminie, mimo że trend dzienny pozostaje wzrostowy."
       }
     },
     "NVIDIA": {
