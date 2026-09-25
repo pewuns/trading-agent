@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-25 06",
+  "last_run": "2026-09-25 07",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-25T04:02:21.074370+00:00",
+      "analyzed_at": "2026-09-25T05:02:15.831919+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
-        "trend_1d": "down",
+        "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.7,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest silna fala spadkowa po osiągnięciu lokalnego szczytu, zakończona świecą doji, która sugeruje chwilowe wyczerpanie, ale nie odwrócenie trendu. Wyższe interwały (1h i 1d) potwierdzają dominację niedźwiedzi, co wskazuje na kontynuację spadków lub dalsze testowanie wsparć."
+        "confidence": 0.65,
+        "reasoning": "Na interwałach 15m i 1h widoczny jest wyraźny trend spadkowy po osiągnięciu lokalnych szczytów, co sugeruje kontynuację ruchu w dół w najbliższej perspektywie, mimo że trend dzienny pozostaje wzrostowy."
       }
     },
     "AMAZON": {
@@ -32,7 +32,7 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-09-25T04:03:19.051753+00:00",
+      "analyzed_at": "2026-09-25T05:03:14.014749+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "up",
@@ -42,8 +42,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widoczny jest silny ruch spadkowy po wcześniejszym impulsie wzrostowym, co sugeruje kontynuację korekty w dół, mimo że wyższe interwały (1h, 1d) utrzymują trend wzrostowy."
+        "confidence": 0.65,
+        "reasoning": "Na interwale 15-minutowym widać wyraźny spadek po gwałtownym wzroście, co sugeruje korektę w dół, podczas gdy wyższe interwały (1h, 1d) utrzymują trend wzrostowy."
       }
     },
     "APPLE": {
