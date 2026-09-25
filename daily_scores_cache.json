@@ -37,7 +37,7 @@
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.6,
+      "confidence": 0.65,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -57,7 +57,7 @@
       "threshold": 0.6
     },
     "DAX": {
-      "confidence": 0.315,
+      "confidence": 0.41500000000000004,
       "direction": "SHORT",
       "threshold": 0.6
     }
