@@ -1,20 +1,20 @@
 {
-  "last_run": "2026-09-25 22",
+  "last_run": "2026-09-25 23",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-25T20:02:13.822898+00:00",
+      "analyzed_at": "2026-09-25T21:02:58.151394+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
           "młot",
-          "doji"
+          "spadająca gwiazda"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
+        "prediction_30min": "neutral",
         "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widać silny spadek zakończony świecą młota, co sugeruje próbę odbicia, jednak dominujący trend spadkowy na interwałach 1h i 1d (spadek z szczytów) wskazuje na kontynuację ruchu w dół lub jedynie krótkotrwałą korektę."
+        "reasoning": "Na wykresie 15-minutowym widać wyraźny spadek zakończony formacją młota, co sugeruje lokalne wyczerpanie podaży, jednak silny trend spadkowy na wyższych interwałach (1h i 1d) dominuje, co wskazuje na neutralny kierunek w najbliższej perspektywie."
       }
     },
     "AMAZON": {
