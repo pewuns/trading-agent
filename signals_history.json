@@ -955,9 +955,13 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-24T19:05:25.360648+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 2.4743728637695312,
-    "mae_percent": -0.3165089836650391,
-    "mfe_percent": 0.06725071355784044
+    "mae_percent": -2.266972856630011,
+    "mfe_percent": 0.06725071355784044,
+    "outcome": "loss",
+    "closed_price": 370.5450134277344,
+    "closed_at": "2026-09-25T15:35:54.525195+00:00",
+    "r_multiple": -3.473607937814696
   }
 }
