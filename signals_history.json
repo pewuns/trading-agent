@@ -58,10 +58,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-24T19:05:02.521453+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.85821533203125,
-    "mae_percent": -0.6914256742961696,
-    "mfe_percent": 0.2475466596244827
+    "mae_percent": -0.7597092428990135,
+    "mfe_percent": 0.2475466596244827,
+    "outcome": "loss",
+    "closed_price": 116.26000213623047,
+    "closed_at": "2026-09-25T06:44:45.160730+00:00",
+    "r_multiple": -1.037035061517673
   },
   "ETHEREUM_LONG": {
     "name": "ETHEREUM",
