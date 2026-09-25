@@ -409,10 +409,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-25T15:50:07.553243+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 544.2706473214348,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -0.6570609516230188,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 83971.2421875,
+    "closed_at": "2026-09-25T16:04:03.178430+00:00",
+    "r_multiple": -1.0071103920404505
   },
   "OIL WTI_LONG": {
     "name": "OIL WTI",
