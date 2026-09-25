@@ -1,20 +1,19 @@
 {
-  "last_run": "2026-09-25 14",
+  "last_run": "2026-09-25 15",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-25T12:02:51.330723+00:00",
+      "analyzed_at": "2026-09-25T13:06:25.543404+00:00",
       "result": {
-        "trend_15m": "down",
+        "trend_15m": "neutral",
         "trend_1h": "neutral",
-        "trend_1d": "down",
+        "trend_1d": "up",
         "patterns_detected": [
-          "doji",
-          "spadająca gwiazda"
+          "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widać silny ruch spadkowy po osiągnięciu lokalnego szczytu, co sugeruje kontynuację presji sprzedażowej w krótkim terminie, podczas gdy interwał dzienny pozostaje w fazie korekty."
+        "prediction_30min": "neutral",
+        "confidence": 0.55,
+        "reasoning": "Na wykresie 15-minutowym widać konsolidację po wcześniejszym ruchu, co sugeruje brak wyraźnego kierunku w krótkim terminie. Wyższe interwały (1h, 1d) wskazują na neutralne lub lekko wzrostowe tło, ale bez silnego impulsu do zmiany trendu."
       }
     },
     "AMAZON": {
