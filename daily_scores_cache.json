@@ -2,7 +2,7 @@
   "date": "2026-09-25",
   "scores": {
     "EUR/USD": {
-      "confidence": 0.45,
+      "confidence": 0.5,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -27,17 +27,17 @@
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.55,
+      "confidence": 0.6,
       "direction": "LONG",
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.55,
+      "confidence": 0.6,
       "direction": "LONG",
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.55,
+      "confidence": 0.6,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -57,7 +57,7 @@
       "threshold": 0.6
     },
     "DAX": {
-      "confidence": 0.265,
+      "confidence": 0.315,
       "direction": "SHORT",
       "threshold": 0.6
     }

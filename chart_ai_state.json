@@ -1,19 +1,20 @@
 {
-  "last_run": "2026-09-25 13",
+  "last_run": "2026-09-25 14",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-25T11:02:28.755524+00:00",
+      "analyzed_at": "2026-09-25T12:02:51.330723+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "neutral",
         "trend_1d": "down",
         "patterns_detected": [
-          "doji"
+          "doji",
+          "spadająca gwiazda"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
         "confidence": 0.65,
-        "reasoning": "Wykres 15-minutowy pokazuje wyraźny spadek po wcześniejszym wzroście, zamykającą się świecą doji sugerującą chwilową konsolidację, ale w kontekście spadkowego trendu dziennego i neutralnego 1-godzinnego, prawdopodobieństwo kontynuacji spadków lub dalszego testowania wsparć pozostaje wysokie."
+        "reasoning": "Na wykresie 15-minutowym widać silny ruch spadkowy po osiągnięciu lokalnego szczytu, co sugeruje kontynuację presji sprzedażowej w krótkim terminie, podczas gdy interwał dzienny pozostaje w fazie korekty."
       }
     },
     "AMAZON": {
