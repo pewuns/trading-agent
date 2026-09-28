@@ -148903,5 +148903,93 @@
       "chart_ai_sentiment": 0.0
     },
     "created_at": "2026-09-28T17:37:08.030468+00:00"
+  },
+  "USD/CAD_2026-09-28T17:51:17.456348+00:00": {
+    "name": "USD/CAD",
+    "direction": "LONG",
+    "confidence": 0.425,
+    "entry": 1.41664,
+    "atr": 0.0006585714285714131,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.1528998242530754,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": 0.8212290502793298,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-28T17:51:17.456364+00:00"
+  },
+  "GOLD_2026-09-28T17:51:22.700412+00:00": {
+    "name": "GOLD",
+    "direction": "SHORT",
+    "confidence": 0.5,
+    "entry": 4167.89990234375,
+    "atr": 11.885602678571429,
+    "features": {
+      "sma20": 1.0,
+      "sma50": -1.0,
+      "rsi": -0.06921807808101604,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": -0.11201278147891358,
+      "poc": -1.0,
+      "mtf_trend": -0.44134078212290484,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-28T17:51:22.700426+00:00"
+  },
+  "ETHEREUM_2026-09-28T17:51:33.275917+00:00": {
+    "name": "ETHEREUM",
+    "direction": "LONG",
+    "confidence": 0.575,
+    "entry": 2693.800048828125,
+    "atr": 14.536411830357142,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.25558783637370497,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.013303571483323652,
+      "poc": 1.0,
+      "mtf_trend": 0.6238361266294228,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-28T17:51:33.275929+00:00"
+  },
+  "SOLANA_2026-09-28T17:51:38.422227+00:00": {
+    "name": "SOLANA",
+    "direction": "LONG",
+    "confidence": 0.425,
+    "entry": 119.55999755859375,
+    "atr": 0.8342868259974888,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.22945097209267076,
+      "vwap": -1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.05501739684080984,
+      "poc": 1.0,
+      "mtf_trend": 0.5158286778398511,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-28T17:51:38.422243+00:00"
   }
 }
