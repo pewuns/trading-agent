@@ -1,20 +1,19 @@
 {
-  "last_run": "2026-09-28 20",
+  "last_run": "2026-09-28 21",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-28T18:03:10.263870+00:00",
+      "analyzed_at": "2026-09-28T19:05:33.314218+00:00",
       "result": {
         "trend_15m": "down",
-        "trend_1h": "down",
-        "trend_1d": "down",
+        "trend_1h": "neutral",
+        "trend_1d": "up",
         "patterns_detected": [
-          "spadająca gwiazda",
-          "objęcie bessy"
+          "spadająca gwiazda"
         ],
         "reversal_expected": true,
         "prediction_30min": "down",
-        "confidence": 0.85,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest wyraźne odwrócenie trendu wzrostowego w dół po dotknięciu oporu, co potwierdzają formacje świecowe takie jak spadająca gwiazda. Sygnał ten jest zgodny z krótkoterminowym trendem spadkowym widocznym na wykresie godzinowym, co zwiększa prawdopodobieństwo kontynuacji ruchu w dół w najbliższych 30 minutach."
+        "confidence": 0.75,
+        "reasoning": "Na wykresie 15-minutowym widoczne jest wyraźne odwrócenie trendu wzrostowego w dół po osiągnięciu szczytu, co potwierdza obecność świecy spadającej gwiazdy. Mimo że trend dzienny pozostaje wzrostowy, krótkoterminowy impuls jest silnie spadkowy."
       }
     },
     "AMAZON": {
@@ -33,18 +32,19 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-09-28T18:04:08.636307+00:00",
+      "analyzed_at": "2026-09-28T19:06:30.954516+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
-          "doji"
+          "doji",
+          "spadająca gwiazda"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.75,
-        "reasoning": "Na wykresie 15-minutowym widać wyraźny spadek po silnym ruchu wzrostowym, zakończony świecami o małej zmienności (doji) na dołach, co sugeruje kontynuację spadku lub konsolidację. Wykres 1-godzinowy potwierdza silny ruch korekcyjny po dotknięciu szczytu, a 1-dniowy pokazuje, że ostatnie świece są spadkowe, co wspiera krótkoterminowy pesymizm."
+        "confidence": 0.7,
+        "reasoning": "Na wykresie 15-minutowym widać wyraźny spadek ceny z poziomu 368 do 358, a ostatnie świece są małe (doji), co sugeruje kontynuację spadku lub lekką konsolidację przed dalszym ruchem w dół. Wykres 1-godzinowy potwierdza trend spadkowy po ostatnim szpilku w górę, a na dziennym widać kontynuację spadku po korekcie."
       }
     },
     "APPLE": {
