@@ -27,7 +27,7 @@
       "threshold": 0.6
     },
     "USD/CAD": {
-      "confidence": 0.425,
+      "confidence": 0.5,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -37,8 +37,8 @@
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.5,
-      "direction": "SHORT",
+      "confidence": 0.525,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "SOLANA": {

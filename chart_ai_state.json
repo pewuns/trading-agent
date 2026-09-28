@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-28 13",
+  "last_run": "2026-09-28 14",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-28T11:03:13.454397+00:00",
+      "analyzed_at": "2026-09-28T12:02:42.275257+00:00",
       "result": {
-        "trend_15m": "down",
-        "trend_1h": "down",
-        "trend_1d": "down",
+        "trend_15m": "neutral",
+        "trend_1h": "neutral",
+        "trend_1d": "neutral",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.75,
-        "reasoning": "Wykres 15-minutowy pokazuje wyraźny spadek z formacją doji na końcu, sugerując chwilowe wyczerpanie, ale silny trend spadkowy na interwałach 1h i 1d (niższe szczyty i dołki) dominuje, co wskazuje na kontynuację ruchu w dół."
+        "prediction_30min": "neutral",
+        "confidence": 0.45,
+        "reasoning": "Na wykresie 15-minutowym widać formację doji po spadkach, co wskazuje na chwilowe wyczerpanie popytu i konsolidację. Wyższe interwały (1h, 1d) również sugerują konsolidację lub brak wyraźnego kierunku, co utrudnia jednoznaczne przewidywanie ruchu w najbliższym czasie."
       }
     },
     "AMAZON": {
@@ -32,7 +32,7 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-09-28T10:05:14.228125+00:00",
+      "analyzed_at": "2026-09-28T12:03:41.030878+00:00",
       "result": {
         "trend_15m": "neutral",
         "trend_1h": "neutral",
@@ -43,7 +43,7 @@
         "reversal_expected": false,
         "prediction_30min": "neutral",
         "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym po silnym spadku nastąpiło wyhamowanie i konsolidacja w okolicach 372-374, co sugeruje neutralny kierunek w krótkim terminie. Wykres dzienny utrzymuje trend wzrostowy, a brak wyraźnych sygnałów odwrócenia na niższych interwałach wskazuje na kontynuację konsolidacji."
+        "reasoning": "Na wykresie dziennym widać wyraźny trend wzrostowy, jednak na interwałach 15-minutowym i 1-godzinnym notowania konsolidują się w wąskim przedziale po wcześniejszym spadku, co wskazuje na brak wyraźnego kierunku w krótkim terminie."
       }
     },
     "APPLE": {
