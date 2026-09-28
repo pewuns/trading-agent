@@ -1,11 +1,11 @@
 {
-  "last_run": "2026-09-28 17",
+  "last_run": "2026-09-28 18",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-28T15:08:44.185340+00:00",
+      "analyzed_at": "2026-09-28T16:04:26.680327+00:00",
       "result": {
         "trend_15m": "down",
-        "trend_1h": "down",
+        "trend_1h": "neutral",
         "trend_1d": "up",
         "patterns_detected": [
           "spadająca gwiazda",
@@ -13,8 +13,8 @@
         ],
         "reversal_expected": true,
         "prediction_30min": "down",
-        "confidence": 0.7,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest odwrócenie trendu wzrostowego po dotknięciu oporu, potwierdzone formacjami świecowymi (spadająca gwiazda, objęcie bessy) i silnym spadkiem ceny. Wykres 1-godzinowy również wskazuje na krótkoterminową korektę w dół."
+        "confidence": 0.75,
+        "reasoning": "Wykres 15-minutowy wyraźnie pokazuje odwrócenie trendu wzrostowego w dół po osiągnięciu lokalnego szczytu, co potwierdzają formacje świecowe takie jak spadająca gwiazda. Choć trend dzienny jest wzrostowy, krótkoterminowy impuls spadkowy jest silny i sugeruje dalsze spadki w najbliższych 30 minutach."
       }
     },
     "AMAZON": {
@@ -33,18 +33,19 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-09-28T12:03:41.030878+00:00",
+      "analyzed_at": "2026-09-28T16:05:25.685308+00:00",
       "result": {
-        "trend_15m": "neutral",
-        "trend_1h": "neutral",
-        "trend_1d": "up",
+        "trend_15m": "down",
+        "trend_1h": "down",
+        "trend_1d": "down",
         "patterns_detected": [
-          "doji"
+          "doji",
+          "spadająca gwiazda"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie dziennym widać wyraźny trend wzrostowy, jednak na interwałach 15-minutowym i 1-godzinnym notowania konsolidują się w wąskim przedziale po wcześniejszym spadku, co wskazuje na brak wyraźnego kierunku w krótkim terminie."
+        "prediction_30min": "down",
+        "confidence": 0.65,
+        "reasoning": "Wykres 15-minutowy pokazuje wyraźny spadek z formacją spadającej gwiazdy, co sugeruje kontynuację ruchu w dół. Wyższe interwały (1h, 1d) również potwierdzają obecny trend spadkowy po niedawnym odwróceniu z szczytu."
       }
     },
     "APPLE": {
