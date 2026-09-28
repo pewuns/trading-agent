@@ -1,20 +1,19 @@
 {
-  "last_run": "2026-09-28 06",
+  "last_run": "2026-09-28 07",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-28T04:03:25.817201+00:00",
+      "analyzed_at": "2026-09-28T05:03:14.499640+00:00",
       "result": {
-        "trend_15m": "down",
-        "trend_1h": "down",
+        "trend_15m": "up",
+        "trend_1h": "neutral",
         "trend_1d": "down",
         "patterns_detected": [
-          "młot",
-          "doji"
+          "młot"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.75,
-        "reasoning": "Na wykresie 15-minutowym dominuje silny ruch spadkowy zakończony dużą czerwoną świecą, a sygnały odbicia (młot) są zbyt słabe, by przełamać trend. Wyższe interwały (1h i 1d) potwierdzają obecność trendu spadkowego, co zwiększa prawdopodobieństwo kontynuacji ruchu w dół."
+        "prediction_30min": "up",
+        "confidence": 0.6,
+        "reasoning": "Na wykresie 15-minutowym widać formację młota po silnym spadku, co wskazuje na krótkoterminowe odbicie i trend wzrostowy. Wyższe interwały (1h, 1d) pozostają neutralne lub spadkowe, co sugeruje, że obecny ruch wzrostowy ma charakter korekcyjny."
       }
     },
     "AMAZON": {
@@ -64,18 +63,19 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-09-28T04:04:24.227305+00:00",
+      "analyzed_at": "2026-09-28T05:04:12.519168+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "neutral",
         "trend_1d": "up",
         "patterns_detected": [
-          "młot"
+          "Młot",
+          "Objęcie hossy"
         ],
         "reversal_expected": false,
         "prediction_30min": "up",
-        "confidence": 0.65,
-        "reasoning": "Na interwale 15-minutowym widoczne jest silne odbicie wzrostowe po spadkach, co sugeruje kontynuację ruchu w górę, podczas gdy trend dzienny pozostaje wyraźnie wzrostowy."
+        "confidence": 0.75,
+        "reasoning": "Na wykresie 15-minutowym widoczne jest silne odbicie od wsparcia (formacja młota), co sugeruje kontynuację ruchu w górę, podczas gdy wyższe interwały (1h, 1d) pozostają w konsolidacji lub trendzie wzrostowym, nie sygnalizując odwrócenia."
       }
     },
     "MICROSOFT": {
