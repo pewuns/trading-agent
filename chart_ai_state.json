@@ -1,11 +1,11 @@
 {
-  "last_run": "2026-09-28 15",
+  "last_run": "2026-09-28 16",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-28T13:04:55.721489+00:00",
+      "analyzed_at": "2026-09-28T14:05:28.143583+00:00",
       "result": {
         "trend_15m": "up",
-        "trend_1h": "neutral",
+        "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
           "doji"
@@ -13,7 +13,7 @@
         "reversal_expected": false,
         "prediction_30min": "up",
         "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest wyraźna formacja odwrócenia wzrostowego (V-shape) z silnymi świecami hossy, co sugeruje kontynuację ruchu w górę. Wykres dzienny potwierdza szerszy trend wzrostowy, podczas gdy interwał godzinowy pozostaje neutralny w konsolidacji."
+        "reasoning": "Na wykresie 15-minutowym widoczny jest silny trend wzrostowy z odwróceniem od dołka, wspierany przez wzrost na interwale 1h. Obecność doji na szczycie sugeruje chwilową konsolidację, ale brak sygnałów odwrócenia trendu."
       }
     },
     "AMAZON": {
@@ -47,19 +47,18 @@
       }
     },
     "APPLE": {
-      "analyzed_at": "2026-09-25T08:03:05.223813+00:00",
+      "analyzed_at": "2026-09-28T14:06:17.139911+00:00",
       "result": {
-        "trend_15m": "down",
-        "trend_1h": "neutral",
+        "trend_15m": "up",
+        "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
-          "spadająca gwiazda",
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest wyraźna formacja spadającej gwiazdy po osiągnięciu szczytu, co wskazuje na krótkoterminowe osłabienie popytu. Mimo silnego trendu wzrostowego na wykresie dziennym, bieżący ruch na niższych interwałach sugeruje kontynuację korekty w dół."
+        "prediction_30min": "up",
+        "confidence": 0.75,
+        "reasoning": "Na wszystkich interwałach widoczny jest wyraźny trend wzrostowy z ostatnimi świecami potwierdzającymi kontynuację ruchu w górę, a obecność doji sugeruje jedynie krótkotrwałą konsolidację przed dalszym wzrostem."
       }
     },
     "NVIDIA": {
