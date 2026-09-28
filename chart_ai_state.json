@@ -1,20 +1,19 @@
 {
-  "last_run": "2026-09-28 18",
+  "last_run": "2026-09-28 19",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-28T16:04:26.680327+00:00",
+      "analyzed_at": "2026-09-28T17:03:45.089873+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "neutral",
         "trend_1d": "up",
         "patterns_detected": [
-          "spadająca gwiazda",
-          "objęcie bessy"
+          "Spadająca gwiazda"
         ],
         "reversal_expected": true,
         "prediction_30min": "down",
         "confidence": 0.75,
-        "reasoning": "Wykres 15-minutowy wyraźnie pokazuje odwrócenie trendu wzrostowego w dół po osiągnięciu lokalnego szczytu, co potwierdzają formacje świecowe takie jak spadająca gwiazda. Choć trend dzienny jest wzrostowy, krótkoterminowy impuls spadkowy jest silny i sugeruje dalsze spadki w najbliższych 30 minutach."
+        "reasoning": "Na wykresie 15-minutowym widoczne jest wyraźne odwrócenie trendu wzrostowego po osiągnięciu szczytu, co potwierdza obecność formacji spadającej gwiazdy i silny impuls spadkowy na ostatnich świecach. Mimo że trend dzienny pozostaje wzrostowy, krótkoterminowa dynamika wskazuje na kontynuację spadków w najbliższej perspektywie."
       }
     },
     "AMAZON": {
@@ -33,9 +32,9 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-09-28T16:05:25.685308+00:00",
+      "analyzed_at": "2026-09-28T17:04:43.049662+00:00",
       "result": {
-        "trend_15m": "down",
+        "trend_15m": "neutral",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
@@ -45,7 +44,7 @@
         "reversal_expected": false,
         "prediction_30min": "down",
         "confidence": 0.65,
-        "reasoning": "Wykres 15-minutowy pokazuje wyraźny spadek z formacją spadającej gwiazdy, co sugeruje kontynuację ruchu w dół. Wyższe interwały (1h, 1d) również potwierdzają obecny trend spadkowy po niedawnym odwróceniu z szczytu."
+        "reasoning": "Wykres 15-minutowy pokazuje konsolidację (doji) po spadku, co sugeruje kontynuację ruchu w dół zgodnie z silnym trendem spadkowym widocznym na interwałach 1h i dziennym."
       }
     },
     "APPLE": {
