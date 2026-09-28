@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-09-28 22",
+  "last_run": "2026-09-28 23",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-28T20:02:33.072331+00:00",
+      "analyzed_at": "2026-09-28T21:03:27.891733+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "neutral",
@@ -14,7 +14,7 @@
         "reversal_expected": true,
         "prediction_30min": "down",
         "confidence": 0.75,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest wyraźne odwrócenie trendu wzrostowego w dół po osiągnięciu szczytu, co potwierdzają formacje świecowe takie jak spadająca gwiazda i objęcie bessy. Mimo że trend dzienny jest wzrostowy, krótkoterminowa presja sprzedająca sugeruje dalszy spadek w ciągu najbliższych 30 minut."
+        "reasoning": "Na wykresie 15-minutowym widać wyraźne odwrócenie trendu wzrostowego w dół po osiągnięciu lokalnego szczytu, co sugeruje dalszy spadek w najbliższej perspektywie, mimo że trend dzienny pozostaje wzrostowy."
       }
     },
     "AMAZON": {
@@ -33,7 +33,7 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-09-28T20:03:30.146287+00:00",
+      "analyzed_at": "2026-09-28T21:04:26.714282+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
@@ -44,7 +44,7 @@
         "reversal_expected": false,
         "prediction_30min": "down",
         "confidence": 0.75,
-        "reasoning": "Na wykresie 15-minutowym widać wyraźny spadek ceny z poziomu 368 do 358, zakończony świecą doji, co sugeruje kontynuację trendu spadkowego lub konsolidację na niskich poziomach. Wykres 1-godzinowy potwierdza silny ruch spadkowy po dotknięciu szczytu, a na dziennym widać ostatnią dużą świecę spadkową, co wskazuje na dominację podaży."
+        "reasoning": "Wykres 15-minutowy pokazuje wyraźny spadek z formowaniem się doji na dołkach, co sugeruje kontynuację ruchu w dół lub konsolidację. Na interwale 1-godzinnym widoczne jest silne odwrócenie trendu wzrostowego w dół, co potwierdza negatywny sentyment."
       }
     },
     "APPLE": {
