@@ -2,7 +2,7 @@
   "date": "2026-09-28",
   "scores": {
     "EUR/USD": {
-      "confidence": 0.475,
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     },
@@ -32,8 +32,8 @@
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.5,
-      "direction": "SHORT",
+      "confidence": 0.55,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "ETHEREUM": {
@@ -43,7 +43,7 @@
     },
     "SOLANA": {
       "confidence": 0.575,
-      "direction": "SHORT",
+      "direction": "LONG",
       "threshold": 0.6
     },
     "GOLD": {
