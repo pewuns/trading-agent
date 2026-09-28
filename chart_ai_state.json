@@ -1,19 +1,20 @@
 {
-  "last_run": "2026-09-28 16",
+  "last_run": "2026-09-28 17",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-28T14:05:28.143583+00:00",
+      "analyzed_at": "2026-09-28T15:08:44.185340+00:00",
       "result": {
-        "trend_15m": "up",
-        "trend_1h": "up",
+        "trend_15m": "down",
+        "trend_1h": "down",
         "trend_1d": "up",
         "patterns_detected": [
-          "doji"
+          "spadająca gwiazda",
+          "objęcie bessy"
         ],
-        "reversal_expected": false,
-        "prediction_30min": "up",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczny jest silny trend wzrostowy z odwróceniem od dołka, wspierany przez wzrost na interwale 1h. Obecność doji na szczycie sugeruje chwilową konsolidację, ale brak sygnałów odwrócenia trendu."
+        "reversal_expected": true,
+        "prediction_30min": "down",
+        "confidence": 0.7,
+        "reasoning": "Na wykresie 15-minutowym widoczne jest odwrócenie trendu wzrostowego po dotknięciu oporu, potwierdzone formacjami świecowymi (spadająca gwiazda, objęcie bessy) i silnym spadkiem ceny. Wykres 1-godzinowy również wskazuje na krótkoterminową korektę w dół."
       }
     },
     "AMAZON": {
@@ -47,18 +48,18 @@
       }
     },
     "APPLE": {
-      "analyzed_at": "2026-09-28T14:06:17.139911+00:00",
+      "analyzed_at": "2026-09-28T15:09:32.581495+00:00",
       "result": {
-        "trend_15m": "up",
+        "trend_15m": "down",
         "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
-          "doji"
+          "spadająca gwiazda"
         ],
         "reversal_expected": false,
-        "prediction_30min": "up",
-        "confidence": 0.75,
-        "reasoning": "Na wszystkich interwałach widoczny jest wyraźny trend wzrostowy z ostatnimi świecami potwierdzającymi kontynuację ruchu w górę, a obecność doji sugeruje jedynie krótkotrwałą konsolidację przed dalszym wzrostem."
+        "prediction_30min": "down",
+        "confidence": 0.65,
+        "reasoning": "Na wykresie 15-minutowym widoczna jest świeca spadającej gwiazdy po silnym ruchu wzrostowym, co sugeruje krótkoterminowe wyczerpanie kupujących i korektę w dół, mimo że trend na wyższych interwałach (1h i 1d) pozostaje wzrostowy."
       }
     },
     "NVIDIA": {
