@@ -1,20 +1,19 @@
 {
-  "last_run": "2026-09-29 11",
+  "last_run": "2026-09-29 12",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-29T09:04:15.344738+00:00",
+      "analyzed_at": "2026-09-29T10:03:53.969364+00:00",
       "result": {
-        "trend_15m": "down",
-        "trend_1h": "neutral",
+        "trend_15m": "up",
+        "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
-          "doji",
-          "spadająca gwiazda"
+          "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest kontynuowanie ruchu spadkowego z formacją spadającej gwiazdy, co sugeruje dalszą presję podaży w krótkim terminie, mimo konsolidacji na wykresie godzinowym."
+        "prediction_30min": "up",
+        "confidence": 0.75,
+        "reasoning": "Na wykresie 15-minutowym widać wyraźny trend wzrostowy z serią świec hossy, a ostatnia świeca jest doji, co sugeruje chwilową konsolidację, ale nie odwrócenie trendu. Wyższe interwały (1h i 1d) również potwierdzają kierunek wzrostowy, co wspiera przewidywanie dalszego ruchu w górę."
       }
     },
     "AMAZON": {
@@ -33,7 +32,7 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-09-29T06:04:28.751403+00:00",
+      "analyzed_at": "2026-09-29T10:04:51.593467+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
@@ -44,7 +43,7 @@
         "reversal_expected": false,
         "prediction_30min": "down",
         "confidence": 0.75,
-        "reasoning": "Wykres 15-minutowy pokazuje wyraźny spadek ceny do poziomu 358, a ostatnie świece mają charakter doji, co sugeruje chwilowe wyczerpanie, ale brak silnego sygnału odwrócenia. Na interwale 1-godzinnym widoczna jest kontynuacja trendu spadkowego po gwałtownym ruchu w dół, co wspiera prognozę dalszego spadku w krótkim terminie."
+        "reasoning": "Na wykresie 15-minutowym widać wyraźny spadek ceny z poziomów ok. 368 do 358, zakończony świecą doji, co sugeruje wyczerpanie spadków, ale brak silnego sygnału odwrócenia. Wykres 1-godzinowy potwierdza trend spadkowy po niedawnym szczycie, a 1-dniowy pokazuje korektę w dół po wcześniejszym wzroście."
       }
     },
     "APPLE": {
