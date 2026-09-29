@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-09-29 09",
+  "last_run": "2026-09-29 10",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-29T07:05:33.633537+00:00",
+      "analyzed_at": "2026-09-29T08:04:41.813960+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "neutral",
@@ -13,8 +13,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Na interwale 15-minutowym widać wyraźne spadki i formacje sugerujące kontynuację ruchu w dół, co pokrywa się z konsolidacją na wykresie godzinowym. Mimo silnego trendu wzrostowego na wykresie dziennym, krótkoterminowy impuls jest spadkowy."
+        "confidence": 0.6,
+        "reasoning": "Na wykresie 15-minutowym widać wyraźny ruch spadkowy zakończony świecą z długim cieniem górnym (spadająca gwiazda) oraz doji, co sugeruje kontynuację presji sprzedażowej w krótkim terminie, mimo neutralnego trendu na 1h i wzrostowego na 1d."
       }
     },
     "AMAZON": {
@@ -93,18 +93,18 @@
       }
     },
     "SOLANA": {
-      "analyzed_at": "2026-09-29T07:06:22.335919+00:00",
+      "analyzed_at": "2026-09-29T08:05:31.731215+00:00",
       "result": {
         "trend_15m": "up",
-        "trend_1h": "up",
+        "trend_1h": "neutral",
         "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "up",
-        "confidence": 0.75,
-        "reasoning": "Wykres 15-minutowy pokazuje wyraźny trend wzrostowy z silnymi świecami hossy, a obecna świeca doji sugeruje jedynie krótką konsolidację przed dalszym ruchem w górę. Wyższe interwały (1h i 1d) potwierdzają dominację byków, co zwiększa prawdopodobieństwo kontynuacji wzrostu."
+        "confidence": 0.65,
+        "reasoning": "Wykres 15-minutowy pokazuje wyraźny trend wzrostowy z silnymi świecami hossy, choć ostatnie doji sugeruje chwilową konsolidację. Na wykresie dziennym widoczny jest silny trend wzrostowy, co wspiera dalsze wzrosty w krótkim terminie."
       }
     }
   }
