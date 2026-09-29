@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-09-29 10",
+  "last_run": "2026-09-29 11",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-29T08:04:41.813960+00:00",
+      "analyzed_at": "2026-09-29T09:04:15.344738+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "neutral",
@@ -13,8 +13,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać wyraźny ruch spadkowy zakończony świecą z długim cieniem górnym (spadająca gwiazda) oraz doji, co sugeruje kontynuację presji sprzedażowej w krótkim terminie, mimo neutralnego trendu na 1h i wzrostowego na 1d."
+        "confidence": 0.65,
+        "reasoning": "Na wykresie 15-minutowym widoczne jest kontynuowanie ruchu spadkowego z formacją spadającej gwiazdy, co sugeruje dalszą presję podaży w krótkim terminie, mimo konsolidacji na wykresie godzinowym."
       }
     },
     "AMAZON": {
@@ -48,18 +48,18 @@
       }
     },
     "APPLE": {
-      "analyzed_at": "2026-09-28T15:09:32.581495+00:00",
+      "analyzed_at": "2026-09-29T09:05:05.393499+00:00",
       "result": {
         "trend_15m": "down",
-        "trend_1h": "up",
+        "trend_1h": "neutral",
         "trend_1d": "up",
         "patterns_detected": [
-          "spadająca gwiazda"
+          "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
         "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest świeca spadającej gwiazdy po silnym ruchu wzrostowym, co sugeruje krótkoterminowe wyczerpanie kupujących i korektę w dół, mimo że trend na wyższych interwałach (1h i 1d) pozostaje wzrostowy."
+        "reasoning": "Na wykresie 15-minutowym widoczny jest wyraźny trend spadkowy z serią świec czerwonych, co sugeruje kontynuację ruchu w dół w krótkim terminie, mimo że trend dzienny pozostaje wzrostowy."
       }
     },
     "NVIDIA": {
