@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-09-29 20",
+  "last_run": "2026-09-29 21",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-29T18:04:48.464705+00:00",
+      "analyzed_at": "2026-09-29T19:08:23.670883+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
@@ -12,8 +12,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Wszystkie interwały wykazują silny trend spadkowy, a ostatnia świeca 15-minutowa (doji) sugeruje jedynie chwilowe wyczerpanie podaży, co w kontekście silnego spadku na wyższych interwałach może prowadzić do dalszego ruchu w dół."
+        "confidence": 0.75,
+        "reasoning": "Wykres 15-minutowy pokazuje wyraźny spadek po osiągnięciu szczytu, a ostatnia świeca jest doji, co sugeruje chwilowe wyczerpanie, ale nie odwrócenie trendu. Na interwale 1-godzinnym i dziennym dominuje trend spadkowy, co wskazuje na dalszy spadek w najbliższych 30 minutach."
       }
     },
     "AMAZON": {
