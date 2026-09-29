@@ -8215,3 +8215,10 @@
 {"name": "BITCOIN", "timestamp": "2026-09-29T13:58:27.625401+00:00", "production_confidence": 0.65, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
 {"name": "ETHEREUM", "timestamp": "2026-09-29T13:58:32.434335+00:00", "production_confidence": 0.65, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
 {"name": "SOLANA", "timestamp": "2026-09-29T13:58:37.296242+00:00", "production_confidence": 0.65, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "DAX", "timestamp": "2026-09-29T14:11:13.016311+00:00", "production_confidence": 0.25, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "EUR/USD", "timestamp": "2026-09-29T14:11:17.971983+00:00", "production_confidence": 0.275, "production_direction": "SHORT", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/CAD", "timestamp": "2026-09-29T14:11:22.627748+00:00", "production_confidence": 0.3, "production_direction": "LONG", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "GOLD", "timestamp": "2026-09-29T14:11:27.617660+00:00", "production_confidence": 0.35, "production_direction": "LONG", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "BITCOIN", "timestamp": "2026-09-29T14:11:32.816554+00:00", "production_confidence": 0.425, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "ETHEREUM", "timestamp": "2026-09-29T14:11:38.029848+00:00", "production_confidence": 0.6, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "SOLANA", "timestamp": "2026-09-29T14:11:42.770952+00:00", "production_confidence": 0.6, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
