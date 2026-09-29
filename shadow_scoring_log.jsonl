@@ -8229,3 +8229,10 @@
 {"name": "BITCOIN", "timestamp": "2026-09-29T14:27:12.426582+00:00", "production_confidence": 0.575, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
 {"name": "ETHEREUM", "timestamp": "2026-09-29T14:27:17.691722+00:00", "production_confidence": 0.6, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
 {"name": "SOLANA", "timestamp": "2026-09-29T14:27:22.377374+00:00", "production_confidence": 0.65, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "DAX", "timestamp": "2026-09-29T14:40:54.215222+00:00", "production_confidence": 0.35, "production_direction": "SHORT", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "EUR/USD", "timestamp": "2026-09-29T14:41:00.176990+00:00", "production_confidence": 0.475, "production_direction": "SHORT", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/CAD", "timestamp": "2026-09-29T14:41:05.763044+00:00", "production_confidence": 0.4, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "GOLD", "timestamp": "2026-09-29T14:41:11.827510+00:00", "production_confidence": 0.35, "production_direction": "LONG", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "BITCOIN", "timestamp": "2026-09-29T14:41:17.961538+00:00", "production_confidence": 0.425, "production_direction": "LONG", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "ETHEREUM", "timestamp": "2026-09-29T14:41:23.809696+00:00", "production_confidence": 0.55, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "SOLANA", "timestamp": "2026-09-29T14:41:29.752809+00:00", "production_confidence": 0.65, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
