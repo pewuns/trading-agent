@@ -1,20 +1,20 @@
 {
-  "last_run": "2026-09-29 08",
+  "last_run": "2026-09-29 09",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-29T06:03:31.237705+00:00",
+      "analyzed_at": "2026-09-29T07:05:33.633537+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "neutral",
-        "trend_1d": "down",
+        "trend_1d": "up",
         "patterns_detected": [
-          "spadająca gwiazda",
-          "objęcie bessy"
+          "doji",
+          "spadająca gwiazda"
         ],
-        "reversal_expected": true,
+        "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.8,
-        "reasoning": "Wykres 15-minutowy wyraźnie pokazuje odwrócenie trendu wzrostowego w dół po osiągnięciu szczytu, co potwierdzają formacje świecowe takie jak spadająca gwiazda i objęcie bessy. Krótkoterminowy ruch spadkowy jest silny i kontynuowany przez ostatnie świece."
+        "confidence": 0.65,
+        "reasoning": "Na interwale 15-minutowym widać wyraźne spadki i formacje sugerujące kontynuację ruchu w dół, co pokrywa się z konsolidacją na wykresie godzinowym. Mimo silnego trendu wzrostowego na wykresie dziennym, krótkoterminowy impuls jest spadkowy."
       }
     },
     "AMAZON": {
@@ -93,18 +93,18 @@
       }
     },
     "SOLANA": {
-      "analyzed_at": "2026-09-28T09:04:55.977259+00:00",
+      "analyzed_at": "2026-09-29T07:06:22.335919+00:00",
       "result": {
-        "trend_15m": "down",
-        "trend_1h": "down",
+        "trend_15m": "up",
+        "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
+        "prediction_30min": "up",
         "confidence": 0.75,
-        "reasoning": "Wykresy krótkoterminowe (15m i 1h) wyraźnie pokazują silny trend spadkowy z ciągłą serią świec byczych, co sugeruje kontynuację ruchu w dół. Choć trend dzienny jest wzrostowy, obecna korekta na niższych interwałach dominuje krótkoterminową dynamikę."
+        "reasoning": "Wykres 15-minutowy pokazuje wyraźny trend wzrostowy z silnymi świecami hossy, a obecna świeca doji sugeruje jedynie krótką konsolidację przed dalszym ruchem w górę. Wyższe interwały (1h i 1d) potwierdzają dominację byków, co zwiększa prawdopodobieństwo kontynuacji wzrostu."
       }
     }
   }
