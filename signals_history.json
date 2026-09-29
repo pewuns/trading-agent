@@ -126,10 +126,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-28T19:07:41.595002+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 19.37465122767844,
-    "mae_percent": -0.6525166357955564,
-    "mfe_percent": 0.0
+    "mae_percent": -0.9746787869606388,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 2661.860107421875,
+    "closed_at": "2026-09-29T04:03:57.346669+00:00",
+    "r_multiple": -1.352279886950739
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
