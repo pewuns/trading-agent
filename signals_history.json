@@ -60,7 +60,7 @@
     "timestamp": "2026-09-29T19:10:15.081360+00:00",
     "status": "open",
     "risk_distance": 0.7007135663713768,
-    "mae_percent": -0.008376296728682358,
+    "mae_percent": -0.5024755758432458,
     "mfe_percent": 0.0
   },
   "ETHEREUM_LONG": {
@@ -554,7 +554,7 @@
     "status": "open",
     "risk_distance": 0.5732133047921337,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.24630678622345908
   },
   "GOLD_LONG": {
     "name": "GOLD",
@@ -621,7 +621,7 @@
     "status": "open",
     "risk_distance": 11.2071533203125,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.07854620482242083
   },
   "META_LONG": {
     "name": "META",
