@@ -167889,5 +167889,71 @@
       "chart_ai_sentiment": 0.0
     },
     "created_at": "2026-09-30T12:06:37.955513+00:00"
+  },
+  "DAX_2026-09-30T12:34:29.520672+00:00": {
+    "name": "DAX",
+    "direction": "SHORT",
+    "confidence": 0.42000000000000004,
+    "entry": 25289.580078125,
+    "atr": 31.950334821428573,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.6420460716052662,
+      "vwap": 0.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": -0.8026070763500931,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": -0.7
+    },
+    "created_at": "2026-09-30T12:34:29.520704+00:00"
+  },
+  "GOLD_2026-09-30T12:34:35.357861+00:00": {
+    "name": "GOLD",
+    "direction": "LONG",
+    "confidence": 0.2,
+    "entry": 4220.7998046875,
+    "atr": 6.707205636160714,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.03466196127722327,
+      "vwap": 1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.4019800979946456,
+      "poc": -1.0,
+      "mtf_trend": -0.06517690875232762,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-30T12:34:35.357889+00:00"
+  },
+  "OIL WTI_2026-09-30T12:34:40.794970+00:00": {
+    "name": "OIL WTI",
+    "direction": "LONG",
+    "confidence": 0.3,
+    "entry": 90.43000030517578,
+    "atr": 0.33357129778180805,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.02857292329691603,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.19691799082862324,
+      "poc": 1.0,
+      "mtf_trend": -0.16945996275605202,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-30T12:34:40.794998+00:00"
   }
 }
