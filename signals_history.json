@@ -555,10 +555,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-29T19:26:05.377307+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.5732133047921337,
-    "mae_percent": -0.6045688730097867,
-    "mfe_percent": 0.4702173873491962
+    "mae_percent": -1.1195700889125133,
+    "mfe_percent": 0.4702173873491962,
+    "outcome": "loss",
+    "closed_price": 90.31999969482422,
+    "closed_at": "2026-09-30T09:25:56.265788+00:00",
+    "r_multiple": -1.7445512719957423
   },
   "GOLD_LONG": {
     "name": "GOLD",
