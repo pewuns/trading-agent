@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-09-30 13",
+  "last_run": "2026-09-30 14",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-30T11:03:39.991621+00:00",
+      "analyzed_at": "2026-09-30T12:04:18.250979+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
@@ -12,8 +12,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.75,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest silna fala spadkowa zakończona świecą doji, co sugeruje chwilowe wyczerpanie, ale brak wyraźnych sygnałów odwrócenia (np. młota). Spadek jest wspierany przez trend spadkowy na interwale 1-godzinnym, gdzie ostatnie świece są wyraźnie czerwone."
+        "confidence": 0.7,
+        "reasoning": "Na wykresie 15-minutowym widać wyraźny trend spadkowy zakończony świecą doji, co sugeruje chwilowe wyczerpanie, ale brak silnego sygnału odwrócenia. Wyższe interwały (1h, 1d) potwierdzają dominację niedźwiedzi, co wskazuje na kontynuację spadków lub ruch boczny w dół."
       }
     },
     "AMAZON": {

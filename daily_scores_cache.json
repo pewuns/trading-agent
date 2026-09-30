@@ -17,7 +17,7 @@
       "threshold": 0.6
     },
     "USD/CHF": {
-      "confidence": 0.425,
+      "confidence": 0.475,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -27,18 +27,18 @@
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.55,
+      "confidence": 0.6,
       "direction": "LONG",
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.55,
+      "confidence": 0.65,
       "direction": "LONG",
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.5,
-      "direction": "SHORT",
+      "confidence": 0.575,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "USD/JPY": {
