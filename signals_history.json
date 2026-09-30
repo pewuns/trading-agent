@@ -58,10 +58,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-30T14:12:15.215885+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 1.3307149069649853,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -1.5754573382408603,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 118.69999694824219,
+    "closed_at": "2026-09-30T14:28:48.328232+00:00",
+    "r_multiple": -1.427805096293928
   },
   "ETHEREUM_LONG": {
     "name": "ETHEREUM",
@@ -122,10 +126,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-30T13:44:11.241340+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 18.99217006138406,
-    "mae_percent": -0.1810601942656829,
-    "mfe_percent": 0.1651409270979827
+    "mae_percent": -0.8464421703466449,
+    "mfe_percent": 0.1651409270979827,
+    "outcome": "loss",
+    "closed_price": 2677.840087890625,
+    "closed_at": "2026-09-30T14:28:48.328232+00:00",
+    "r_multiple": -1.2036467242745448
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
@@ -186,10 +194,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-30T13:44:05.805080+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 616.4807477678551,
-    "mae_percent": -0.3273414037884223,
-    "mfe_percent": 0.08546461309798628
+    "mae_percent": -0.9184508264354992,
+    "mfe_percent": 0.08546461309798628,
+    "outcome": "loss",
+    "closed_price": 83661.84375,
+    "closed_at": "2026-09-30T14:28:48.328232+00:00",
+    "r_multiple": -1.2579721715689844
   },
   "SOLANA_SHORT": {
     "name": "SOLANA",
