@@ -8710,3 +8710,8 @@
 {"name": "BITCOIN", "timestamp": "2026-09-30T13:44:05.804252+00:00", "production_confidence": 0.65, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
 {"name": "ETHEREUM", "timestamp": "2026-09-30T13:44:11.240507+00:00", "production_confidence": 0.7, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
 {"name": "SOLANA", "timestamp": "2026-09-30T13:44:16.605566+00:00", "production_confidence": 0.65, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "DAX", "timestamp": "2026-09-30T13:57:04.888548+00:00", "production_confidence": 0.35, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "GOLD", "timestamp": "2026-09-30T13:57:11.165285+00:00", "production_confidence": 0.425, "production_direction": "SHORT", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "BITCOIN", "timestamp": "2026-09-30T13:57:17.222388+00:00", "production_confidence": 0.6, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "ETHEREUM", "timestamp": "2026-09-30T13:57:23.062366+00:00", "production_confidence": 0.7, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "SOLANA", "timestamp": "2026-09-30T13:57:29.428332+00:00", "production_confidence": 0.6, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
