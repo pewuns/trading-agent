@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-09-30 22",
+  "last_run": "2026-09-30 23",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-30T20:03:10.875483+00:00",
+      "analyzed_at": "2026-09-30T21:02:41.929780+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
@@ -12,8 +12,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.75,
-        "reasoning": "Wykresy na wszystkich interwałach potwierdzają silny trend spadkowy, a obecność świecy doji na wykresie 15-minutowym sugeruje jedynie chwilowe wyczerpanie, co przy braku sygnału odwrócenia na wyższych interwałach wskazuje na kontynuację ruchu w dół."
+        "confidence": 0.85,
+        "reasoning": "Wykresy na wszystkich interwałach (15m, 1h, 1d) wyraźnie wskazują na silny trend spadkowy. Ostatnie świece na wykresie 15-minutowym to doji, co sugeruje chwilową konsolidację, ale w kontekście dominacji świec czerwonych na wyższych interwałach przewidywany jest dalszy spadek lub kontynuacja spadków."
       }
     },
     "AMAZON": {
