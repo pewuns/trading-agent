@@ -40,6 +40,11 @@
       "confidence": 0.45,
       "direction": "SHORT",
       "threshold": 0.6
+    },
+    "USD/JPY": {
+      "confidence": 0.325,
+      "direction": "LONG",
+      "threshold": 0.6
     }
   }
 }

@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-30 07",
+  "last_run": "2026-09-30 08",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-30T05:03:47.190641+00:00",
+      "analyzed_at": "2026-09-30T06:03:21.125988+00:00",
       "result": {
         "trend_15m": "down",
-        "trend_1h": "neutral",
-        "trend_1d": "up",
+        "trend_1h": "down",
+        "trend_1d": "neutral",
         "patterns_detected": [
           "doji"
         ],
-        "reversal_expected": true,
-        "prediction_30min": "up",
-        "confidence": 0.65,
-        "reasoning": "Wykres 15-minutowy pokazuje silny spadek zakończony świecą doji, co sugeruje wyczerpanie podaży i potencjalny krótkoterminowy odbicie. Trend dzienny pozostaje wzrostowy, co wspiera tezę o korekcie w górę."
+        "reversal_expected": false,
+        "prediction_30min": "down",
+        "confidence": 0.75,
+        "reasoning": "Wykres 15-minutowy pokazuje wyraźny trend spadkowy z serią czerwonych świec, a ostatnia świeca typu doji sugeruje jedynie chwilowe wyczerpanie, ale nie odwrócenie trendu. Interwał 1-godzinny potwierdza kontynuację ruchu w dół, co wskazuje na dalsze spadki w najbliższych 30 minutach."
       }
     },
     "AMAZON": {
@@ -32,18 +32,18 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-09-29T10:04:51.593467+00:00",
+      "analyzed_at": "2026-09-30T06:04:18.209496+00:00",
       "result": {
-        "trend_15m": "down",
+        "trend_15m": "neutral",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.75,
-        "reasoning": "Na wykresie 15-minutowym widać wyraźny spadek ceny z poziomów ok. 368 do 358, zakończony świecą doji, co sugeruje wyczerpanie spadków, ale brak silnego sygnału odwrócenia. Wykres 1-godzinowy potwierdza trend spadkowy po niedawnym szczycie, a 1-dniowy pokazuje korektę w dół po wcześniejszym wzroście."
+        "prediction_30min": "neutral",
+        "confidence": 0.6,
+        "reasoning": "Wykres 15-minutowy pokazuje konsolidację i formację doji po spadku, co wskazuje na chwilowy brak kierunku. Wyższe interwały (1h i 1d) potwierdzają silny trend spadkowy, co utrudnia oczekiwanie na szybkie odwrócenie."
       }
     },
     "APPLE": {
