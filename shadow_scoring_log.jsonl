@@ -8447,3 +8447,11 @@
 {"name": "GOOGLE", "timestamp": "2026-09-29T19:52:39.460493+00:00", "production_confidence": 0.3, "production_direction": "LONG", "shadow_score": 0}
 {"name": "USD/CAD", "timestamp": "2026-09-30T04:04:52.278704+00:00", "production_confidence": 0.35, "production_direction": "SHORT", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
 {"name": "USD/CAD", "timestamp": "2026-09-30T04:26:11.580603+00:00", "production_confidence": 0.35, "production_direction": "SHORT", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "EUR/USD", "timestamp": "2026-09-30T04:39:38.096553+00:00", "production_confidence": 0.375, "production_direction": "SHORT", "shadow_score": -2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "GBP/USD", "timestamp": "2026-09-30T04:39:42.454170+00:00", "production_confidence": 0.375, "production_direction": "SHORT", "shadow_score": -2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/CHF", "timestamp": "2026-09-30T04:39:46.666340+00:00", "production_confidence": 0.425, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "AUD/USD", "timestamp": "2026-09-30T04:39:53.363273+00:00", "production_confidence": 0.5, "production_direction": "SHORT", "shadow_score": -2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/CAD", "timestamp": "2026-09-30T04:40:02.436482+00:00", "production_confidence": 0.35, "production_direction": "SHORT", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "BITCOIN", "timestamp": "2026-09-30T04:40:07.273726+00:00", "production_confidence": 0.45, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "ETHEREUM", "timestamp": "2026-09-30T04:40:11.992852+00:00", "production_confidence": 0.35, "production_direction": "LONG", "shadow_score": 0}
+{"name": "SOLANA", "timestamp": "2026-09-30T04:40:16.721680+00:00", "production_confidence": 0.35, "production_direction": "SHORT", "shadow_score": 0}
