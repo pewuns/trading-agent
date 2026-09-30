@@ -52,7 +52,7 @@
       "threshold": 0.6
     },
     "OIL WTI": {
-      "confidence": 0.475,
+      "confidence": 0.525,
       "direction": "SHORT",
       "threshold": 0.6
     },
@@ -62,12 +62,12 @@
       "threshold": 0.6
     },
     "S&P500": {
-      "confidence": 0.45,
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "NASDAQ": {
-      "confidence": 0.35,
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     },
