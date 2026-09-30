@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-09-29 23",
+  "last_run": "2026-09-30 06",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-29T21:02:45.496904+00:00",
+      "analyzed_at": "2026-09-30T04:03:31.731348+00:00",
       "result": {
         "trend_15m": "down",
-        "trend_1h": "down",
-        "trend_1d": "down",
+        "trend_1h": "neutral",
+        "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.75,
-        "reasoning": "Na interwale 15-minutowym widoczna jest silna fala spadkowa zakończona świecą doji, co sugeruje chwilowe wyczerpanie, ale nie odwrócenie trendu. Wyższe interwały (1h i 1d) potwierdzają dominację niedźwiedzi, co wskazuje na kontynuację spadków lub dalsze testowanie dołków."
+        "confidence": 0.65,
+        "reasoning": "Na wykresie 15-minutowym widoczny jest wyraźny trend spadkowy z silnymi świecami czerwonymi, co sugeruje kontynuację ruchu w dół mimo obecności doji. Wykres dzienny wskazuje na silny trend wzrostowy, co może ograniczać zasięg spadków w krótkim terminie."
       }
     },
     "AMAZON": {
@@ -62,7 +62,7 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-09-29T04:03:43.047579+00:00",
+      "analyzed_at": "2026-09-30T04:04:30.013731+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
@@ -72,8 +72,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Na interwale 15-minutowym widoczna jest wyraźna presja sprzedających z serią spadkowych świec, co sugeruje kontynuację korekty w dół w krótkim terminie, pomimo wzrostowego trendu na wykresie dziennym."
+        "confidence": 0.75,
+        "reasoning": "Wykres 15-minutowy i 1-godzinny wyraźnie pokazują trend spadkowy z serią świec czerwonych, co sugeruje kontynuację ruchu w dół mimo długoterminowego trendu wzrostowego na wykresie dziennym."
       }
     },
     "MICROSOFT": {
