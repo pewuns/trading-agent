@@ -622,10 +622,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-09-29T19:25:59.642275+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 11.2071533203125,
     "mae_percent": 0.0,
-    "mfe_percent": 0.28325681528961505
+    "mfe_percent": 0.5855632354481184,
+    "outcome": "win",
+    "closed_price": 4225.7001953125,
+    "closed_at": "2026-09-30T07:07:21.891485+00:00",
+    "r_multiple": 2.1950353451186704
   },
   "META_LONG": {
     "name": "META",
