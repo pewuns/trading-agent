@@ -42,7 +42,7 @@
       "threshold": 0.6
     },
     "USD/JPY": {
-      "confidence": 0.425,
+      "confidence": 0.5,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -82,7 +82,7 @@
       "threshold": 0.6
     },
     "NVIDIA": {
-      "confidence": 0.35,
+      "confidence": 0.45,
       "direction": "LONG",
       "threshold": 0.6
     },
