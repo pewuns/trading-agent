@@ -2,7 +2,7 @@
   "date": "2026-09-30",
   "scores": {
     "USD/CAD": {
-      "confidence": 0.45,
+      "confidence": 0.5,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -42,7 +42,7 @@
       "threshold": 0.6
     },
     "USD/JPY": {
-      "confidence": 0.5,
+      "confidence": 0.55,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -52,8 +52,8 @@
       "threshold": 0.6
     },
     "OIL WTI": {
-      "confidence": 0.4,
-      "direction": "LONG",
+      "confidence": 0.475,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "DAX": {
