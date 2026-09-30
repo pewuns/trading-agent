@@ -162895,5 +162895,27 @@
       "chart_ai_sentiment": 0.0
     },
     "created_at": "2026-09-30T04:04:52.319563+00:00"
+  },
+  "USD/CAD_2026-09-30T04:26:11.619722+00:00": {
+    "name": "USD/CAD",
+    "direction": "SHORT",
+    "confidence": 0.35,
+    "entry": 1.41784,
+    "atr": 0.000485000000000037,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.4271844660194239,
+      "vwap": 0.0,
+      "support_resistance": 0.5,
+      "pattern": 1.0,
+      "order_flow": 0.0,
+      "poc": -1.0,
+      "mtf_trend": 0.5679702048417135,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-09-30T04:26:11.619748+00:00"
   }
 }
