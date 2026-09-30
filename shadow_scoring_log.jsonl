@@ -8700,3 +8700,8 @@
 {"name": "AMAZON", "timestamp": "2026-09-30T13:15:40.426266+00:00", "production_confidence": 0.45, "production_direction": "SHORT", "shadow_score": -1}
 {"name": "META", "timestamp": "2026-09-30T13:15:45.929680+00:00", "production_confidence": 0.55, "production_direction": "LONG", "shadow_score": 1}
 {"name": "GOOGLE", "timestamp": "2026-09-30T13:15:51.393795+00:00", "production_confidence": 0.3, "production_direction": "LONG", "shadow_score": 0}
+{"name": "DAX", "timestamp": "2026-09-30T13:30:25.860085+00:00", "production_confidence": 0.35, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "GOLD", "timestamp": "2026-09-30T13:30:31.665281+00:00", "production_confidence": 0.475, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "BITCOIN", "timestamp": "2026-09-30T13:30:36.973641+00:00", "production_confidence": 0.65, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "ETHEREUM", "timestamp": "2026-09-30T13:30:42.255611+00:00", "production_confidence": 0.65, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "SOLANA", "timestamp": "2026-09-30T13:30:47.213653+00:00", "production_confidence": 0.65, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
