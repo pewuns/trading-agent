@@ -2,8 +2,8 @@
   "date": "2026-09-30",
   "scores": {
     "USD/CAD": {
-      "confidence": 0.35,
-      "direction": "SHORT",
+      "confidence": 0.375,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "EUR/USD": {
@@ -27,7 +27,7 @@
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.45,
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     },
