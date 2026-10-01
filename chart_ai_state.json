@@ -1,23 +1,23 @@
 {
-  "last_run": "2026-09-30 23",
+  "last_run": "2026-10-01 06",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-09-30T21:02:41.929780+00:00",
+      "analyzed_at": "2026-10-01T04:04:12.335794+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
-          "doji"
+          "Doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
         "confidence": 0.85,
-        "reasoning": "Wykresy na wszystkich interwałach (15m, 1h, 1d) wyraźnie wskazują na silny trend spadkowy. Ostatnie świece na wykresie 15-minutowym to doji, co sugeruje chwilową konsolidację, ale w kontekście dominacji świec czerwonych na wyższych interwałach przewidywany jest dalszy spadek lub kontynuacja spadków."
+        "reasoning": "Spójna presja podaży widoczna na wszystkich interwałach, z wyraźnymi niższymi szczytami i dnami. Ostatnie formacje (doji) sugerują chwilowe wyczerpanie, ale brak sygnału odwrócenia trendu."
       }
     },
     "AMAZON": {
-      "analyzed_at": "2026-09-29T11:04:05.432182+00:00",
+      "analyzed_at": "2026-10-01T04:05:10.852804+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
@@ -27,8 +27,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.6,
-        "reasoning": "Trend spadkowy jest widoczny na wszystkich interwałach, a ostatnie świece 15-minutowe wskazują na kontynuację ruchu w dół po krótkiej konsolidacji."
+        "confidence": 0.75,
+        "reasoning": "Na wykresie 15-minutowym widoczny jest wyraźny trend spadkowy z ostatnią dużą czerwoną świecą, co potwierdzają sygnały z wyższych interwałów (1h i 1d), gdzie dominują również świeże formacje spadkowe."
       }
     },
     "TESLA": {
