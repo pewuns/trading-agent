@@ -1,20 +1,19 @@
 {
-  "last_run": "2026-10-01 21",
+  "last_run": "2026-10-01 22",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-01T19:03:48.234676+00:00",
+      "analyzed_at": "2026-10-01T20:02:57.057855+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
-          "doji",
-          "mała czarna kolumna"
+          "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
         "confidence": 0.75,
-        "reasoning": "Wykres 15-minutowy pokazuje wyraźny ruch spadkowy zakończony formacją doji, co sugeruje chwilowe wyczerpanie, ale silny trend spadkowy na interwałach 1h i 1d (duże czerwone świece) dominuje, co wskazuje na kontynuację spadków lub próbę testowania kolejnych wsparć."
+        "reasoning": "Wszystkie interwały wykazują wyraźny trend spadkowy, a na wykresie 15-minutowym ostatnie świece (doji) sugerują chwilowe wyczerpanie, ale brak sygnału odwrócenia trendu."
       }
     },
     "AMAZON": {
