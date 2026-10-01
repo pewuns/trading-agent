@@ -68,7 +68,7 @@
     },
     "NASDAQ": {
       "confidence": 0.5,
-      "direction": "SHORT",
+      "direction": "LONG",
       "threshold": 0.6
     },
     "APPLE": {
@@ -78,12 +78,12 @@
     },
     "MICROSOFT": {
       "confidence": 0.35,
-      "direction": "SHORT",
+      "direction": "LONG",
       "threshold": 0.6
     },
     "NVIDIA": {
-      "confidence": 0.35,
-      "direction": "SHORT",
+      "confidence": 0.55,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "TESLA": {
