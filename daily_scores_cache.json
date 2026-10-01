@@ -32,7 +32,7 @@
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.575,
+      "confidence": 0.65,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -87,8 +87,8 @@
       "threshold": 0.6
     },
     "TESLA": {
-      "confidence": 0.35,
-      "direction": "LONG",
+      "confidence": 0.5,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "AMAZON": {
@@ -98,6 +98,11 @@
     },
     "META": {
       "confidence": 0.45,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "GOOGLE": {
+      "confidence": 0.55,
       "direction": "SHORT",
       "threshold": 0.6
     }
