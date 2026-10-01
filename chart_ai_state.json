@@ -1,20 +1,20 @@
 {
-  "last_run": "2026-10-01 10",
+  "last_run": "2026-10-01 11",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-01T08:05:03.398298+00:00",
+      "analyzed_at": "2026-10-01T09:06:26.919911+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
-          "duża świeca spadkowa",
-          "pogorszenie struktury cenowej"
+          "spadająca gwiazda",
+          "objęcie bessy"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
         "confidence": 0.85,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest silna, duża świeca spadkowa, która potwierdza kontynuację trendu zniżkowego widocznego również na interwałach 1h i dziennym, co wskazuje na dalsze spadki w najbliższym czasie."
+        "reasoning": "Wykresy na wszystkich interwałach (15m, 1h, 1d) pokazują silny trend spadkowy z wyraźnymi świecami bessy. Ostatnie formacje (spadająca gwiazda, objęcie bessy) potwierdzają kontynuację ruchu w dół, a brak sygnałów odwrócenia sugeruje dalszy spadek w najbliższych 30 minutach."
       }
     },
     "AMAZON": {
@@ -64,19 +64,19 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-10-01T05:05:03.693319+00:00",
+      "analyzed_at": "2026-10-01T09:07:16.414863+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
         "trend_1d": "up",
         "patterns_detected": [
-          "duża świeca spadkowa",
-          "doji"
+          "spadająca gwiazda",
+          "duża świeca spadkowa"
         ],
         "reversal_expected": true,
         "prediction_30min": "down",
-        "confidence": 0.75,
-        "reasoning": "Wykres 15-minutowy pokazuje silny impuls spadkowy (duża czerwona świeca) po konsolidacji, co sugeruje kontynuację ruchu w dół w krótkim terminie, mimo że trend dzienny pozostaje wzrostowy."
+        "confidence": 0.85,
+        "reasoning": "Na wykresie 15-minutowym widoczna jest gwałtowna, duża świeca spadkowa, która przełamała lokalne wsparcie, co sugeruje silny impet spadkowy w krótkim terminie. Wykres 1-godzinowy również pokazuje ostatnie świece spadkowe, potwierdzając krótkoterminową korektę, mimo że trend dzienny pozostaje wzrostowy."
       }
     },
     "MICROSOFT": {
