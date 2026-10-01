@@ -179681,5 +179681,93 @@
       "chart_ai_sentiment": 0.0
     },
     "created_at": "2026-10-01T15:27:53.692912+00:00"
+  },
+  "GOLD_2026-10-01T15:41:18.906237+00:00": {
+    "name": "GOLD",
+    "direction": "SHORT",
+    "confidence": 0.375,
+    "entry": 4194.5,
+    "atr": 11.521414620535714,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 0.0,
+      "rsi": -0.1798552727102411,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.000972506965252589,
+      "poc": 1.0,
+      "mtf_trend": -0.8212290502793296,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-01T15:41:18.906264+00:00"
+  },
+  "BITCOIN_2026-10-01T15:41:25.239534+00:00": {
+    "name": "BITCOIN",
+    "direction": "LONG",
+    "confidence": 0.575,
+    "entry": 83912.1484375,
+    "atr": 310.76785714285717,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.020782339629612494,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.24952969815430787,
+      "poc": 1.0,
+      "mtf_trend": 0.7318435754189945,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-01T15:41:25.239562+00:00"
+  },
+  "ETHEREUM_2026-10-01T15:41:31.115120+00:00": {
+    "name": "ETHEREUM",
+    "direction": "SHORT",
+    "confidence": 0.475,
+    "entry": 2677.89990234375,
+    "atr": 11.487827845982142,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.36486145761452293,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.06723367632579694,
+      "poc": -1.0,
+      "mtf_trend": -0.22160148975791427,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-01T15:41:31.115141+00:00"
+  },
+  "SOLANA_2026-10-01T15:41:36.368558+00:00": {
+    "name": "SOLANA",
+    "direction": "SHORT",
+    "confidence": 0.475,
+    "entry": 117.1500015258789,
+    "atr": 0.575714111328125,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.14697430417680807,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.2080195802109227,
+      "poc": -1.0,
+      "mtf_trend": -0.5083798882681564,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-01T15:41:36.368587+00:00"
   }
 }
