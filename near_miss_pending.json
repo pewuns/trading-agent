@@ -180275,5 +180275,115 @@
       "chart_ai_sentiment": 0.0
     },
     "created_at": "2026-10-01T16:52:43.115676+00:00"
+  },
+  "USD/CAD_2026-10-01T17:06:47.603917+00:00": {
+    "name": "USD/CAD",
+    "direction": "LONG",
+    "confidence": 0.525,
+    "entry": 1.42465,
+    "atr": 0.0008721428571428927,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.07832422586519996,
+      "vwap": 0.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": 0.9106145251396649,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-01T17:06:47.603945+00:00"
+  },
+  "GOLD_2026-10-01T17:06:53.349181+00:00": {
+    "name": "GOLD",
+    "direction": "SHORT",
+    "confidence": 0.525,
+    "entry": 4189.7001953125,
+    "atr": 10.8857421875,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.04825120851444126,
+      "vwap": -1.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.027683543864117914,
+      "poc": -1.0,
+      "mtf_trend": -0.9106145251396648,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-01T17:06:53.349209+00:00"
+  },
+  "BITCOIN_2026-10-01T17:06:58.955349+00:00": {
+    "name": "BITCOIN",
+    "direction": "LONG",
+    "confidence": 0.575,
+    "entry": 84445.0078125,
+    "atr": 311.97879464285717,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 1.0,
+      "rsi": 0.29775394078856066,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.24309950963279664,
+      "poc": 1.0,
+      "mtf_trend": 0.9106145251396649,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-01T17:06:58.955377+00:00"
+  },
+  "ETHEREUM_2026-10-01T17:07:04.564914+00:00": {
+    "name": "ETHEREUM",
+    "direction": "SHORT",
+    "confidence": 0.4,
+    "entry": 2690.330078125,
+    "atr": 11.460745675223214,
+    "features": {
+      "sma20": 1.0,
+      "sma50": -1.0,
+      "rsi": -0.10415620561525345,
+      "vwap": -1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.05035160181447768,
+      "poc": 1.0,
+      "mtf_trend": 0.45996275605214176,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-01T17:07:04.564942+00:00"
+  },
+  "SOLANA_2026-10-01T17:07:10.313784+00:00": {
+    "name": "SOLANA",
+    "direction": "SHORT",
+    "confidence": 0.425,
+    "entry": 117.56999969482422,
+    "atr": 0.5828563145228794,
+    "features": {
+      "sma20": 1.0,
+      "sma50": -1.0,
+      "rsi": -0.13605518086108503,
+      "vwap": -1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.07776000100190048,
+      "poc": 1.0,
+      "mtf_trend": -0.20297951582867768,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-01T17:07:10.313812+00:00"
   }
 }
