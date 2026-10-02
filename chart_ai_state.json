@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-10-02 06",
+  "last_run": "2026-10-02 07",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-02T04:03:41.096275+00:00",
+      "analyzed_at": "2026-10-02T05:03:29.952560+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
@@ -12,8 +12,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.85,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest wyraźne wybicie dołka i kontynuacja spadków, a na wykresie dziennym ostatnia świeca jest silną czerwoną, co wskazuje na dominację podaży i brak sygnałów odwrócenia trendu."
+        "confidence": 0.75,
+        "reasoning": "Na wykresie 15-minutowym po silnym spadku pojawiła się formacja doji, sugerująca chwilowe wyczerpanie podaży, ale dominujący trend spadkowy na wyższych interwałach (1h i 1d) wskazuje na kontynuację ruchu w dół."
       }
     },
     "AMAZON": {
@@ -64,19 +64,18 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-10-01T09:07:16.414863+00:00",
+      "analyzed_at": "2026-10-02T05:04:28.388511+00:00",
       "result": {
-        "trend_15m": "down",
-        "trend_1h": "down",
+        "trend_15m": "up",
+        "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
-          "spadająca gwiazda",
-          "duża świeca spadkowa"
+          "doji"
         ],
-        "reversal_expected": true,
-        "prediction_30min": "down",
-        "confidence": 0.85,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest gwałtowna, duża świeca spadkowa, która przełamała lokalne wsparcie, co sugeruje silny impet spadkowy w krótkim terminie. Wykres 1-godzinowy również pokazuje ostatnie świece spadkowe, potwierdzając krótkoterminową korektę, mimo że trend dzienny pozostaje wzrostowy."
+        "reversal_expected": false,
+        "prediction_30min": "neutral",
+        "confidence": 0.6,
+        "reasoning": "Na wykresie 15-minutowym widać wyraźny wzrostowy trend z formacją doji na końcu, co sugeruje chwilową konsolidację lub wyczerpanie popytu. Wyższe interwały (1h, 1d) potwierdzają silny trend wzrostowy, co wskazuje, że obecna konsolidacja jest prawdopodobnie korektą w ramach szerszego ruchu w górę."
       }
     },
     "MICROSOFT": {
