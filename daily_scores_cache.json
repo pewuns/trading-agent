@@ -67,8 +67,8 @@
       "threshold": 0.6
     },
     "NASDAQ": {
-      "confidence": 0.3,
-      "direction": "LONG",
+      "confidence": 0.35,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "APPLE": {
@@ -102,7 +102,7 @@
       "threshold": 0.6
     },
     "GOOGLE": {
-      "confidence": 0.4,
+      "confidence": 0.55,
       "direction": "SHORT",
       "threshold": 0.6
     }
