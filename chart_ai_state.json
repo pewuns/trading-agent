@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-10-02 17",
+  "last_run": "2026-10-02 18",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-02T15:08:51.010637+00:00",
+      "analyzed_at": "2026-10-02T16:03:45.664084+00:00",
       "result": {
-        "trend_15m": "up",
-        "trend_1h": "up",
+        "trend_15m": "neutral",
+        "trend_1h": "neutral",
         "trend_1d": "down",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "up",
-        "confidence": 0.65,
-        "reasoning": "Krótkoterminowe interwały (15m i 1h) pokazują wyraźny wzrostowy trend po korekcie, co sugeruje kontynuację ruchu w górę pomimo spadkowego trendu na wykresie dziennym."
+        "prediction_30min": "neutral",
+        "confidence": 0.4,
+        "reasoning": "Wykres 15-minutowy pokazuje konsolidację po spadku, a na wykresie dziennym widoczna jest świeca doji, co sugeruje wyczerpanie trendu spadkowego i potencjalną zmianę kierunku."
       }
     },
     "AMAZON": {
