@@ -92,12 +92,12 @@
       "threshold": 0.6
     },
     "AMAZON": {
-      "confidence": 0.4,
+      "confidence": 0.55,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "META": {
-      "confidence": 0.45,
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     },
