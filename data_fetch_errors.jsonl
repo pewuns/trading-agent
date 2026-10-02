@@ -22829,3 +22829,23 @@
 {"timestamp": "2026-10-02T05:05:27.077242+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
 {"timestamp": "2026-10-02T05:05:27.183055+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
 {"timestamp": "2026-10-02T05:05:27.277397+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-02T05:24:44.139510+00:00", "source": "twelvedata", "name": "AUD/USD", "symbol": "AUD/USD", "reason": "HTTP 429: {\"code\":429,\"message\":\"You have run out of API credits for the current minute. 10 API credits were used, with the current limit being 8. Wait for the "}
+{"timestamp": "2026-10-02T05:24:46.857670+00:00", "source": "twelvedata", "name": "AUD/USD", "symbol": "AUD/USD", "reason": "HTTP 429: {\"code\":429,\"message\":\"You have run out of API credits for the current minute. 12 API credits were used, with the current limit being 8. Wait for the "}
+{"timestamp": "2026-10-02T05:24:53.921405+00:00", "source": "twelvedata", "name": "USD/CAD", "symbol": "USD/CAD", "reason": "HTTP 429: {\"code\":429,\"message\":\"You have run out of API credits for the current minute. 14 API credits were used, with the current limit being 8. Wait for the "}
+{"timestamp": "2026-10-02T05:24:56.650840+00:00", "source": "twelvedata", "name": "USD/CAD", "symbol": "USD/CAD", "reason": "HTTP 429: {\"code\":429,\"message\":\"You have run out of API credits for the current minute. 16 API credits were used, with the current limit being 8. Wait for the "}
+{"timestamp": "2026-10-02T05:25:00.854189+00:00", "source": "yahoo", "name": "GC=F", "symbol": "GC=F", "reason": "za mało wyrównanych świec (6)"}
+{"timestamp": "2026-10-02T05:25:00.855688+00:00", "source": "yahoo", "name": "GOLD", "symbol": "GC=F", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-10-02T05:25:00.924360+00:00", "source": "yahoo", "name": "CL=F", "symbol": "CL=F", "reason": "za mało wyrównanych świec (6)"}
+{"timestamp": "2026-10-02T05:25:00.925835+00:00", "source": "yahoo", "name": "OIL WTI", "symbol": "CL=F", "reason": "Yahoo nie zwróciło danych w tym cyklu"}
+{"timestamp": "2026-10-02T05:25:00.926078+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-02T05:25:00.999517+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-02T05:25:01.067106+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-02T05:25:01.148767+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-02T05:25:05.911602+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-02T05:25:05.977015+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-02T05:25:06.052708+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-02T05:25:06.150122+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-02T05:25:11.170921+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-02T05:25:11.234507+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-02T05:25:11.308070+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-02T05:25:11.400398+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
