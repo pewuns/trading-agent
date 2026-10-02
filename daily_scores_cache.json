@@ -28,7 +28,7 @@
     },
     "BITCOIN": {
       "confidence": 0.6,
-      "direction": "LONG",
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "ETHEREUM": {
@@ -68,7 +68,7 @@
     },
     "NASDAQ": {
       "confidence": 0.35,
-      "direction": "SHORT",
+      "direction": "LONG",
       "threshold": 0.6
     },
     "APPLE": {
