@@ -194,10 +194,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-01T19:26:00.312241+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 432.12137276785506,
     "mae_percent": -0.043376053963834094,
-    "mfe_percent": 0.0
+    "mfe_percent": 1.0695089961714472,
+    "outcome": "win",
+    "closed_price": 85575.6875,
+    "closed_at": "2026-10-02T04:04:51.527720+00:00",
+    "r_multiple": 2.0956026352033357
   },
   "SOLANA_SHORT": {
     "name": "SOLANA",
