@@ -52,7 +52,7 @@
       "threshold": 0.6
     },
     "OIL WTI": {
-      "confidence": 0.525,
+      "confidence": 0.6,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -62,12 +62,12 @@
       "threshold": 0.6
     },
     "S&P500": {
-      "confidence": 0.4,
+      "confidence": 0.45,
       "direction": "LONG",
       "threshold": 0.6
     },
     "NASDAQ": {
-      "confidence": 0.35,
+      "confidence": 0.45,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -77,7 +77,7 @@
       "threshold": 0.6
     },
     "MICROSOFT": {
-      "confidence": 0.35,
+      "confidence": 0.55,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -87,7 +87,7 @@
       "threshold": 0.6
     },
     "TESLA": {
-      "confidence": 0.55,
+      "confidence": 0.6,
       "direction": "LONG",
       "threshold": 0.6
     },
