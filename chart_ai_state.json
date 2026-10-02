@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-10-02 11",
+  "last_run": "2026-10-02 12",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-02T09:04:21.934800+00:00",
+      "analyzed_at": "2026-10-02T10:02:36.777616+00:00",
       "result": {
-        "trend_15m": "up",
+        "trend_15m": "down",
         "trend_1h": "up",
         "trend_1d": "down",
         "patterns_detected": [
-          "młot"
+          "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "up",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest silne odbicie od wsparcia z formacją młota, co sugeruje kontynuację krótkoterminowego ruchu wzrostowego, mimo że trend dzienny pozostaje spadkowy."
+        "prediction_30min": "down",
+        "confidence": 0.6,
+        "reasoning": "Na wykresie 15-minutowym widoczna jest wyraźna seria spadkowych świec po osiągnięciu lokalnego szczytu, co sugeruje kontynuację krótkoterminowej korekty. Ostatnia świeca w formie doji wskazuje na chwilową niepewność, ale impet spadkowy wciąż dominuje."
       }
     },
     "AMAZON": {
