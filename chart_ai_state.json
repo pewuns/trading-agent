@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-10-02 22",
+  "last_run": "2026-10-02 23",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-02T20:02:55.065997+00:00",
+      "analyzed_at": "2026-10-02T21:03:27.302159+00:00",
       "result": {
         "trend_15m": "neutral",
         "trend_1h": "up",
@@ -12,8 +12,8 @@
         ],
         "reversal_expected": false,
         "prediction_30min": "neutral",
-        "confidence": 0.55,
-        "reasoning": "Na wykresie 15-minutowym widać konsolidację i formację doji po spadku, co sugeruje chwilowe zawahanie kupujących. Wyższy interwał 1H wskazuje na odbicie (trend wzrostowy), ale dominujący trend dzienny jest spadkowy, co utrudnia jednoznaczne przewidywanie kierunku w najbliższych 30 minutach."
+        "confidence": 0.45,
+        "reasoning": "Na wykresie 15-minutowym widać formację doji po spadkowej serii świec, co sugeruje chwilowe wyczerpanie ruchu w dół, ale brak silnego sygnału odwrócenia. Wyższy interwał 1h wskazuje na kontynuację odbicia, podczas gdy 1d pozostaje w trendzie spadkowym, co utrudnia jednoznaczną prognozę."
       }
     },
     "AMAZON": {
