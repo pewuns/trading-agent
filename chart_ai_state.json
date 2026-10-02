@@ -1,20 +1,19 @@
 {
-  "last_run": "2026-10-02 10",
+  "last_run": "2026-10-02 11",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-02T08:04:40.642499+00:00",
+      "analyzed_at": "2026-10-02T09:04:21.934800+00:00",
       "result": {
-        "trend_15m": "neutral",
-        "trend_1h": "down",
+        "trend_15m": "up",
+        "trend_1h": "up",
         "trend_1d": "down",
         "patterns_detected": [
-          "doji",
           "młot"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Dominuje silny trend spadkowy na interwałach 1h i 1d, jednak na wykresie 15m pojawiły się formacje doji i młota, sugerujące chwilowe wyczerpanie podaży i konsolidację."
+        "prediction_30min": "up",
+        "confidence": 0.65,
+        "reasoning": "Na wykresie 15-minutowym widoczne jest silne odbicie od wsparcia z formacją młota, co sugeruje kontynuację krótkoterminowego ruchu wzrostowego, mimo że trend dzienny pozostaje spadkowy."
       }
     },
     "AMAZON": {
@@ -80,18 +79,18 @@
       }
     },
     "MICROSOFT": {
-      "analyzed_at": "2026-10-01T10:06:26.851955+00:00",
+      "analyzed_at": "2026-10-02T09:05:12.281074+00:00",
       "result": {
         "trend_15m": "down",
-        "trend_1h": "down",
+        "trend_1h": "neutral",
         "trend_1d": "up",
         "patterns_detected": [
           "spadająca gwiazda"
         ],
-        "reversal_expected": true,
+        "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.75,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest silna świeca spadkowa (spadająca gwiazda) po konsolidacji, co sugeruje dalsze spadki w krótkim terminie, mimo że trend dzienny pozostaje wzrostowy."
+        "confidence": 0.65,
+        "reasoning": "Na wykresie 15-minutowym widoczna jest świeca spadającej gwiazdy po krótkiej konsolidacji, co sugeruje kontynuację spadków w krótkim terminie, mimo silnego trendu wzrostowego na wykresie dziennym."
       }
     },
     "SOLANA": {

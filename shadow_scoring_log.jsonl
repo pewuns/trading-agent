@@ -9508,3 +9508,10 @@
 {"name": "BITCOIN", "timestamp": "2026-10-02T08:52:49.839761+00:00", "production_confidence": 0.5, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
 {"name": "ETHEREUM", "timestamp": "2026-10-02T08:52:54.756811+00:00", "production_confidence": 0.55, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
 {"name": "SOLANA", "timestamp": "2026-10-02T08:52:59.478459+00:00", "production_confidence": 0.45, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "GBP/USD", "timestamp": "2026-10-02T09:05:37.188908+00:00", "production_confidence": 0.225, "production_direction": "SHORT", "shadow_score": -2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "AUD/USD", "timestamp": "2026-10-02T09:05:41.895343+00:00", "production_confidence": 0.3, "production_direction": "LONG", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/CAD", "timestamp": "2026-10-02T09:05:49.013755+00:00", "production_confidence": 0.5, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "GOLD", "timestamp": "2026-10-02T09:05:54.333176+00:00", "production_confidence": 0.45, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "BITCOIN", "timestamp": "2026-10-02T09:06:00.989530+00:00", "production_confidence": 0.5, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "ETHEREUM", "timestamp": "2026-10-02T09:06:06.374905+00:00", "production_confidence": 0.5, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "SOLANA", "timestamp": "2026-10-02T09:06:11.621981+00:00", "production_confidence": 0.35, "production_direction": "SHORT", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
