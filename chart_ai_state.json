@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-10-02 07",
+  "last_run": "2026-10-02 08",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-02T05:03:29.952560+00:00",
+      "analyzed_at": "2026-10-02T06:03:47.921417+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
@@ -13,7 +13,7 @@
         "reversal_expected": false,
         "prediction_30min": "down",
         "confidence": 0.75,
-        "reasoning": "Na wykresie 15-minutowym po silnym spadku pojawiła się formacja doji, sugerująca chwilowe wyczerpanie podaży, ale dominujący trend spadkowy na wyższych interwałach (1h i 1d) wskazuje na kontynuację ruchu w dół."
+        "reasoning": "Wykres 15-minutowy pokazuje wyraźny trend spadkowy po osiągnięciu szczytu, a ostatnie świece sugerują kontynuację ruchu w dół. Wyższe interwały (1h, 1d) również potwierdzają dominację podaży i brak sygnałów odwrócenia trendu."
       }
     },
     "AMAZON": {
@@ -106,6 +106,21 @@
         "prediction_30min": "down",
         "confidence": 0.65,
         "reasoning": "Krótkoterminowe interwały (15m i 1h) wykazują wyraźny trend spadkowy z formowaniem się doji, co sugeruje kontynuację korekty w dół, mimo silnego trendu wzrostowego na wykresie dziennym."
+      }
+    },
+    "META": {
+      "analyzed_at": "2026-10-02T06:04:46.485937+00:00",
+      "result": {
+        "trend_15m": "down",
+        "trend_1h": "neutral",
+        "trend_1d": "up",
+        "patterns_detected": [
+          "doji"
+        ],
+        "reversal_expected": false,
+        "prediction_30min": "down",
+        "confidence": 0.6,
+        "reasoning": "Na wykresie 15-minutowym widać wyraźny spadek ceny z szczytu oraz ostatnią świecę doji, co sugeruje kontynuację krótkoterminowej korekty. Wykres 1-godzinowy pozostaje w konsolidacji, a 1-dniowy utrzymuje trend wzrostowy, ale sygnał z krótkiego interwału dominuje w perspektywie 30 minut."
       }
     }
   }
