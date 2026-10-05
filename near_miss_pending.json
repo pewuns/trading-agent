@@ -194113,5 +194113,93 @@
       "chart_ai_sentiment": 0.85
     },
     "created_at": "2026-10-05T08:06:44.838121+00:00"
+  },
+  "USD/CAD_2026-10-05T08:29:53.162007+00:00": {
+    "name": "USD/CAD",
+    "direction": "SHORT",
+    "confidence": 0.25,
+    "entry": 1.42607,
+    "atr": 0.0005114285714285753,
+    "features": {
+      "sma20": -1.0,
+      "sma50": -1.0,
+      "rsi": -0.6959999999999329,
+      "vwap": 0.0,
+      "support_resistance": 0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": 0.08379888268156432,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-05T08:29:53.162054+00:00"
+  },
+  "BITCOIN_2026-10-05T08:29:58.152053+00:00": {
+    "name": "BITCOIN",
+    "direction": "LONG",
+    "confidence": 0.425,
+    "entry": 86404.5390625,
+    "atr": 218.6015625,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.5930961022964192,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.21958101256450965,
+      "poc": 1.0,
+      "mtf_trend": 0.7467411545623839,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-05T08:29:58.152073+00:00"
+  },
+  "ETHEREUM_2026-10-05T08:30:02.801732+00:00": {
+    "name": "ETHEREUM",
+    "direction": "LONG",
+    "confidence": 0.425,
+    "entry": 2726.5,
+    "atr": 7.374285016741071,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.4922273776721877,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.08360958365428807,
+      "poc": 1.0,
+      "mtf_trend": 0.7467411545623839,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-05T08:30:02.801759+00:00"
+  },
+  "SOLANA_2026-10-05T08:30:07.445227+00:00": {
+    "name": "SOLANA",
+    "direction": "LONG",
+    "confidence": 0.585,
+    "entry": 121.62999725341797,
+    "atr": 0.37142835344587055,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.49063893016344706,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.1534745415025292,
+      "poc": 1.0,
+      "mtf_trend": 0.6573556797020486,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.85
+    },
+    "created_at": "2026-10-05T08:30:07.445252+00:00"
   }
 }
