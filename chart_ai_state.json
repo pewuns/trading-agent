@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-10-05 11",
+  "last_run": "2026-10-05 12",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-05T09:05:26.342184+00:00",
+      "analyzed_at": "2026-10-05T10:06:28.835367+00:00",
       "result": {
         "trend_15m": "neutral",
-        "trend_1h": "neutral",
+        "trend_1h": "up",
         "trend_1d": "down",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "neutral",
-        "confidence": 0.45,
-        "reasoning": "Na wykresie dziennym widać wyraźny trend spadkowy po osiągnięciu szczytu, podczas gdy na interwałach krótkoterminowych (15m i 1h) rynek konsoliduje się w wąskim zakresie po wcześniejszym spadku, co sugeruje brak silnego impulsu w najbliższej przyszłości."
+        "confidence": 0.4,
+        "reasoning": "Wykres 15-minutowy pokazuje spłaszczenie i konsolidację po wcześniejszym ruchu, co sugeruje brak wyraźnego kierunku w krótkim terminie. Na interwale 1-godzinnym widać odbicie od dołka, ale na dziennym utrzymuje się silny trend spadkowy."
       }
     },
     "AMAZON": {
@@ -32,18 +32,19 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-10-02T18:04:58.182172+00:00",
+      "analyzed_at": "2026-10-05T10:07:26.152316+00:00",
       "result": {
-        "trend_15m": "neutral",
-        "trend_1h": "up",
+        "trend_15m": "down",
+        "trend_1h": "neutral",
         "trend_1d": "up",
         "patterns_detected": [
+          "spadająca gwiazda",
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
+        "prediction_30min": "down",
         "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym po silnym impulsie wzrostowym nastąpiło wejście w konsolidację (konsolidacja po impulsie), co sugeruje chwilowy brak kierunku. Wyższe interwały (1h i 1d) potwierdzają trend wzrostowy po niedawnym dołku, co wspiera scenariusz kontynuacji wzrostu po zakończeniu bieżącej konsolidacji."
+        "reasoning": "Na wykresie 15-minutowym widoczne jest wyraźne osłabienie po dotknięciu oporu, gdzie ostatnia świeca jest silnie spadkowa, co sugeruje dalszy ruch w dół w krótkim terminie, mimo że trend dzienny pozostaje wzrostowy."
       }
     },
     "APPLE": {
