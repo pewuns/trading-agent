@@ -1,19 +1,20 @@
 {
-  "last_run": "2026-10-05 09",
+  "last_run": "2026-10-05 10",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-05T07:02:01.365625+00:00",
+      "analyzed_at": "2026-10-05T08:05:08.744904+00:00",
       "result": {
-        "trend_15m": "neutral",
-        "trend_1h": "neutral",
+        "trend_15m": "down",
+        "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
-          "doji"
+          "doji",
+          "spadająca gwiazda"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.45,
-        "reasoning": "Na wykresie 15-minutowym widać konsolidację po spadku, co sugeruje neutralny kierunek w krótkim terminie. Wyższy interwał dzienny wciąż wskazuje na trend spadkowy, co ogranicza potencjał do silnego odbicia."
+        "prediction_30min": "down",
+        "confidence": 0.65,
+        "reasoning": "Wszystkie interwały wykazują dominację świec spadkowych, a obecne formacje (doji, spadająca gwiazda) sugerują kontynuację presji sprzedażowej lub korektę w dół, bez wyraźnych sygnałów odwrócenia trendu."
       }
     },
     "AMAZON": {
@@ -92,19 +93,18 @@
       }
     },
     "SOLANA": {
-      "analyzed_at": "2026-10-02T07:06:33.681430+00:00",
+      "analyzed_at": "2026-10-05T08:05:57.632932+00:00",
       "result": {
-        "trend_15m": "down",
-        "trend_1h": "neutral",
+        "trend_15m": "up",
+        "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
-          "doji",
-          "spadająca gwiazda"
+          "objęcie hossy"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym po silnym wzroście nastąpiło odwrócenie i spadek, co sugeruje krótkoterminową korektę. Wykres dzienny pozostaje silnie wzrostowy, co wskazuje, że obecny spadek jest jedynie korektą wewnątrz szerszego trendu."
+        "prediction_30min": "up",
+        "confidence": 0.85,
+        "reasoning": "Wykres 15-minutowy pokazuje silny impuls wzrostowy po dołku, co potwierdza trend widoczny na interwałach 1h i 1d, gdzie dominują świeże formacje wzrostowe."
       }
     },
     "META": {
