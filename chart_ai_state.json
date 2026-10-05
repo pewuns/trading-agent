@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-10-05 14",
+  "last_run": "2026-10-05 15",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-05T12:05:23.331644+00:00",
+      "analyzed_at": "2026-10-05T13:00:18.413371+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "up",
@@ -11,9 +11,9 @@
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "up",
-        "confidence": 0.65,
-        "reasoning": "Wykres 15-minutowy i godzinowy wykazują wyraźny trend wzrostowy z serią świec hossy, co sugeruje kontynuację ruchu w górę w krótkim terminie, mimo że na wykresie dziennym widoczny jest szerszy trend spadkowy."
+        "prediction_30min": "neutral",
+        "confidence": 0.6,
+        "reasoning": "Na wykresie 15-minutowym widoczny jest silny ruch wzrostowy zakończony świecą doji, co sugeruje chwilowe wyczerpanie popytu i konsolidację. Wyższy interwał 1h potwierdza trend wzrostowy, ale dzienne tło pozostaje spadkowe, co utrudnia jednoznaczną prognozę krótkoterminową."
       }
     },
     "AMAZON": {
@@ -78,18 +78,19 @@
       }
     },
     "MICROSOFT": {
-      "analyzed_at": "2026-10-02T09:05:12.281074+00:00",
+      "analyzed_at": "2026-10-05T13:01:16.766351+00:00",
       "result": {
-        "trend_15m": "down",
-        "trend_1h": "neutral",
+        "trend_15m": "up",
+        "trend_1h": "up",
         "trend_1d": "up",
         "patterns_detected": [
-          "spadająca gwiazda"
+          "młot",
+          "objęcie hossy"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest świeca spadającej gwiazdy po krótkiej konsolidacji, co sugeruje kontynuację spadków w krótkim terminie, mimo silnego trendu wzrostowego na wykresie dziennym."
+        "prediction_30min": "up",
+        "confidence": 0.75,
+        "reasoning": "Po konsolidacji i spadku na wykresie 15-minutowym pojawiła się silna świeca wzrostowa (młot/objęcie hossy), co sygnalizuje odwrócenie krótkoterminowego trendu spadkowego na wzrostowy, wspierane przez silny trend wzrostowy na wyższych interwałach."
       }
     },
     "SOLANA": {
