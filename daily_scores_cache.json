@@ -38,7 +38,7 @@
     },
     "ETHEREUM": {
       "confidence": 0.5,
-      "direction": "LONG",
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "SOLANA": {
@@ -57,7 +57,7 @@
       "threshold": 0.6
     },
     "DAX": {
-      "confidence": 0.2,
+      "confidence": 0.265,
       "direction": "LONG",
       "threshold": 0.6
     }
