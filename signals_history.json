@@ -265,10 +265,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-02T19:53:35.608281+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.9064284733363621,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -2.1117782939817658,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 120.4000015258789,
+    "closed_at": "2026-10-05T04:08:27.018009+00:00",
+    "r_multiple": -2.7470428577827013
   },
   "ETHEREUM_SHORT": {
     "name": "ETHEREUM",
@@ -332,10 +336,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-02T19:53:30.837832+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 14.191066196986412,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -1.830246182871794,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 2713.43994140625,
+    "closed_at": "2026-10-05T04:08:27.018009+00:00",
+    "r_multiple": -3.436670568248544
   },
   "BITCOIN_SHORT": {
     "name": "BITCOIN",
@@ -401,10 +409,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-02T19:26:41.931948+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 428.1118861607101,
-    "mae_percent": -0.056141250122454966,
-    "mfe_percent": 0.0
+    "mae_percent": -2.2572199681222442,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 86033.9921875,
+    "closed_at": "2026-10-05T04:08:27.018009+00:00",
+    "r_multiple": -4.43601179128927
   },
   "OIL WTI_LONG": {
     "name": "OIL WTI",
@@ -935,9 +947,13 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-02T19:53:54.925998+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 1.8846391950334578,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -0.5114159396148555,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 370.5899963378906,
+    "closed_at": "2026-10-05T04:08:27.018009+00:00",
+    "r_multiple": -1.0108029082261847
   }
 }
