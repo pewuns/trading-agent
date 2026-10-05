@@ -477,10 +477,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-02T19:53:21.197835+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.5582141876220703,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -1.586777185187486,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 89.93000030517578,
+    "closed_at": "2026-10-05T06:37:13.564743+00:00",
+    "r_multiple": -2.597563767447423
   },
   "OIL WTI_SHORT": {
     "name": "OIL WTI",
@@ -815,10 +819,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-02T18:29:54.981353+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 12.803728376115942,
-    "mae_percent": -0.26160183574807894,
-    "mfe_percent": 0.0
+    "mae_percent": -0.3936039446880225,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 4183.0,
+    "closed_at": "2026-10-05T06:37:13.564743+00:00",
+    "r_multiple": -1.2808692797905927
   },
   "MICROSOFT_LONG": {
     "name": "MICROSOFT",
