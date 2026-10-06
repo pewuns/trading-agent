@@ -887,10 +887,14 @@
     "chart_ai_impact": "medium",
     "chart_ai_reasoning": "Po konsolidacji i spadku na wykresie 15-minutowym pojawiła się silna świeca wzrostowa (młot/objęcie hossy), co sygnalizuje odwrócenie krótkoterminowego trendu spadkowego na wzrostowy, wspierane przez silny trend wzrostowy na wyższych interwałach.",
     "timestamp": "2026-10-05T13:03:15.520286+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 1.2727988106863677,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 1.478168018443223,
+    "outcome": "win",
+    "closed_price": 525.1799926757812,
+    "closed_at": "2026-10-06T10:51:42.981898+00:00",
+    "r_multiple": 6.0103476799926785
   },
   "TESLA_LONG": {
     "name": "TESLA",
