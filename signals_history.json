@@ -338,7 +338,7 @@
     "status": "open",
     "risk_distance": 10.95752825055797,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.31078533831536653
   },
   "BITCOIN_SHORT": {
     "name": "BITCOIN",
@@ -540,10 +540,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-07T17:33:17.039122+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.635357175554546,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -5.074765993295674,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 92.76000213623047,
+    "closed_at": "2026-10-08T10:59:37.773777+00:00",
+    "r_multiple": -7.051157253435287
   },
   "GOLD_LONG": {
     "name": "GOLD",
