@@ -1,54 +1,54 @@
 {
-  "date": "2026-10-12",
+  "date": "2026-10-13",
   "scores": {
     "EUR/USD": {
-      "confidence": 0.5,
-      "direction": "SHORT",
+      "confidence": 0.2,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "USD/JPY": {
-      "confidence": 0.5,
-      "direction": "LONG",
+      "confidence": 0.4,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "GBP/USD": {
-      "confidence": 0.325,
-      "direction": "SHORT",
-      "threshold": 0.6
-    },
-    "USD/CHF": {
       "confidence": 0.5,
       "direction": "LONG",
       "threshold": 0.6
     },
-    "AUD/USD": {
-      "confidence": 0.45,
+    "USD/CHF": {
+      "confidence": 0.25,
       "direction": "SHORT",
       "threshold": 0.6
     },
-    "USD/CAD": {
-      "confidence": 0.425,
+    "AUD/USD": {
+      "confidence": 0.25,
       "direction": "LONG",
+      "threshold": 0.6
+    },
+    "USD/CAD": {
+      "confidence": 0.3,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "OIL WTI": {
-      "confidence": 0.55,
-      "direction": "LONG",
+      "confidence": 0.425,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.425,
+      "confidence": 0.275,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.475,
+      "confidence": 0.325,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.425,
-      "direction": "SHORT",
+      "confidence": 0.3,
+      "direction": "LONG",
       "threshold": 0.6
     }
   }
