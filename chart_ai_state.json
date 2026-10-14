@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-10-13 13",
+  "last_run": "2026-10-14 11",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-13T11:14:43.050753+00:00",
+      "analyzed_at": "2026-10-14T09:05:39.917694+00:00",
       "result": {
-        "trend_15m": "down",
+        "trend_15m": "neutral",
         "trend_1h": "up",
         "trend_1d": "down",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest wyraźna sekwencja świec spadkowych po osiągnięciu lokalnego szczytu, co wskazuje na kontynuację krótkoterminowej korekty, mimo iż trend na wykresie godzinowym pozostaje wzrostowy."
+        "prediction_30min": "neutral",
+        "confidence": 0.55,
+        "reasoning": "Na wykresie 15-minutowym widać konsolidację po spadku, co sugeruje neutralny kierunek w krótkim terminie, podczas gdy trend 1-godzinowy pozostaje wzrostowy, a dzienny wykazuje tendencję spadkową."
       }
     },
     "AMAZON": {
@@ -48,18 +48,18 @@
       }
     },
     "APPLE": {
-      "analyzed_at": "2026-10-05T07:02:49.841949+00:00",
+      "analyzed_at": "2026-10-14T09:06:27.684057+00:00",
       "result": {
-        "trend_15m": "neutral",
-        "trend_1h": "neutral",
+        "trend_15m": "down",
+        "trend_1h": "down",
         "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.55,
-        "reasoning": "Na wykresie 15-minutowym widać konsolidację po wcześniejszym spadku, a obecna świeca ma postać doji, co wskazuje na brak wyraźnego kierunku. Wyższe interwały (1h, 1d) sugerują stabilizację lub dalszy wzrost w dłuższej perspektywie, ale krótkoterminowo rynek czeka na wybicie z boku."
+        "prediction_30min": "down",
+        "confidence": 0.75,
+        "reasoning": "Na wykresie 15-minutowym widoczna jest wyraźna seria spadkowa z formacją doji na końcu, sugerującą kontynuację ruchu w dół lub konsolidację, podczas gdy trend dzienny pozostaje wzrostowy."
       }
     },
     "NVIDIA": {

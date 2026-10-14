@@ -472,7 +472,7 @@
     "status": "open",
     "risk_distance": 0.476782935006284,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.2015941022877984
   },
   "OIL WTI_SHORT": {
     "name": "OIL WTI",
@@ -807,10 +807,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-13T18:19:26.851210+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 9.203456333705617,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.44929392168408555,
+    "outcome": "win",
+    "closed_price": 4165.5,
+    "closed_at": "2026-10-14T09:06:48.387281+00:00",
+    "r_multiple": 2.042689616361832
   },
   "MICROSOFT_LONG": {
     "name": "MICROSOFT",
