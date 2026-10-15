@@ -200955,5 +200955,27 @@
       "chart_ai_sentiment": 0.0
     },
     "created_at": "2026-10-15T13:41:21.584582+00:00"
+  },
+  "GOLD_2026-10-15T17:52:49.940061+00:00": {
+    "name": "GOLD",
+    "direction": "SHORT",
+    "confidence": 0.35,
+    "entry": 4173.10009765625,
+    "atr": 6.228550502232143,
+    "features": {
+      "sma20": -1.0,
+      "sma50": 1.0,
+      "rsi": -0.14110686737062836,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.013863141774804546,
+      "poc": -1.0,
+      "mtf_trend": 0.02420856610800759,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-15T17:52:49.940081+00:00"
   }
 }

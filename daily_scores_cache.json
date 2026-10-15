@@ -17,8 +17,8 @@
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.6,
-      "direction": "SHORT",
+      "confidence": 0.65,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "DAX": {
@@ -27,7 +27,12 @@
       "threshold": 0.6
     },
     "GOLD": {
-      "confidence": 0.25,
+      "confidence": 0.35,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "OIL WTI": {
+      "confidence": 0.65,
       "direction": "LONG",
       "threshold": 0.6
     }
