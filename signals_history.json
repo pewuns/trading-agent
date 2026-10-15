@@ -265,7 +265,7 @@
     "status": "open",
     "risk_distance": 1.12392915998187,
     "mae_percent": 0.0,
-    "mfe_percent": 0.028825578346155168
+    "mfe_percent": 1.047368445360757
   },
   "ETHEREUM_SHORT": {
     "name": "ETHEREUM",
@@ -326,10 +326,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-14T18:49:09.058145+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 12.07928466796875,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 2.1786038112654613,
+    "outcome": "win",
+    "closed_price": 2372.110107421875,
+    "closed_at": "2026-10-15T08:39:22.541727+00:00",
+    "r_multiple": 4.373589615324369
   },
   "BITCOIN_SHORT": {
     "name": "BITCOIN",
@@ -396,7 +400,7 @@
     "status": "open",
     "risk_distance": 259.1785714285652,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.4748122373051457
   },
   "OIL WTI_LONG": {
     "name": "OIL WTI",
