@@ -200911,5 +200911,49 @@
       "chart_ai_sentiment": 0.0
     },
     "created_at": "2026-10-15T08:39:48.267843+00:00"
+  },
+  "DAX_2026-10-15T13:41:15.063065+00:00": {
+    "name": "DAX",
+    "direction": "LONG",
+    "confidence": 0.2,
+    "entry": 25244.94921875,
+    "atr": 33.046456473214285,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.24810609146152715,
+      "vwap": 0.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": 0.0,
+      "poc": 1.0,
+      "mtf_trend": -0.12104283054003706,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-15T13:41:15.063097+00:00"
+  },
+  "GOLD_2026-10-15T13:41:21.584555+00:00": {
+    "name": "GOLD",
+    "direction": "LONG",
+    "confidence": 0.25,
+    "entry": 4175.7001953125,
+    "atr": 9.371372767857142,
+    "features": {
+      "sma20": 1.0,
+      "sma50": 0.0,
+      "rsi": 0.013236352895567478,
+      "vwap": 1.0,
+      "support_resistance": -0.5,
+      "pattern": 0.0,
+      "order_flow": -0.11866058234138262,
+      "poc": -1.0,
+      "mtf_trend": -0.12104283054003717,
+      "news_sentiment": 0.0,
+      "macro_sentiment": 0.0,
+      "chart_ai_sentiment": 0.0
+    },
+    "created_at": "2026-10-15T13:41:21.584582+00:00"
   }
 }
