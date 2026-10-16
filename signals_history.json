@@ -61,7 +61,7 @@
     "status": "open",
     "risk_distance": 0.8389271327427394,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.4814974934355657
   },
   "ETHEREUM_LONG": {
     "name": "ETHEREUM",
@@ -128,7 +128,7 @@
     "status": "open",
     "risk_distance": 17.833949497767662,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.3574579595729716
   },
   "BITCOIN_LONG": {
     "name": "BITCOIN",
@@ -194,7 +194,7 @@
     "timestamp": "2026-10-15T17:53:00.908614+00:00",
     "status": "open",
     "risk_distance": 432.744140625,
-    "mae_percent": 0.0,
+    "mae_percent": -0.28469231053790284,
     "mfe_percent": 0.0
   },
   "SOLANA_SHORT": {
@@ -460,10 +460,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-15T17:52:55.433367+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.5485725402832031,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -1.2207741159421663,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 95.4800033569336,
+    "closed_at": "2026-10-16T08:34:16.211627+00:00",
+    "r_multiple": -2.1510378637738605
   },
   "OIL WTI_SHORT": {
     "name": "OIL WTI",
