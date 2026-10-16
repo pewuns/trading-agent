@@ -1,19 +1,20 @@
 {
-  "last_run": "2026-10-14 11",
+  "last_run": "2026-10-16 22",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-14T09:05:39.917694+00:00",
+      "analyzed_at": "2026-10-16T20:04:18.246606+00:00",
       "result": {
         "trend_15m": "neutral",
         "trend_1h": "up",
-        "trend_1d": "down",
+        "trend_1d": "up",
         "patterns_detected": [
-          "doji"
+          "doji",
+          "spadająca gwiazda"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.55,
-        "reasoning": "Na wykresie 15-minutowym widać konsolidację po spadku, co sugeruje neutralny kierunek w krótkim terminie, podczas gdy trend 1-godzinowy pozostaje wzrostowy, a dzienny wykazuje tendencję spadkową."
+        "prediction_30min": "down",
+        "confidence": 0.6,
+        "reasoning": "Na wykresie 15-minutowym widać formację spadającej gwiazdy po silnym impulsie wzrostowym, co sugeruje krótkoterminowe wyczerpanie kupujących i korektę w dół, mimo że trend na wyższych interwałach (1h, 1d) pozostaje wzrostowy."
       }
     },
     "AMAZON": {
@@ -63,18 +64,18 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-10-05T11:07:17.450926+00:00",
+      "analyzed_at": "2026-10-16T20:05:15.476166+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
-        "trend_1d": "up",
+        "trend_1d": "down",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.65,
-        "reasoning": "Wykres 15-minutowy wyraźnie pokazuje trend spadkowy z ostatnimi świecami utrzymującymi się na niskich poziomach, co sugeruje kontynuację spadków w najbliższej perspektywie, mimo długoterminowego trendu wzrostowego na wykresie dziennym."
+        "confidence": 0.75,
+        "reasoning": "Wszystkie interwały wykazują wyraźny trend spadkowy, a ostatnie świece na wykresie 15-minutowym (doji) sugerują chwilowe wyczerpanie ruchu, ale nie odwracają dominującego kierunku zniżkowego."
       }
     },
     "MICROSOFT": {
