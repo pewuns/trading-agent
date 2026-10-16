@@ -17,18 +17,18 @@
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.475,
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.525,
-      "direction": "LONG",
+      "confidence": 0.65,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.55,
-      "direction": "LONG",
+      "confidence": 0.65,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "DAX": {
@@ -48,6 +48,11 @@
     },
     "OIL WTI": {
       "confidence": 0.25,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "USD/CAD": {
+      "confidence": 0.225,
       "direction": "SHORT",
       "threshold": 0.6
     }
