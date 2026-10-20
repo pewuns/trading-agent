@@ -1,20 +1,19 @@
 {
-  "last_run": "2026-10-19 23",
+  "last_run": "2026-10-20 16",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-19T21:14:31.482028+00:00",
+      "analyzed_at": "2026-10-20T14:04:05.795338+00:00",
       "result": {
-        "trend_15m": "down",
-        "trend_1h": "down",
-        "trend_1d": "up",
+        "trend_15m": "up",
+        "trend_1h": "neutral",
+        "trend_1d": "down",
         "patterns_detected": [
-          "młot",
           "objęcie hossy"
         ],
-        "reversal_expected": true,
+        "reversal_expected": false,
         "prediction_30min": "up",
         "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym po silnym spadku pojawiła się formacja młota i objęcia hossy, co sugeruje lokalne odwrócenie trendu, mimo że na wyższych interwałach (1h) dominuje ruch spadkowy."
+        "reasoning": "Na interwale 15-minutowym widoczna jest silna sekwencja zielonych świec po dołku, co wskazuje na krótkoterminowy trend wzrostowy, mimo że wyższe interwały (1h, 1d) sugerują korektę lub konsolidację w szerszym trendzie spadkowym."
       }
     },
     "AMAZON": {
@@ -48,18 +47,19 @@
       }
     },
     "APPLE": {
-      "analyzed_at": "2026-10-14T09:06:27.684057+00:00",
+      "analyzed_at": "2026-10-20T14:04:52.632197+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "down",
         "trend_1d": "up",
         "patterns_detected": [
+          "spadająca gwiazda",
           "doji"
         ],
-        "reversal_expected": false,
+        "reversal_expected": true,
         "prediction_30min": "down",
-        "confidence": 0.75,
-        "reasoning": "Na wykresie 15-minutowym widoczna jest wyraźna seria spadkowa z formacją doji na końcu, sugerującą kontynuację ruchu w dół lub konsolidację, podczas gdy trend dzienny pozostaje wzrostowy."
+        "confidence": 0.65,
+        "reasoning": "Na wykresie 15-minutowym widać wyraźne odwrócenie trendu wzrostowego na spadkowy, potwierdzone formacją spadającej gwiazdy i silną świecą bessy. Choć trend dzienny pozostaje wzrostowy, krótkoterminowy momentum sugeruje kontynuację spadków w najbliższych 30 minutach."
       }
     },
     "NVIDIA": {
