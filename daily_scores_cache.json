@@ -12,22 +12,22 @@
       "threshold": 0.6
     },
     "GBP/USD": {
-      "confidence": 0.375,
+      "confidence": 0.425,
       "direction": "LONG",
       "threshold": 0.6
     },
     "USD/CHF": {
-      "confidence": 0.325,
+      "confidence": 0.4,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "AUD/USD": {
-      "confidence": 0.325,
-      "direction": "SHORT",
+      "confidence": 0.35,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "GOLD": {
-      "confidence": 0.55,
+      "confidence": 0.65,
       "direction": "SHORT",
       "threshold": 0.6
     },
@@ -37,23 +37,73 @@
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.6,
+      "confidence": 0.65,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.55,
+      "confidence": 0.65,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.55,
+      "confidence": 0.65,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "DAX": {
       "confidence": 0.4,
       "direction": "LONG",
+      "threshold": 0.6
+    },
+    "S&P500": {
+      "confidence": 0.55,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "NASDAQ": {
+      "confidence": 0.55,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "USD/CAD": {
+      "confidence": 0.45,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "APPLE": {
+      "confidence": 0.5,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "MICROSOFT": {
+      "confidence": 0.5,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "NVIDIA": {
+      "confidence": 0.55,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "TESLA": {
+      "confidence": 0.35,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "AMAZON": {
+      "confidence": 0.55,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "META": {
+      "confidence": 0.55,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "GOOGLE": {
+      "confidence": 0.55,
+      "direction": "SHORT",
       "threshold": 0.6
     }
   }
