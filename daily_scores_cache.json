@@ -12,12 +12,12 @@
       "threshold": 0.6
     },
     "USD/CHF": {
-      "confidence": 0.25,
+      "confidence": 0.4,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "AUD/USD": {
-      "confidence": 0.35,
+      "confidence": 0.425,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -27,8 +27,8 @@
       "threshold": 0.6
     },
     "GOLD": {
-      "confidence": 0.35,
-      "direction": "LONG",
+      "confidence": 0.4,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "OIL WTI": {
@@ -37,18 +37,23 @@
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.325,
-      "direction": "SHORT",
+      "confidence": 0.525,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.3,
+      "confidence": 0.4,
       "direction": "LONG",
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.35,
+      "confidence": 0.45,
       "direction": "LONG",
+      "threshold": 0.6
+    },
+    "DAX": {
+      "confidence": 0.275,
+      "direction": "SHORT",
       "threshold": 0.6
     }
   }
