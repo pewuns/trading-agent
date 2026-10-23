@@ -265,10 +265,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-22T18:41:36.698744+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 0.7082143511090919,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -1.1209856929687847,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 104.63999938964844,
+    "closed_at": "2026-10-23T08:54:13.895584+00:00",
+    "r_multiple": -1.63791658683313
   },
   "ETHEREUM_SHORT": {
     "name": "ETHEREUM",
@@ -329,10 +333,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-22T18:41:30.871894+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 12.474609375,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -1.3521579222848414,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 2405.340087890625,
+    "closed_at": "2026-10-23T08:54:13.895584+00:00",
+    "r_multiple": -2.5724322843275402
   },
   "BITCOIN_SHORT": {
     "name": "BITCOIN",
@@ -393,10 +401,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-22T18:41:24.916556+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 315.9751674107101,
-    "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mae_percent": -0.7598773945001718,
+    "mfe_percent": 0.0,
+    "outcome": "loss",
+    "closed_price": 81704.5,
+    "closed_at": "2026-10-23T08:54:13.895584+00:00",
+    "r_multiple": -1.9500642409632427
   },
   "OIL WTI_LONG": {
     "name": "OIL WTI",
@@ -796,10 +808,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-10-22T18:41:12.761280+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 10.178545270647192,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.4293893905858947,
+    "outcome": "win",
+    "closed_price": 4034.89990234375,
+    "closed_at": "2026-10-23T08:54:13.895584+00:00",
+    "r_multiple": 1.7094924688848616
   },
   "MICROSOFT_LONG": {
     "name": "MICROSOFT",
