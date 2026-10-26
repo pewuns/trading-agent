@@ -1,20 +1,19 @@
 {
-  "last_run": "2026-10-26 17",
+  "last_run": "2026-10-26 22",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-26T16:14:02.096164+00:00",
+      "analyzed_at": "2026-10-26T21:00:33.221413+00:00",
       "result": {
         "trend_15m": "down",
         "trend_1h": "neutral",
         "trend_1d": "neutral",
         "patterns_detected": [
-          "spadająca gwiazda",
           "doji"
         ],
         "reversal_expected": false,
         "prediction_30min": "down",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać wyraźne osłabienie popytu po osiągnięciu lokalnego szczytu, co potwierdzają ostatnie czerwone świece. Wyższe interwały (1h, 1d) pozostają w konsolidacji, co nie daje sygnału do silnego odbicia, sugerując kontynuację krótkoterminowej korekty."
+        "confidence": 0.65,
+        "reasoning": "Na wykresie 15-minutowym po osiągnięciu szczytu widać wyraźną sekwencję świec spadkowych, co wskazuje na krótkoterminową korektę. Wyższe interwały (1h, 1d) pozostają w konsolidacji, co nie daje silnego impulsu do zmiany kierunku w dół."
       }
     },
     "AMAZON": {
@@ -33,18 +32,18 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-10-26T16:14:59.547898+00:00",
+      "analyzed_at": "2026-10-26T21:01:32.459682+00:00",
       "result": {
-        "trend_15m": "neutral",
-        "trend_1h": "up",
+        "trend_15m": "down",
+        "trend_1h": "neutral",
         "trend_1d": "up",
         "patterns_detected": [
-          "doji"
+          "spadająca gwiazda"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać konsolidację po silnym wzroście, z formacją doji sugerującą chwilowe wyczerpanie popytu. Wyższe interwały (1h i 1d) potwierdzają jednak silny trend wzrostowy, co wskazuje na kontynuację ruchu w górę po krótkiej korekcie."
+        "prediction_30min": "down",
+        "confidence": 0.7,
+        "reasoning": "Na wykresie 15-minutowym widoczna jest wyraźna formacja spadającej gwiazdy po okresie konsolidacji, co sugeruje dalsze osłabienie w krótkim terminie, mimo że trend dzienny pozostaje wzrostowy."
       }
     },
     "APPLE": {
