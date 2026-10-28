@@ -10535,3 +10535,12 @@
 {"name": "TESLA", "timestamp": "2026-10-27T20:12:51.186006+00:00", "production_confidence": 0.625, "production_direction": "LONG", "shadow_score": 2}
 {"name": "AMAZON", "timestamp": "2026-10-27T20:12:56.137331+00:00", "production_confidence": 0.55, "production_direction": "SHORT", "shadow_score": -2}
 {"name": "META", "timestamp": "2026-10-27T20:13:01.121978+00:00", "production_confidence": 0.5, "production_direction": "SHORT", "shadow_score": -2}
+{"name": "EUR/USD", "timestamp": "2026-10-28T10:07:39.774209+00:00", "production_confidence": 0.225, "production_direction": "SHORT", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/JPY", "timestamp": "2026-10-28T10:07:44.219093+00:00", "production_confidence": 0.3, "production_direction": "SHORT", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "GBP/USD", "timestamp": "2026-10-28T10:07:48.656940+00:00", "production_confidence": 0.4, "production_direction": "SHORT", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/CHF", "timestamp": "2026-10-28T10:07:52.850014+00:00", "production_confidence": 0.375, "production_direction": "LONG", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "AUD/USD", "timestamp": "2026-10-28T10:08:02.407142+00:00", "production_confidence": 0.325, "production_direction": "SHORT", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/CAD", "timestamp": "2026-10-28T10:08:06.650377+00:00", "production_confidence": 0.3, "production_direction": "SHORT", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "BITCOIN", "timestamp": "2026-10-28T10:08:11.952337+00:00", "production_confidence": 0.3, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "ETHEREUM", "timestamp": "2026-10-28T10:08:16.853133+00:00", "production_confidence": 0.35, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "SOLANA", "timestamp": "2026-10-28T10:08:21.652708+00:00", "production_confidence": 0.42000000000000004, "production_direction": "LONG", "shadow_score": 1, "signal_engine_direction": null, "signal_engine_tier": null}
