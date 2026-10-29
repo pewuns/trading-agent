@@ -1,17 +1,19 @@
 {
-  "last_run": "2026-10-29 02",
+  "last_run": "2026-10-29 18",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-29T01:05:13.646907+00:00",
+      "analyzed_at": "2026-10-29T17:03:59.057915+00:00",
       "result": {
-        "trend_15m": "up",
+        "trend_15m": "neutral",
         "trend_1h": "up",
         "trend_1d": "up",
-        "patterns_detected": [],
+        "patterns_detected": [
+          "doji"
+        ],
         "reversal_expected": false,
-        "prediction_30min": "up",
-        "confidence": 0.75,
-        "reasoning": "Wykresy na wszystkich interwałach (15m, 1h, 1d) pokazują wyraźny trend wzrostowy z formowaniem wyższych dołków i szczytów. Brak sygnałów odwrócenia, a ostatnie świece potwierdzają kontynuację ruchu w górę."
+        "prediction_30min": "neutral",
+        "confidence": 0.6,
+        "reasoning": "Wykres 15-minutowy pokazuje konsolidację po silnym wzroście, co sugeruje krótkoterminowe wyczerpanie popytu, podczas gdy wyższe interwały (1h, 1d) utrzymują wyraźny trend wzrostowy."
       }
     },
     "AMAZON": {
@@ -77,18 +79,18 @@
       }
     },
     "MICROSOFT": {
-      "analyzed_at": "2026-10-13T11:15:40.419555+00:00",
+      "analyzed_at": "2026-10-29T17:04:56.151130+00:00",
       "result": {
-        "trend_15m": "up",
-        "trend_1h": "up",
+        "trend_15m": "neutral",
+        "trend_1h": "neutral",
         "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "up",
-        "confidence": 0.75,
-        "reasoning": "Wszystkie interwały wykazują silny trend wzrostowy, a ostatnie świece na wykresie 15-minutowym potwierdzają kontynuację ruchu w górę po krótkiej konsolidacji."
+        "prediction_30min": "neutral",
+        "confidence": 0.65,
+        "reasoning": "Na wykresie 15-minutowym widać wyraźne wyczerpanie spadków i przejście w konsolidację (doji), co sugeruje brak silnego kierunku w najbliższym czasie. Trend dzienny pozostaje wzrostowy, ale krótkoterminowo rynek konsoliduje się po spadkach."
       }
     },
     "SOLANA": {
