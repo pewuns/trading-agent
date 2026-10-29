@@ -25778,3 +25778,30 @@
 {"timestamp": "2026-10-28T16:36:50.868659+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
 {"timestamp": "2026-10-28T21:18:43.012068+00:00", "source": "TradingEconomics_News", "target": "https://tradingeconomics.com/rss/news.aspx", "status_code": 403, "error": "Status HTTP 403"}
 {"timestamp": "2026-10-28T21:18:43.041374+00:00", "source": "TradingEconomics_Calendar", "target": "https://tradingeconomics.com/rss/calendar.aspx", "status_code": 403, "error": "Status HTTP 403"}
+{"timestamp": "2026-10-29T01:05:22.260919+00:00", "source": "twelvedata", "name": "EUR/USD", "symbol": "EUR/USD", "reason": "cache dla 60m zbyt stary (33.6h)"}
+{"timestamp": "2026-10-29T01:05:22.395828+00:00", "source": "twelvedata", "name": "EUR/USD", "symbol": "EUR/USD", "reason": "cache dla 1d zbyt stary (572.9h)"}
+{"timestamp": "2026-10-29T01:05:25.847637+00:00", "source": "twelvedata", "name": "USD/JPY", "symbol": "USD/JPY", "reason": "cache dla 60m zbyt stary (33.6h)"}
+{"timestamp": "2026-10-29T01:05:26.051397+00:00", "source": "twelvedata", "name": "USD/JPY", "symbol": "USD/JPY", "reason": "cache dla 1d zbyt stary (572.9h)"}
+{"timestamp": "2026-10-29T01:05:29.520627+00:00", "source": "twelvedata", "name": "GBP/USD", "symbol": "GBP/USD", "reason": "cache dla 60m zbyt stary (33.6h)"}
+{"timestamp": "2026-10-29T01:05:29.694525+00:00", "source": "twelvedata", "name": "GBP/USD", "symbol": "GBP/USD", "reason": "cache dla 1d zbyt stary (572.9h)"}
+{"timestamp": "2026-10-29T01:05:33.241740+00:00", "source": "twelvedata", "name": "USD/CHF", "symbol": "USD/CHF", "reason": "cache dla 60m zbyt stary (33.6h)"}
+{"timestamp": "2026-10-29T01:05:33.410471+00:00", "source": "twelvedata", "name": "USD/CHF", "symbol": "USD/CHF", "reason": "cache dla 1d zbyt stary (572.9h)"}
+{"timestamp": "2026-10-29T01:05:36.892082+00:00", "source": "twelvedata", "name": "AUD/USD", "symbol": "AUD/USD", "reason": "cache dla 60m zbyt stary (63.6h)"}
+{"timestamp": "2026-10-29T01:05:37.033858+00:00", "source": "twelvedata", "name": "AUD/USD", "symbol": "AUD/USD", "reason": "cache dla 1d zbyt stary (572.9h)"}
+{"timestamp": "2026-10-29T01:05:40.587677+00:00", "source": "twelvedata", "name": "USD/CAD", "symbol": "USD/CAD", "reason": "cache dla 60m zbyt stary (63.6h)"}
+{"timestamp": "2026-10-29T01:05:40.741585+00:00", "source": "twelvedata", "name": "USD/CAD", "symbol": "USD/CAD", "reason": "cache dla 1d zbyt stary (572.9h)"}
+{"timestamp": "2026-10-29T01:05:51.862061+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-29T01:05:51.989961+00:00", "source": "yahoo", "name": "BTC-USD", "symbol": "BTC-USD", "reason": "za mało wyrównanych świec (6)"}
+{"timestamp": "2026-10-29T01:05:51.991374+00:00", "source": "all_sources", "name": "BITCOIN", "symbol": "BTC-USD", "reason": "CryptoCompare i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-10-29T01:05:51.991516+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-29T01:05:52.181133+00:00", "source": "cryptocompare", "name": "BITCOIN", "symbol": "BTC", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-29T01:05:53.498853+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-29T01:05:53.626233+00:00", "source": "yahoo", "name": "ETH-USD", "symbol": "ETH-USD", "reason": "za mało wyrównanych świec (6)"}
+{"timestamp": "2026-10-29T01:05:53.627257+00:00", "source": "all_sources", "name": "ETHEREUM", "symbol": "ETH-USD", "reason": "CryptoCompare i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-10-29T01:05:53.627397+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-29T01:05:54.850250+00:00", "source": "cryptocompare", "name": "ETHEREUM", "symbol": "ETH", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-29T01:05:58.138454+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-29T01:05:58.270341+00:00", "source": "yahoo", "name": "SOL-USD", "symbol": "SOL-USD", "reason": "za mało wyrównanych świec (6)"}
+{"timestamp": "2026-10-29T01:05:58.271401+00:00", "source": "all_sources", "name": "SOLANA", "symbol": "SOL-USD", "reason": "CryptoCompare i Yahoo zawiodły w tym cyklu"}
+{"timestamp": "2026-10-29T01:05:58.271547+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
+{"timestamp": "2026-10-29T01:05:59.459143+00:00", "source": "cryptocompare", "name": "SOLANA", "symbol": "SOL", "reason": "brak CRYPTOCOMPARE_API_KEY"}
