@@ -10555,3 +10555,11 @@
 {"name": "BITCOIN", "timestamp": "2026-10-28T16:36:42.151782+00:00", "production_confidence": 0.525, "production_direction": "SHORT", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
 {"name": "ETHEREUM", "timestamp": "2026-10-28T16:36:49.390532+00:00", "production_confidence": 0.65, "production_direction": "SHORT", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
 {"name": "SOLANA", "timestamp": "2026-10-28T16:36:56.132298+00:00", "production_confidence": 0.55, "production_direction": "SHORT", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/JPY", "timestamp": "2026-10-29T10:30:46.829571+00:00", "production_confidence": 0.5, "production_direction": "LONG", "shadow_score": 2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "AUD/USD", "timestamp": "2026-10-29T10:30:51.692699+00:00", "production_confidence": 0.4, "production_direction": "SHORT", "shadow_score": -2, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "USD/CAD", "timestamp": "2026-10-29T10:30:59.032509+00:00", "production_confidence": 0.275, "production_direction": "SHORT", "shadow_score": -1, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "GOLD", "timestamp": "2026-10-29T10:31:04.432285+00:00", "production_confidence": 0.3, "production_direction": "SHORT", "shadow_score": -1}
+{"name": "OIL WTI", "timestamp": "2026-10-29T10:31:09.764855+00:00", "production_confidence": 0.35, "production_direction": "LONG", "shadow_score": 0}
+{"name": "BITCOIN", "timestamp": "2026-10-29T10:31:15.229684+00:00", "production_confidence": 0.3, "production_direction": "LONG", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "ETHEREUM", "timestamp": "2026-10-29T10:31:20.475021+00:00", "production_confidence": 0.275, "production_direction": "SHORT", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
+{"name": "SOLANA", "timestamp": "2026-10-29T10:31:25.792006+00:00", "production_confidence": 0.35, "production_direction": "LONG", "shadow_score": 0, "signal_engine_direction": null, "signal_engine_tier": null}
