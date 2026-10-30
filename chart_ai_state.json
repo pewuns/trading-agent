@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-10-29 18",
+  "last_run": "2026-10-30 22",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-10-29T17:03:59.057915+00:00",
+      "analyzed_at": "2026-10-30T21:12:12.422822+00:00",
       "result": {
-        "trend_15m": "neutral",
-        "trend_1h": "up",
+        "trend_15m": "down",
+        "trend_1h": "down",
         "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Wykres 15-minutowy pokazuje konsolidację po silnym wzroście, co sugeruje krótkoterminowe wyczerpanie popytu, podczas gdy wyższe interwały (1h, 1d) utrzymują wyraźny trend wzrostowy."
+        "prediction_30min": "down",
+        "confidence": 0.7,
+        "reasoning": "Wykres 15-minutowy i godzinowy wyraźnie pokazują kontynuację spadków po wcześniejszej korekcie, co sugeruje dalszy ruch w dół w krótkim terminie, mimo byczego trendu na wykresie dziennym."
       }
     },
     "AMAZON": {
@@ -79,18 +79,18 @@
       }
     },
     "MICROSOFT": {
-      "analyzed_at": "2026-10-29T17:04:56.151130+00:00",
+      "analyzed_at": "2026-10-30T21:13:11.083949+00:00",
       "result": {
-        "trend_15m": "neutral",
-        "trend_1h": "neutral",
+        "trend_15m": "up",
+        "trend_1h": "down",
         "trend_1d": "up",
         "patterns_detected": [
-          "doji"
+          "młot"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
+        "prediction_30min": "up",
         "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widać wyraźne wyczerpanie spadków i przejście w konsolidację (doji), co sugeruje brak silnego kierunku w najbliższym czasie. Trend dzienny pozostaje wzrostowy, ale krótkoterminowo rynek konsoliduje się po spadkach."
+        "reasoning": "Na wykresie 15-minutowym widoczny jest wyraźny wzrostowy ruch po dołku, co sugeruje krótkoterminową siłę kupujących, mimo że trend godzinowy pozostaje spadkowy."
       }
     },
     "SOLANA": {
