@@ -2,12 +2,12 @@
   "date": "2026-11-02",
   "scores": {
     "EUR/USD": {
-      "confidence": 0.25,
-      "direction": "LONG",
+      "confidence": 0.375,
+      "direction": "SHORT",
       "threshold": 0.6
     },
     "USD/JPY": {
-      "confidence": 0.325,
+      "confidence": 0.425,
       "direction": "LONG",
       "threshold": 0.6
     },
@@ -17,13 +17,13 @@
       "threshold": 0.6
     },
     "AUD/USD": {
-      "confidence": 0.275,
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "USD/CAD": {
-      "confidence": 0.175,
-      "direction": "SHORT",
+      "confidence": 0.375,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "GOLD": {
@@ -37,17 +37,47 @@
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.475,
+      "confidence": 0.65,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.475,
+      "confidence": 0.65,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.475,
+      "confidence": 0.65,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "S&P500": {
+      "confidence": 0.55,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "NASDAQ": {
+      "confidence": 0.55,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "USD/CHF": {
+      "confidence": 0.5,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "APPLE": {
+      "confidence": 0.4,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "TESLA": {
+      "confidence": 0.3,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "META": {
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     }
