@@ -130,7 +130,7 @@
     "timestamp": "2026-11-04T18:52:28.870327+00:00",
     "status": "open",
     "risk_distance": 14.74608503069203,
-    "mae_percent": 0.0,
+    "mae_percent": -0.29989091854321315,
     "mfe_percent": 0.0
   },
   "BITCOIN_LONG": {
@@ -194,7 +194,7 @@
     "timestamp": "2026-11-04T18:52:23.801064+00:00",
     "status": "open",
     "risk_distance": 352.51004464285506,
-    "mae_percent": 0.0,
+    "mae_percent": -0.1304546965489395,
     "mfe_percent": 0.0
   },
   "SOLANA_SHORT": {
@@ -599,10 +599,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-11-04T18:52:17.524406+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 12.332179478236412,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 1.7783490703652365,
+    "outcome": "win",
+    "closed_price": 4143.60009765625,
+    "closed_at": "2026-11-05T11:41:25.339735+00:00",
+    "r_multiple": 5.870831397819449
   },
   "META_LONG": {
     "name": "META",
