@@ -266,7 +266,7 @@
     "timestamp": "2026-11-05T18:58:40.731652+00:00",
     "status": "open",
     "risk_distance": 1.0585719517299168,
-    "mae_percent": 0.0,
+    "mae_percent": -0.7809936395039047,
     "mfe_percent": 0.0
   },
   "ETHEREUM_SHORT": {
@@ -331,7 +331,7 @@
     "status": "open",
     "risk_distance": 21.38575090680797,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.49294098739470954
   },
   "BITCOIN_SHORT": {
     "name": "BITCOIN",
@@ -395,7 +395,7 @@
     "status": "open",
     "risk_distance": 634.7494419642899,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.030844345990954244
   },
   "OIL WTI_LONG": {
     "name": "OIL WTI",
@@ -798,10 +798,14 @@
     "chart_ai_impact": "low",
     "chart_ai_reasoning": "",
     "timestamp": "2026-11-05T18:58:16.924608+00:00",
-    "status": "open",
+    "status": "closed",
     "risk_distance": 18.824942452566575,
     "mae_percent": 0.0,
-    "mfe_percent": 0.0
+    "mfe_percent": 0.7661250912499019,
+    "outcome": "win",
+    "closed_price": 4080.10009765625,
+    "closed_at": "2026-11-06T11:39:59.095832+00:00",
+    "r_multiple": 1.673311888170225
   },
   "MICROSOFT_LONG": {
     "name": "MICROSOFT",
