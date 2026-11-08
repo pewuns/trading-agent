@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Verbose run logs are retained as GitHub Actions artifacts, not in Git history.
+/shadow_scoring_log.jsonl
+/shadow_scoring_log_summary.jsonl
+/near_miss_log.jsonl
+/near_miss_log_summary.jsonl
+/shadow_near_miss_log.jsonl
+/shadow_near_miss_log_summary.jsonl
+/data_fetch_errors.jsonl
+/data_fetch_errors_summary.jsonl

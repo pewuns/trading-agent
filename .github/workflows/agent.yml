@@ -2,15 +2,9 @@ name: Trading Agent
 
 on:
   schedule:
-    # Co 15 min, godziny UTC 4-21. Celowo POSZERZONE względem docelowego
-    # okna 6:00-22:00 czasu Europe/Warsaw: Warszawa to UTC+1 (CET, zima) albo
-    # UTC+2 (CEST, lato), więc lokalne 6-22 to UTC 5-21 zimą albo UTC 4-20
-    # latem - unia obu przypadków to UTC 4-21, żeby nie trzeba było ręcznie
-    # poprawiać crona 2x/rok przy zmianie czasu. OSTATECZNĄ, precyzyjną
-    # decyzję "czy analizować rynki teraz" podejmuje i tak kod
-    # (is_within_trading_window w agent.py, przez pytz z pełną obsługą
-    # strefy) - ten cron to tylko szerokie, bezpieczne okno wyzwalaczy.
-    - cron: '*/15 4-21 * * 1-5'
+    # Uruchamiaj co 15 min przez całą dobę, także w weekendy, aby monitorować
+    # otwarte pozycje krypto poza standardowym oknem analizy rynków.
+    - cron: '*/15 * * * *'
   workflow_dispatch:
     inputs:
       agent_mode:
@@ -42,23 +36,44 @@ jobs:
         TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        CRYPTOCOMPARE_API_KEY: ${{ secrets.CRYPTOCOMPARE_API_KEY }}
         # Twelve Data (GŁÓWNE źródło cen dla 6 par forex - patrz FOREX_SYMBOLS
         # w agent.py). Bez tego sekretu forex automatycznie spada na Yahoo.
         TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
-        # Domyślnie 'shadow' przy uruchomieniu z harmonogramu (cron) - bezpieczny
-        # tryb testowy, który wysyła powiadomienia, ale NIE zmienia wag ML/progu/
-        # statystyk. Uruchomienie ręczne (workflow_dispatch) pozwala wybrać 'live'.
+        # Domyślnie 'shadow' przy uruchomieniu z harmonogramu (cron): wysyła
+        # powiadomienia i uczy osobne kopie wag/statystyk. Ręczne uruchomienie
+        # (workflow_dispatch) pozwala wybrać 'live'.
         AGENT_MODE: ${{ github.event.inputs.agent_mode || 'shadow' }}
         # XTB (opcjonalnie - tylko realny spread, NIE ceny/świece):
         XTB_LOGIN: ${{ secrets.XTB_LOGIN }}
         XTB_PASSWORD: ${{ secrets.XTB_PASSWORD }}
       run: python agent.py
 
+    - name: Archive run logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: agent-logs-${{ github.run_id }}
+        path: |
+          shadow_scoring_log.jsonl
+          shadow_scoring_log_summary.jsonl
+          near_miss_log.jsonl
+          near_miss_log_summary.jsonl
+          shadow_near_miss_log.jsonl
+          shadow_near_miss_log_summary.jsonl
+          data_fetch_errors.jsonl
+          data_fetch_errors_summary.jsonl
+        if-no-files-found: ignore
+        retention-days: 30
+
     - name: Commit changes
       run: |
-        git config --global user.name 'GitHub Actions Bot'
-        git config --global user.email 'actions@github.com'
+        git config user.name 'GitHub Actions Bot'
+        git config user.email 'actions@github.com'
         git add -A
-        git commit -m 'Auto-update data' || echo "No changes"
-        git push || echo "Push failed"
-
+        if git diff --cached --quiet; then
+          echo "No changes to commit."
+          exit 0
+        fi
+        git commit -m 'Auto-update data'
+        git push
