@@ -2,8 +2,8 @@
 Konfiguracja trybów pracy agenta, feature flags i progów kalibracji scoringu.
 
 Tryby:
-  - SHADOW:   analiza, logowanie, ZERO wpływu na Telegram/wagi ML/statystyki
-              (bezpieczne testowanie zmian na żywych danych)
+  - SHADOW:   analiza, powiadomienia i uczenie na odizolowanych kopiach
+              wag/statystyk (bez wpływu na stan LIVE)
   - BACKTEST: historyczne dane, symulacja (weryfikacja strategii, backtest_2.py)
   - LIVE:     produkcja - normalne powiadomienia, uczenie wag, adaptacja progu
 
@@ -81,9 +81,9 @@ FEATURES = {
         'send_notifications': True,          # wysyłaj powiadomienia (z prefixem 🔍) - żeby dało się ocenić jakość na żywo
         'log_shadow_trades': True,
         'log_near_misses': True,
-        'update_learned_weights': False,      # NIE zmieniaj wag ML w trybie shadow
-        'record_performance_stats': False,    # NIE zbieraj statystyk win/loss do Kelly
-        'update_adaptive_threshold': False,   # NIE adaptuj progu
+        'update_learned_weights': True,       # ucz wyłącznie shadowowe kopie wag
+        'record_performance_stats': True,    # zapisuj osobne statystyki shadow
+        'update_adaptive_threshold': True,   # adaptuj wyłącznie shadowowy próg
     },
     RunMode.LIVE: {
         'fetch_market_data': True,

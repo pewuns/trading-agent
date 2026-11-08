@@ -12,6 +12,10 @@ import re
 import xml.etree.ElementTree as ET
 import io
 import base64
+import tempfile
+import uuid
+from email.utils import parsedate_to_datetime
+import shutil
 
 from config import (
     AGENT_MODE, RunMode, is_feature_enabled, get_mode_prefix,
@@ -75,6 +79,7 @@ TWELVEDATA_API_KEY = os.environ.get('TWELVEDATA_API_KEY', '')
 
 # Pliki
 SIGNALS_FILE = 'signals_history.json'
+SIGNAL_ARCHIVE_FILE = 'signal_archive.jsonl'
 AI_MEMORY_FILE = 'ai_memory.json'
 TIMEFRAME_WEIGHTS_FILE = 'timeframe_weights.json'
 FEATURE_WEIGHTS_FILE = 'feature_weights.json'
@@ -82,15 +87,40 @@ FEATURE_STORE_FILE = 'feature_store.jsonl'
 ADAPTIVE_THRESHOLD_FILE = 'adaptive_thresholds.json'
 PERFORMANCE_STATS_FILE = 'performance_stats.json'
 CIRCUIT_BREAKER_FILE = 'circuit_breaker_state.json'
+SHADOW_TIMEFRAME_WEIGHTS_FILE = 'shadow_timeframe_weights.json'
+SHADOW_FEATURE_WEIGHTS_FILE = 'shadow_feature_weights.json'
+SHADOW_ADAPTIVE_THRESHOLD_FILE = 'shadow_adaptive_thresholds.json'
+SHADOW_PERFORMANCE_STATS_FILE = 'shadow_performance_stats.json'
+SHADOW_CIRCUIT_BREAKER_FILE = 'shadow_circuit_breaker_state.json'
+SHADOW_SIGNALS_FILE = 'shadow_signals_history.json'
+SHADOW_SIGNAL_ARCHIVE_FILE = 'shadow_signal_archive.jsonl'
+SHADOW_AI_MEMORY_FILE = 'shadow_ai_memory.json'
+SHADOW_FEATURE_STORE_FILE = 'shadow_feature_store.jsonl'
 SHADOW_LOG_FILE = 'shadow_scoring_log.jsonl'
+LOG_MAINTENANCE_STATE_FILE = 'log_maintenance_state.json'
+
+
+def _near_miss_files_for_mode():
+    if AGENT_MODE == RunMode.SHADOW:
+        return (
+            SHADOW_NEAR_MISS_LOG_FILE,
+            SHADOW_NEAR_MISS_PENDING_FILE,
+            SHADOW_DAILY_SCORES_CACHE_FILE,
+        )
+    return NEAR_MISS_LOG_FILE, NEAR_MISS_PENDING_FILE, DAILY_SCORES_CACHE_FILE
 
 # --- Nowe pliki: błędy pobierania danych, near-miss, dane makro ---
 DATA_FETCH_ERRORS_FILE = 'data_fetch_errors.jsonl'     # log błędów każdego źródła danych
 NEAR_MISS_LOG_FILE = 'near_miss_log.jsonl'             # log KAŻDEJ próby scoringu (append-only, do audytu)
 NEAR_MISS_PENDING_FILE = 'near_miss_pending.json'      # sygnały "co by było gdyby" czekające na ewaluację
+SHADOW_NEAR_MISS_LOG_FILE = 'shadow_near_miss_log.jsonl'
+SHADOW_NEAR_MISS_PENDING_FILE = 'shadow_near_miss_pending.json'
+NEAR_MISS_TTL_HOURS = 48
+MAX_NEAR_MISS_PENDING = 5000
 MACRO_DATA_FILE = 'macro_data_history.jsonl'           # WSZYSTKIE dane makro (append-only, do nauki)
 MACRO_STATE_FILE = 'macro_state.json'                  # ostatnie pobrania/analizy makro + cache sentymentu
 DAILY_SCORES_CACHE_FILE = 'daily_scores_cache.json'     # max confidence per rynek DZIŚ, do podsumowania Top 3
+SHADOW_DAILY_SCORES_CACHE_FILE = 'shadow_daily_scores_cache.json'
 CHART_AI_STATE_FILE = 'chart_ai_state.json'              # cache analiz wykresów Groq Vision per rynek + ostatnie uruchomienie
 
 TIMEZONE = pytz.timezone('Europe/Warsaw')
@@ -100,6 +130,11 @@ ACCOUNT_SIZE = float(os.environ.get('ACCOUNT_SIZE', 10000))
 RISK_PER_TRADE_PERCENT = float(os.environ.get('RISK_PER_TRADE_PERCENT', 1.0))
 MAX_PER_CLUSTER = int(os.environ.get('MAX_PER_CLUSTER', 2))
 SIGNAL_TIMEOUT_HOURS = float(os.environ.get('SIGNAL_TIMEOUT_HOURS', 48))
+SIGNAL_COOLDOWN_HOURS = float(os.environ.get('SIGNAL_COOLDOWN_HOURS', 2))
+MIN_TP_SPREAD_MULTIPLE = 3.0
+MIN_STOP_SPREAD_MULTIPLE = 4.0
+STOP_ATR_MULTIPLIER = 1.5
+TAKE_PROFIT_ATR_MULTIPLIER = 2.5
 
 # --- Uczenie się (punkt A) ---
 MIN_SAMPLES_FOR_LEARNED_MODEL = int(os.environ.get('MIN_SAMPLES_FOR_LEARNED_MODEL', 30))
@@ -386,7 +421,7 @@ def fetch_xtb_historical(symbol, period='H1', months_back=12):
         logger.error(f"Błąd sesji XTB przy pobieraniu historii: {e}")
     finally:
         client.logout()
-    return bars
+    return sorted(bars, key=lambda bar: bar['timestamp'])
 
 
 def fetch_xtb_spreads():
@@ -481,7 +516,7 @@ CORRELATION_CLUSTERS = {
 # z rzeczywistych świec 60m (patrz resample_ohlcv), a nie kopią '1h'.
 TIMEFRAMES = {
     '5m': {'interval': '5m', 'range': '1d', 'default_weight': 0.15},
-    '15m': {'interval': '15m', 'range': '1d', 'default_weight': 0.20},
+    '15m': {'interval': '15m', 'range': '5d', 'default_weight': 0.20},
     # NAPRAWIONE: '1h' i '4h' mają teraz TEN SAM zakres ('1mo') - dzięki temu
     # analyze_timeframes pobiera świece 60-minutowe RAZ i współdzieli je
     # między obiema pozycjami (4h nadal resampluje z tych samych danych), a
@@ -493,6 +528,7 @@ TIMEFRAMES = {
     '4h': {'interval': '60m', 'range': '1mo', 'default_weight': 0.15, 'resample_from_60m': 4},
     '1d': {'interval': '1d', 'range': '3mo', 'default_weight': 0.25},
 }
+DECISION_TIMEFRAMES = ('1h', '4h', '1d')
 
 # Punktacja scoringu - jawnie zdefiniowana, żeby total był policzalny
 # (patrz sekcja "GŁÓWNA ANALIZA RYNKU" - suma max punktów jednej strony = 10)
@@ -544,10 +580,29 @@ def http_get_with_retry(url, params=None, headers=None, timeout=10, retries=3, b
                 return resp, None
             last_detail = f"HTTP {resp.status_code}: {resp.text[:150]}"
             logger.warning(f"HTTP {resp.status_code} dla {url} (próba {attempt + 1}/{retries})")
+            retry_after = resp.headers.get('Retry-After') if resp.status_code == 429 else None
+            delay = backoff ** attempt
+            if retry_after:
+                try:
+                    delay = max(0.0, float(retry_after))
+                except ValueError:
+                    try:
+                        retry_at = parsedate_to_datetime(retry_after)
+                        delay = max(0.0, (retry_at - datetime.now(retry_at.tzinfo)).total_seconds())
+                    except (TypeError, ValueError, OverflowError):
+                        pass
+                if delay > 900.0:
+                    logger.warning(
+                        f"HTTP 429 dla {url}: Retry-After przekracza limit oczekiwania "
+                        f"({delay:.0f}s); pomijam kolejną próbę."
+                    )
+                    return None, last_detail
         except requests.RequestException as e:
             last_detail = f"{type(e).__name__}: {e}"
             logger.warning(f"Błąd sieci dla {url}: {e} (próba {attempt + 1}/{retries})")
-        time.sleep(backoff ** attempt)
+            delay = backoff ** attempt
+        if attempt + 1 < retries:
+            time.sleep(delay)
     if last_detail:
         logger.error(f"Nie udało się pobrać {url} po {retries} próbach: {last_detail}")
     return None, (last_detail or 'nieznany błąd')
@@ -572,8 +627,8 @@ def http_post_with_retry(url, json_payload=None, headers=None, timeout=25, retri
 
 def log_data_error(source, name, symbol, reason):
     """Zapisuje błąd pobierania danych do OSOBNEGO pliku (punkt: priorytet
-    źródeł danych). Każde nieudane pobranie z Investing.com / Trading Economics
-    / Yahoo trafia tutaj z nazwą źródła, rynkiem, symbolem i powodem - żeby
+    źródeł danych). Każde nieudane pobranie z CryptoCompare, Twelve Data lub
+    Yahoo trafia tutaj z nazwą źródła, rynkiem, symbolem i powodem - żeby
     dało się później ocenić, które źródło faktycznie zawodzi i jak często,
     zamiast zgadywać na podstawie samych logów tekstowych."""
     try:
@@ -588,6 +643,18 @@ def log_data_error(source, name, symbol, reason):
     except Exception as e:
         logger.error(f"Nie udało się zapisać do {DATA_FETCH_ERRORS_FILE}: {e}")
     logger.warning(f"[{source}] Błąd danych dla {name} ({symbol}): {reason}")
+
+
+_MISSING_API_KEYS_LOGGED = set()
+
+
+def _log_missing_api_key_once(source, name, symbol, key_name):
+    if key_name in _MISSING_API_KEYS_LOGGED:
+        return
+    logger.warning(f"Brak {key_name}; używam świeżego cache lub fallbacku.")
+    log_data_error(source, name, symbol, f'brak {key_name}')
+    _MISSING_API_KEYS_LOGGED.add(key_name)
+
 
 # ============================================
 # FILTRY BEZPIECZEŃSTWA
@@ -1077,17 +1144,23 @@ def build_feature_vector(ind, combined, news_analysis, divergences, macro_analys
     }
 
 
+def passes_spread_cost_filters(stop_distance, target_distance, spread_abs):
+    if spread_abs is None or spread_abs <= 0:
+        return False
+    return (
+        stop_distance >= MIN_STOP_SPREAD_MULTIPLE * spread_abs
+        and target_distance >= MIN_TP_SPREAD_MULTIPLE * spread_abs
+    )
+
+
 class AdaptiveThreshold:
     """
-    Próg pewności (domyślnie 0.7) kalibrowany OSOBNO dla każdego rynku na
-    podstawie historii jego sygnałów: dla każdego rynku szuka najniższego
-    progu, przy którym win-rate sygnałów >= tego progu utrzymuje się na
-    poziomie >= target_win_rate. Dopóki rynek ma mniej niż
-    MIN_SAMPLES_FOR_ADAPTIVE_THRESHOLD zamkniętych sygnałów, używany jest
-    bezpieczny domyślny próg 0.7.
+    Próg pewności kalibrowany osobno dla każdego rynku według expectancy
+    wyrażonego w R. Historyczne wpisy zawierające tylko win/loss nie mają
+    informacji o rzeczywistym R i nie są używane do kalibracji.
     """
     DEFAULT = CONFIDENCE_THRESHOLD  # z config.py - jedno miejsce do kalibracji (obniżone z 0.7)
-    TARGET_WIN_RATE = 0.55
+    TARGET_EXPECTANCY_R = 0.1
     HISTORY_WINDOW = 200
 
     def __init__(self, file_path=ADAPTIVE_THRESHOLD_FILE):
@@ -1098,7 +1171,15 @@ class AdaptiveThreshold:
         try:
             if os.path.exists(self.file_path):
                 with open(self.file_path, 'r', encoding='utf-8') as f:
-                    return json.load(f)
+                    data = json.load(f)
+                    for entry in data.values():
+                        entry['history'] = [
+                            [float(confidence), float(r_multiple)]
+                            for confidence, r_multiple in entry.get('history', [])
+                            if not isinstance(r_multiple, bool)
+                            and isinstance(r_multiple, (int, float))
+                        ]
+                    return data
         except Exception as e:
             logger.warning(f"Nie udało się wczytać {self.file_path}: {e}")
         return {}
@@ -1116,25 +1197,26 @@ class AdaptiveThreshold:
             return self.DEFAULT
         return entry.get('threshold', self.DEFAULT)
 
-    def record_outcome(self, market_name, confidence, outcome):
-        if outcome not in ('win', 'loss'):
+    def record_outcome(self, market_name, confidence, r_multiple):
+        if not isinstance(r_multiple, (int, float)) or isinstance(r_multiple, bool):
             return
         entry = self.data.setdefault(market_name, {'threshold': self.DEFAULT, 'history': []})
-        entry['history'].append([confidence, outcome == 'win'])
+        entry['history'].append([float(confidence), float(r_multiple)])
         entry['history'] = entry['history'][-self.HISTORY_WINDOW:]
         if len(entry['history']) >= MIN_SAMPLES_FOR_ADAPTIVE_THRESHOLD:
             entry['threshold'] = self._recalibrate(entry['history'])
         self.save()
 
     def _recalibrate(self, history):
-        candidates = sorted(set(round(c, 2) for c, _ in history))
+        valid = [(float(c), float(r)) for c, r in history if not isinstance(r, bool)]
+        candidates = sorted(set(round(c, 2) for c, _ in valid))
         best = self.DEFAULT
         for th in candidates:
-            subset = [w for c, w in history if c >= th]
+            subset = [r for c, r in valid if c >= th]
             if len(subset) < 5:
                 continue
-            win_rate = sum(subset) / len(subset)
-            if win_rate >= self.TARGET_WIN_RATE:
+            expectancy = sum(subset) / len(subset)
+            if expectancy >= self.TARGET_EXPECTANCY_R:
                 best = th
                 break
         return best
@@ -1165,16 +1247,17 @@ class PerformanceStats:
             logger.error(f"Nie udało się zapisać {self.file_path}: {e}")
 
     def record(self, outcome, r_multiple):
-        if outcome not in ('win', 'loss'):
+        if outcome not in ('win', 'loss', 'timeout'):
             return
         self.records.append({'outcome': outcome, 'r_multiple': r_multiple})
         self.save()
 
     def get_stats(self, min_samples=MIN_SAMPLES_FOR_KELLY):
-        if len(self.records) < min_samples:
+        settled = [r for r in self.records if r.get('outcome') in ('win', 'loss')]
+        if len(settled) < min_samples:
             return None
-        wins = [r['r_multiple'] for r in self.records if r['outcome'] == 'win']
-        losses = [abs(r['r_multiple']) for r in self.records if r['outcome'] == 'loss']
+        wins = [r['r_multiple'] for r in settled if r['outcome'] == 'win']
+        losses = [abs(r['r_multiple']) for r in settled if r['outcome'] == 'loss']
         if not wins or not losses:
             return None
         win_rate = len(wins) / (len(wins) + len(losses))
@@ -1239,9 +1322,47 @@ class CircuitBreaker:
         return False, None
 
 
+def _as_utc_datetime(value):
+    if isinstance(value, datetime):
+        parsed = value
+    elif isinstance(value, (int, float)):
+        return datetime.fromtimestamp(value, tz=pytz.utc)
+    else:
+        text = str(value).strip()
+        try:
+            return datetime.fromtimestamp(float(text), tz=pytz.utc)
+        except ValueError:
+            parsed = datetime.fromisoformat(text.replace('Z', '+00:00'))
+    if parsed.tzinfo is None:
+        return pytz.utc.localize(parsed)
+    return parsed.astimezone(pytz.utc)
+
+
+def _ohlcv_bars(data):
+    timestamps = data.get('timestamps') or []
+    fields = ('opens', 'highs', 'lows', 'prices')
+    if not timestamps or any(not data.get(field) for field in fields):
+        return []
+    count = min(len(timestamps), *(len(data[field]) for field in fields))
+    bars = []
+    for index in range(count):
+        try:
+            bars.append({
+                'timestamp': _as_utc_datetime(timestamps[index]),
+                'open': float(data['opens'][index]),
+                'high': float(data['highs'][index]),
+                'low': float(data['lows'][index]),
+                'close': float(data['prices'][index]),
+            })
+        except (TypeError, ValueError, OverflowError):
+            continue
+    return bars
+
+
 class SignalManager:
-    def __init__(self, file_path=SIGNALS_FILE):
+    def __init__(self, file_path=SIGNALS_FILE, archive_path=SIGNAL_ARCHIVE_FILE):
         self.file_path = file_path
+        self.archive_path = archive_path
         self.signals = self.load_signals()
 
     def load_signals(self):
@@ -1250,134 +1371,232 @@ class SignalManager:
                 with open(self.file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
                     if content.strip():
-                        return json.loads(content)
+                        stored = json.loads(content)
+                        signals = {}
+                        for old_key, old_signal in stored.items():
+                            if not isinstance(old_signal, dict):
+                                continue
+                            signal = dict(old_signal)
+                            signal_id = signal.get('signal_id') or uuid.uuid5(
+                                uuid.NAMESPACE_URL,
+                                f"{old_key}:{signal.get('timestamp', '')}",
+                            ).hex
+                            signal['signal_id'] = signal_id
+                            signal.setdefault('key', old_key)
+                            signals[signal_id] = signal
+                        return signals
         except Exception as e:
             logger.warning(f"Nie udało się wczytać {self.file_path}: {e}")
         return {}
 
     def save_signals(self):
+        temp_path = None
         try:
-            with open(self.file_path, 'w', encoding='utf-8') as f:
+            directory = os.path.dirname(os.path.abspath(self.file_path))
+            with tempfile.NamedTemporaryFile(
+                mode='w', encoding='utf-8', dir=directory,
+                prefix='.signals-', suffix='.tmp', delete=False,
+            ) as f:
+                temp_path = f.name
                 json.dump(self.signals, f, indent=2, ensure_ascii=False)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(temp_path, self.file_path)
+            return True
         except Exception as e:
             logger.error(f"Nie udało się zapisać {self.file_path}: {e}")
+            if temp_path and os.path.exists(temp_path):
+                os.unlink(temp_path)
+            return False
 
-    def should_send_signal(self, signal):
-        key = f"{signal['name']}_{signal['direction']}"
-        if key not in self.signals:
-            self._store(key, signal)
+    def _append_archive(self, event, signal):
+        record = {
+            'event': event,
+            'timestamp': datetime.now(pytz.utc).isoformat(),
+            'signal_id': signal['signal_id'],
+            'signal': signal,
+        }
+        try:
+            with open(self.archive_path, 'a', encoding='utf-8') as f:
+                f.write(json.dumps(record, ensure_ascii=False) + '\n')
+                f.flush()
+                os.fsync(f.fileno())
             return True
-        previous = self.signals[key]
-        price_diff = abs(signal['entry'] - previous['entry']) / previous['entry'] * 100
-        prev_time = datetime.fromisoformat(previous['timestamp'])
-        minutes_diff = (datetime.now(pytz.utc) - prev_time).total_seconds() / 60
-        if price_diff >= 0.3 or minutes_diff >= 30:
-            self._store(key, signal)
-            return True
-        return False
+        except Exception as e:
+            logger.error(f"Nie udało się zapisać do {self.archive_path}: {e}")
+            return False
 
-    def _store(self, key, signal):
+    def should_send_signal(self, signal, now=None):
+        """Only allow new signals when the market has no active or recent position."""
+        now = now or datetime.now(pytz.utc)
+        name = signal['name']
+        for previous in self.signals.values():
+            if previous.get('name') != name:
+                continue
+            if previous.get('status') == 'open':
+                return False
+            closed_at = previous.get('closed_at') or previous.get('timestamp')
+            if not closed_at:
+                continue
+            try:
+                age = (now - _as_utc_datetime(closed_at)).total_seconds() / 3600
+            except (TypeError, ValueError, OverflowError):
+                continue
+            if age < SIGNAL_COOLDOWN_HOURS:
+                return False
+        return True
+
+    def store_signal(self, signal):
         signal = dict(signal)
-        signal['timestamp'] = datetime.now(pytz.utc).isoformat()
+        timestamp = datetime.now(pytz.utc).isoformat()
+        signal_id = uuid.uuid4().hex
+        signal['signal_id'] = signal_id
+        signal['key'] = f"{signal['name']}_{signal['direction']}"
+        signal['timestamp'] = timestamp
+        signal['last_evaluated_at'] = timestamp
         signal['status'] = 'open'
         signal['risk_distance'] = abs(signal['entry'] - signal['stop_loss'])
         signal['mae_percent'] = 0.0  # najgorszy dotychczasowy ruch przeciwko pozycji (Maximum Adverse Excursion)
         signal['mfe_percent'] = 0.0  # najlepszy dotychczasowy ruch na korzyść (Maximum Favorable Excursion)
-        self.signals[key] = signal
-        self.save_signals()
-        append_feature_store(key, signal.get('features', {}), signal['name'],
-                              signal['direction'], signal['confidence'], signal['timestamp'])
-        # Log per tryb pracy (SHADOW -> shadow_trades.jsonl, LIVE -> live_trades.jsonl) -
-        # dokładnie w momencie, gdy sygnał oficjalnie wchodzi do śledzenia
-        # (SIGNALS_FILE), niezależnie od tego, czy zmieści się w limicie
-        # Top 10 wysyłanym na Telegram (patrz main()).
+        self.signals[signal_id] = signal
+        if not self.save_signals():
+            self.signals.pop(signal_id, None)
+            return False
+        if not self._append_archive('opened', signal):
+            self.signals.pop(signal_id, None)
+            self.save_signals()
+            return False
+        feature_store_file = (
+            SHADOW_FEATURE_STORE_FILE if AGENT_MODE == RunMode.SHADOW else FEATURE_STORE_FILE
+        )
+        append_feature_store(
+            signal['key'], signal.get('features', {}), signal['name'],
+            signal['direction'], signal['confidence'], signal['timestamp'],
+            file_path=feature_store_file,
+        )
+        # This is called only after a signal passed cluster/top-10 filters and
+        # Telegram confirmed delivery.
         log_signal_per_mode(signal)
+        return True
 
     def evaluate_open_signals(self, tf_weights, feature_weights=None, adaptive_threshold=None,
                                performance_stats=None, circuit_breaker=None,
-                               max_age_hours=SIGNAL_TIMEOUT_HOURS):
-        """Sprawdza otwarte sygnały: aktualizuje MAE/MFE, a gdy trafią TP/SL/timeout
-        - zamyka je i karmi wynikiem WSZYSTKIE komponenty uczące się:
-        TimeframeWeights, FeatureWeights, AdaptiveThreshold, PerformanceStats
-        i CircuitBreaker (żeby limit strat dziennych/tygodniowych był aktualny)."""
-        now = datetime.now(pytz.utc)
+                               max_age_hours=SIGNAL_TIMEOUT_HOURS, now=None):
+        """Evaluate every available candle since the prior check; stop wins ties."""
+        now = now or datetime.now(pytz.utc)
+        data_by_name = {}
         any_update = False
-        for key, sig in list(self.signals.items()):
+        for signal_id, sig in list(self.signals.items()):
             if sig.get('status') != 'open':
                 continue
             try:
-                sig_time = datetime.fromisoformat(sig['timestamp'])
-            except Exception:
+                signal_time = _as_utc_datetime(sig['timestamp'])
+            except (KeyError, TypeError, ValueError, OverflowError):
                 continue
-            age_hours = (now - sig_time).total_seconds() / 3600
-
-            market_info = MARKETS.get(sig.get('name'))
+            age_hours = (now - signal_time).total_seconds() / 3600
+            name = sig.get('name')
+            market_info = MARKETS.get(name)
             if not market_info:
                 continue
-            data, _src = get_price_data(sig.get('name'), market_info['symbol'], '15m', '1d')
-            if not data or not data['prices']:
+            if name not in data_by_name:
+                data_by_name[name] = get_price_data(name, market_info['symbol'], '15m', '5d')
+            data, _src = data_by_name[name]
+            if not data or not data.get('prices'):
                 continue
+
             current_price = data['prices'][-1]
             direction = sig['direction']
             entry = sig['entry']
-
-            # --- MAE/MFE: aktualizowane KAŻDY cykl, nie tylko przy zamknięciu ---
-            move_percent = ((current_price - entry) / entry * 100 if direction == 'LONG'
-                             else (entry - current_price) / entry * 100)
-            sig['mfe_percent'] = max(sig.get('mfe_percent', 0.0), move_percent)
-            sig['mae_percent'] = min(sig.get('mae_percent', 0.0), move_percent)
-            any_update = True
-
-            hit_tp = (direction == 'LONG' and current_price >= sig['take_profit']) or \
-                     (direction == 'SHORT' and current_price <= sig['take_profit'])
-            hit_sl = (direction == 'LONG' and current_price <= sig['stop_loss']) or \
-                     (direction == 'SHORT' and current_price >= sig['stop_loss'])
-
+            last_evaluated = _as_utc_datetime(
+                sig.get('last_evaluated_at') or sig['timestamp']
+            )
             outcome = None
-            if hit_tp:
-                outcome = 'win'
-            elif hit_sl:
-                outcome = 'loss'
-            elif age_hours >= max_age_hours:
-                outcome = 'timeout'
+            exit_price = None
+            exit_bar_timestamp = None
 
-            if outcome:
-                sig['status'] = 'closed'
-                sig['outcome'] = outcome
-                sig['closed_price'] = current_price
-                sig['closed_at'] = now.isoformat()
-
-                # R-multiple: ruch faktyczny / dystans do SL, ze znakiem zgodnym z kierunkiem
-                if sig.get('risk_distance'):
-                    raw_move = (current_price - entry) if direction == 'LONG' else (entry - current_price)
-                    sig['r_multiple'] = raw_move / sig['risk_distance']
+            for bar in _ohlcv_bars(data):
+                bar_close_time = bar['timestamp'] + timedelta(minutes=15)
+                if bar_close_time <= last_evaluated or bar_close_time > now:
+                    continue
+                if direction == 'LONG':
+                    adverse_move = (bar['low'] - entry) / entry * 100
+                    favorable_move = (bar['high'] - entry) / entry * 100
+                    hit_sl = bar['low'] <= sig['stop_loss']
+                    hit_tp = bar['high'] >= sig['take_profit']
                 else:
-                    sig['r_multiple'] = 0.0
+                    adverse_move = (entry - bar['high']) / entry * 100
+                    favorable_move = (entry - bar['low']) / entry * 100
+                    hit_sl = bar['high'] >= sig['stop_loss']
+                    hit_tp = bar['low'] <= sig['take_profit']
 
-                if should_update_weights():
-                    tf_weights.update_from_outcome(sig, outcome)
+                sig['mae_percent'] = min(sig.get('mae_percent', 0.0), adverse_move)
+                sig['mfe_percent'] = max(sig.get('mfe_percent', 0.0), favorable_move)
+                sig['last_evaluated_at'] = bar_close_time.isoformat()
+                last_evaluated = bar_close_time
+                any_update = True
 
-                if outcome in ('win', 'loss') and feature_weights is not None and sig.get('features') \
-                        and should_update_weights():
-                    went_up = (direction == 'LONG' and outcome == 'win') or \
-                              (direction == 'SHORT' and outcome == 'loss')
-                    feature_weights.update(sig['features'], went_up)
+                if hit_sl or hit_tp:
+                    outcome = 'loss' if hit_sl else 'win'
+                    exit_price = sig['stop_loss'] if hit_sl else sig['take_profit']
+                    exit_bar_timestamp = bar['timestamp'].isoformat()
+                    break
 
-                if adaptive_threshold is not None and should_update_threshold():
-                    adaptive_threshold.record_outcome(sig['name'], sig.get('confidence', 0), outcome)
+            if outcome is None and age_hours >= max_age_hours:
+                move_percent = ((current_price - entry) / entry * 100 if direction == 'LONG'
+                                else (entry - current_price) / entry * 100)
+                sig['mae_percent'] = min(sig.get('mae_percent', 0.0), move_percent)
+                sig['mfe_percent'] = max(sig.get('mfe_percent', 0.0), move_percent)
+                outcome = 'timeout'
+                exit_price = current_price
+                any_update = True
 
-                if outcome in ('win', 'loss') and performance_stats is not None and should_record_stats():
-                    performance_stats.record(outcome, sig['r_multiple'])
+            if outcome is None:
+                continue
 
-                if outcome in ('win', 'loss') and circuit_breaker is not None and should_record_stats():
-                    circuit_breaker.record_trade(sig['r_multiple'])
+            risk_distance = sig.get('risk_distance') or abs(entry - sig['stop_loss'])
+            raw_move = (exit_price - entry) if direction == 'LONG' else (entry - exit_price)
+            sig['status'] = 'closed'
+            sig['outcome'] = outcome
+            sig['closed_price'] = exit_price
+            sig['closed_at'] = now.isoformat()
+            if exit_bar_timestamp:
+                sig['exit_bar_timestamp'] = exit_bar_timestamp
+            sig['gross_r_multiple'] = raw_move / risk_distance if risk_distance else 0.0
+            spread_cost_r = (
+                max(0.0, float(sig.get('spread_abs_estimate', 0.0) or 0.0)) / risk_distance
+                if risk_distance else 0.0
+            )
+            sig['spread_cost_r'] = spread_cost_r
+            sig['r_multiple'] = sig['gross_r_multiple'] - spread_cost_r
 
-                log_trade_outcome(key, outcome, sig.get('r_multiple', 0.0))
+            if should_update_weights():
+                tf_weights.update_from_outcome(sig, outcome)
 
-                logger.info(
-                    f"Zamknięto sygnał {sig['name']} {direction} - {outcome} "
-                    f"(R={sig.get('r_multiple', 0):.2f}, MAE={sig['mae_percent']:.2f}%, MFE={sig['mfe_percent']:.2f}%)"
+            if outcome in ('win', 'loss') and feature_weights is not None and sig.get('features') \
+                    and should_update_weights():
+                went_up = (direction == 'LONG' and outcome == 'win') or \
+                          (direction == 'SHORT' and outcome == 'loss')
+                feature_weights.update(sig['features'], went_up)
+
+            if adaptive_threshold is not None and should_update_threshold():
+                adaptive_threshold.record_outcome(
+                    name, sig.get('confidence', 0), sig['r_multiple']
                 )
+
+            if outcome in ('win', 'loss', 'timeout') and performance_stats is not None \
+                    and should_record_stats():
+                performance_stats.record(outcome, sig['r_multiple'])
+
+            if outcome in ('win', 'loss') and circuit_breaker is not None and should_record_stats():
+                circuit_breaker.record_trade(sig['r_multiple'])
+
+            self._append_archive('closed', sig)
+            log_trade_outcome(signal_id, outcome, sig.get('r_multiple', 0.0))
+            logger.info(
+                f"Zamknięto sygnał {name} {direction} - {outcome} "
+                f"(R={sig.get('r_multiple', 0):.2f}, MAE={sig['mae_percent']:.2f}%, "
+                f"MFE={sig['mfe_percent']:.2f}%)"
+            )
 
         if any_update:
             self.save_signals()
@@ -1386,13 +1605,14 @@ class SignalManager:
 # FUNKCJE POMOCNICZE
 # ============================================
 
-def append_feature_store(signal_key, features, name, direction, confidence, timestamp):
+def append_feature_store(signal_key, features, name, direction, confidence, timestamp,
+                         file_path=FEATURE_STORE_FILE):
     """Zapisuje pełny wektor cech każdego wysłanego sygnału do osobnego pliku
     JSONL (punkt C - feature store). Nie jest to potrzebne do bieżącego
     działania bota - służy do OFFLINE retreningu/analizy (np. wytrenowania
     pełnoprawnego modelu ML na historii, zamiast prostej regresji online)."""
     try:
-        with open(FEATURE_STORE_FILE, 'a', encoding='utf-8') as f:
+        with open(file_path, 'a', encoding='utf-8') as f:
             f.write(json.dumps({
                 'key': signal_key,
                 'name': name,
@@ -1402,7 +1622,7 @@ def append_feature_store(signal_key, features, name, direction, confidence, time
                 'timestamp': timestamp,
             }, ensure_ascii=False) + "\n")
     except Exception as e:
-        logger.error(f"Nie udało się zapisać do {FEATURE_STORE_FILE}: {e}")
+        logger.error(f"Nie udało się zapisać do {file_path}: {e}")
 
 
 def compute_shadow_score(ind, combined):
@@ -1449,7 +1669,7 @@ def log_shadow_comparison(name, production_confidence, production_direction, sha
 def compute_signal_engine_shadow(main_data):
     """Model-cień (opcja C z rozmowy): niezależny sygnał z proponowanego
     Signal Engine (Kalman-filtered Supertrend + Smart Trail + RSI/Volume -
-    patrz signal_engine.py) liczony na TYCH SAMYCH świecach 15m/1d co
+    patrz signal_engine.py) liczony na tych samych świecach 1h co
     produkcyjny scoring, żeby porównanie było miarodajne. Logowany obok
     compute_shadow_score w log_shadow_comparison - NIE wpływa na to, co
     faktycznie jest wysyłane na Telegram.
@@ -1486,7 +1706,7 @@ def compute_signal_engine_shadow(main_data):
 
 def log_near_miss(name, stage, reason, long_conf=None, short_conf=None, direction=None,
                    confidence=None, threshold=None, entry=None, atr=None, features=None,
-                   price_source=None, regime=None):
+                   price_source=None, regime=None, tracker=None):
     """Loguje KAŻDĄ próbę scoringu dla danego rynku w tym cyklu - także te
     odrzucone wcześniej przez filtry (spread/zmienność/płynność/sesja/brak
     danych), nie tylko finalny wynik scoringu. To rozszerza dawny
@@ -1511,14 +1731,15 @@ def log_near_miss(name, stage, reason, long_conf=None, short_conf=None, directio
         'regime': regime,
         'price_source': price_source,
     }
+    near_miss_log_file, _, _ = _near_miss_files_for_mode()
     try:
-        with open(NEAR_MISS_LOG_FILE, 'a', encoding='utf-8') as f:
+        with open(near_miss_log_file, 'a', encoding='utf-8') as f:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
     except Exception as e:
-        logger.error(f"Nie udało się zapisać do {NEAR_MISS_LOG_FILE}: {e}")
+        logger.error(f"Nie udało się zapisać do {near_miss_log_file}: {e}")
 
     if stage == 'scored' and reason == 'ponizej progu' and entry and atr and features is not None:
-        NearMissTracker().add(name, direction, confidence, entry, atr, features)
+        (tracker or NearMissTracker()).add(name, direction, confidence, entry, atr, features)
 
     if stage == 'scored' and confidence is not None:
         update_daily_scores_cache(name, confidence, direction, threshold)
@@ -1529,10 +1750,11 @@ def update_daily_scores_cache(market_name, conf, direction, threshold=None):
     znacznie taniej niż skanowanie całego near_miss_log.jsonl przy każdym
     dziennym podsumowaniu (patrz send_daily_near_threshold_summary)."""
     today = datetime.now(TIMEZONE).strftime('%Y-%m-%d')
+    _, _, cache_file = _near_miss_files_for_mode()
     cache = {'date': today, 'scores': {}}
-    if os.path.exists(DAILY_SCORES_CACHE_FILE):
+    if os.path.exists(cache_file):
         try:
-            with open(DAILY_SCORES_CACHE_FILE, 'r', encoding='utf-8') as f:
+            with open(cache_file, 'r', encoding='utf-8') as f:
                 d = json.load(f)
                 if d.get('date') == today:
                     cache = d
@@ -1543,18 +1765,20 @@ def update_daily_scores_cache(market_name, conf, direction, threshold=None):
         cache['scores'][market_name] = {'confidence': conf, 'direction': direction or 'NONE',
                                          'threshold': threshold}
     try:
-        with open(DAILY_SCORES_CACHE_FILE, 'w', encoding='utf-8') as f:
+        with open(cache_file, 'w', encoding='utf-8') as f:
             json.dump(cache, f, indent=2, ensure_ascii=False)
     except Exception as e:
-        logger.error(f"Nie udało się zapisać {DAILY_SCORES_CACHE_FILE}: {e}")
+        logger.error(f"Nie udało się zapisać {cache_file}: {e}")
 
 
 class NearMissTracker:
     """Przechowuje sygnały odrzucone przez próg pewności ('near-miss'), żeby
     po NEAR_MISS_MIN_AGE_HOURS sprawdzić, co faktycznie zrobiła cena - i
     dokarmić FeatureWeights tym wynikiem z obniżoną wagą
-    (NEAR_MISS_SAMPLE_WEIGHT). Osobny, mutowalny plik (JSON) - w
-    odróżnieniu od NEAR_MISS_LOG_FILE, który jest tylko append-only audytem.
+    (NEAR_MISS_SAMPLE_WEIGHT). Osobny, mutowalny plik (JSON), czyszczony po
+    48 godzinach i ograniczony do
+    MAX_NEAR_MISS_PENDING rekordów. Zmiany są zapisywane wsadowo po cyklu.
+    NEAR_MISS_LOG_FILE pozostaje append-only audytem.
 
     UWAGA - ograniczenie: ewaluacja sprawdza TYLKO cenę w momencie
     uruchomienia (jak evaluate_open_signals), a nie pełną ścieżkę świec
@@ -1563,25 +1787,67 @@ class NearMissTracker:
     dla sygnału treningowego o i tak obniżonej wadze, nie dla realnych
     transakcji."""
 
-    def __init__(self, file_path=NEAR_MISS_PENDING_FILE):
+    def __init__(self, file_path=None):
+        if file_path is None:
+            _, file_path, _ = _near_miss_files_for_mode()
         self.file_path = file_path
         self.data = self.load()
+        self.dirty = False
+        self.cleanup()
 
     def load(self):
         try:
             if os.path.exists(self.file_path):
                 with open(self.file_path, 'r', encoding='utf-8') as f:
-                    return json.load(f)
+                    data = json.load(f)
+                    if isinstance(data, dict):
+                        return data
+                    logger.warning(f"Nieprawidłowy format danych w {self.file_path}; oczekiwano obiektu JSON.")
         except Exception as e:
             logger.warning(f"Nie udało się wczytać {self.file_path}: {e}")
         return {}
 
     def save(self):
+        if not self.dirty:
+            return True
+        temp_path = None
         try:
-            with open(self.file_path, 'w', encoding='utf-8') as f:
-                json.dump(self.data, f, indent=2, ensure_ascii=False)
+            directory = os.path.dirname(os.path.abspath(self.file_path))
+            with tempfile.NamedTemporaryFile(
+                mode='w', encoding='utf-8', dir=directory,
+                prefix='.near-miss-', suffix='.tmp', delete=False,
+            ) as f:
+                temp_path = f.name
+                json.dump(self.data, f, ensure_ascii=False, separators=(',', ':'))
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(temp_path, self.file_path)
+            self.dirty = False
+            return True
         except Exception as e:
             logger.error(f"Nie udało się zapisać {self.file_path}: {e}")
+            if temp_path and os.path.exists(temp_path):
+                os.unlink(temp_path)
+            return False
+
+    def cleanup(self, now=None):
+        now = now or datetime.now(pytz.utc)
+        kept = {}
+        for key, item in self.data.items():
+            try:
+                age = (now - _as_utc_datetime(item['created_at'])).total_seconds() / 3600
+            except (KeyError, TypeError, ValueError, OverflowError):
+                continue
+            if 0 <= age < NEAR_MISS_TTL_HOURS:
+                kept[key] = item
+        if len(kept) > MAX_NEAR_MISS_PENDING:
+            kept = dict(sorted(
+                kept.items(),
+                key=lambda pair: _as_utc_datetime(pair[1]['created_at']),
+            )[-MAX_NEAR_MISS_PENDING:])
+        if kept != self.data:
+            self.data = kept
+            self.dirty = True
 
     def add(self, name, direction, confidence, entry, atr, features):
         key = f"{name}_{datetime.now(pytz.utc).isoformat()}"
@@ -1594,21 +1860,23 @@ class NearMissTracker:
             'features': features,
             'created_at': datetime.now(pytz.utc).isoformat(),
         }
-        self.save()
+        self.dirty = True
+        self.cleanup()
 
-    def evaluate(self, feature_weights):
+    def evaluate(self, feature_weights, now=None):
         """Sprawdza dojrzałe próbki (wiek >= NEAR_MISS_MIN_AGE_HOURS), ustala
         hipotetyczny wynik (TP/SL na bazie NEAR_MISS_ATR_*_MULT) i dokarmia
         FeatureWeights z wagą NEAR_MISS_SAMPLE_WEIGHT. Próbki starsze niż
         NEAR_MISS_MAX_AGE_HOURS bez rozstrzygnięcia są porzucane (timeout,
         bez wpływu na naukę - zbyt niejednoznaczne)."""
-        now = datetime.now(pytz.utc)
+        now = now or datetime.now(pytz.utc)
         resolved_keys = []
         n_evaluated = 0
+        data_by_name = {}
         for key, item in list(self.data.items()):
             try:
-                created_at = datetime.fromisoformat(item['created_at'])
-            except Exception:
+                created_at = _as_utc_datetime(item['created_at'])
+            except (KeyError, TypeError, ValueError, OverflowError):
                 resolved_keys.append(key)
                 continue
             age_hours = (now - created_at).total_seconds() / 3600
@@ -1619,7 +1887,12 @@ class NearMissTracker:
             if not market_info:
                 resolved_keys.append(key)
                 continue
-            data, _src = get_price_data(item['name'], market_info['symbol'], '15m', '1d')
+            name = item['name']
+            if name not in data_by_name:
+                data_by_name[name] = get_price_data(
+                    name, market_info['symbol'], '15m', '5d'
+                )[0]
+            data = data_by_name[name]
             if not data or not data['prices']:
                 if age_hours >= NEAR_MISS_MAX_AGE_HOURS:
                     resolved_keys.append(key)
@@ -1650,8 +1923,9 @@ class NearMissTracker:
                           (direction == 'SHORT' and outcome == 'loss')
                 feature_weights.update(item['features'], went_up, weight=NEAR_MISS_SAMPLE_WEIGHT)
                 n_evaluated += 1
+                near_miss_log_file, _, _ = _near_miss_files_for_mode()
                 try:
-                    with open(NEAR_MISS_LOG_FILE, 'a', encoding='utf-8') as f:
+                    with open(near_miss_log_file, 'a', encoding='utf-8') as f:
                         f.write(json.dumps({
                             'timestamp': now.isoformat(), 'name': item['name'], 'stage': 'evaluated',
                             'reason': outcome, 'direction': direction, 'confidence': item['confidence'],
@@ -1664,14 +1938,15 @@ class NearMissTracker:
 
         for key in resolved_keys:
             self.data.pop(key, None)
-        if resolved_keys or n_evaluated:
-            self.save()
+        if resolved_keys:
+            self.dirty = True
+        self.cleanup(now)
         if n_evaluated:
             logger.info(f"Near-miss: doewaluowano {n_evaluated} próbek do FeatureWeights (waga {NEAR_MISS_SAMPLE_WEIGHT}).")
 
 
-def evaluate_near_misses(feature_weights):
-    NearMissTracker().evaluate(feature_weights)
+def evaluate_near_misses(feature_weights, tracker=None):
+    (tracker or NearMissTracker()).evaluate(feature_weights)
 
 
 def build_daily_near_miss_summary():
@@ -1680,13 +1955,14 @@ def build_daily_near_miss_summary():
     update_daily_scores_cache) zamiast skanowania całego near_miss_log.jsonl
     przy każdym podsumowaniu."""
     today = datetime.now(TIMEZONE).strftime('%Y-%m-%d')
-    if not os.path.exists(DAILY_SCORES_CACHE_FILE):
+    _, _, cache_file = _near_miss_files_for_mode()
+    if not os.path.exists(cache_file):
         return []
     try:
-        with open(DAILY_SCORES_CACHE_FILE, 'r', encoding='utf-8') as f:
+        with open(cache_file, 'r', encoding='utf-8') as f:
             cache = json.load(f)
     except Exception as e:
-        logger.warning(f"Nie udało się wczytać {DAILY_SCORES_CACHE_FILE}: {e}")
+        logger.warning(f"Nie udało się wczytać {cache_file}: {e}")
         return []
     if cache.get('date') != today:
         return []
@@ -1697,75 +1973,199 @@ def build_daily_near_miss_summary():
     return ranked[:3]
 
 
-def rotate_jsonl_log(file_path, days_to_keep=30):
-    """Punkt 4: near_miss_log.jsonl i data_fetch_errors.jsonl rosną bez końca
-    i są commitowane do repo co 10 minut - po kilku miesiącach mogłoby to
-    realnie spowolnić `git add -A && git commit` w workflow. Trzyma pełne
-    wpisy z ostatnich `days_to_keep` dni, a starsze zwija do JEDNEJ linii
-    dziennego podsumowania (liczba wpisów + rozbicie wg reason/source/stage)
-    w <file_path bez '.jsonl'>_summary.jsonl - podobnie jak PerformanceStats/
-    backtest_results.json już trzymają tylko ostatnie N wpisów zamiast
-    wszystkiego. Wywoływane raz dziennie (patrz is_evening_summary_time),
-    nie przy każdym cyklu."""
+def _rotation_breakdown_key(file_path, record):
+    basename = os.path.basename(file_path)
+    if 'data_fetch_errors' in basename:
+        source = record.get('source') or '?'
+        status = record.get('status_code')
+        detail = str(record.get('reason') or record.get('error') or '')
+        status_match = re.search(r'\bHTTP\s+(\d{3})\b', detail)
+        if status or status_match:
+            category = f"HTTP {status or status_match.group(1)}"
+        elif 'brak ' in detail.lower():
+            category = 'missing_key'
+        else:
+            error_type = re.match(r'([A-Za-z][A-Za-z0-9_]*(?:Error|Exception|Timeout))\b', detail)
+            category = error_type.group(1) if error_type else 'other'
+        return f"{source}:{category}"
+    if 'shadow_scoring' in basename:
+        production = record.get('production_direction') or 'NONE'
+        shadow = record.get('signal_engine_direction') or 'NONE'
+        return f"production={production},signal_engine={shadow}"
+    parts = (
+        record.get('stage') or '?',
+        record.get('reason') or '?',
+        record.get('name') or '?',
+    )
+    return ':'.join(str(part) for part in parts)
+
+
+def _write_rotation_summaries(summary_path, new_counts, max_days=365):
+    cutoff_date = (datetime.now(pytz.utc) - timedelta(days=max_days)).date()
+    totals = {}
+    breakdowns = {}
+    invalid_lines = []
+    if not new_counts and not os.path.exists(summary_path):
+        return True
+    if os.path.exists(summary_path):
+        try:
+            with open(summary_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    try:
+                        record = json.loads(line)
+                        date = datetime.strptime(record['date'], '%Y-%m-%d').date()
+                        if date < cutoff_date:
+                            continue
+                        key = date.isoformat()
+                        totals[key] = totals.get(key, 0) + int(record.get('total', 0))
+                        day_breakdown = breakdowns.setdefault(key, {})
+                        for category, count in record.get('breakdown', {}).items():
+                            day_breakdown[category] = day_breakdown.get(category, 0) + int(count)
+                    except (json.JSONDecodeError, KeyError, TypeError, ValueError, AttributeError):
+                        logger.warning(f"Pominięto nieprawidłowy wpis podsumowania w {summary_path}")
+                        invalid_lines.append(line if line.endswith('\n') else line + '\n')
+        except OSError as e:
+            logger.error(f"Nie udało się odczytać podsumowania {summary_path}: {e}")
+            return False
+
+    for day, categories in new_counts.items():
+        if datetime.strptime(day, '%Y-%m-%d').date() < cutoff_date:
+            continue
+        totals[day] = sum(categories.values())
+        breakdowns[day] = dict(categories)
+
+    temp_path = None
+    try:
+        directory = os.path.dirname(os.path.abspath(summary_path))
+        with tempfile.NamedTemporaryFile(
+            mode='w', encoding='utf-8', dir=directory,
+            prefix='.log-summary-', suffix='.tmp', delete=False,
+        ) as f:
+            temp_path = f.name
+            for day in sorted(totals):
+                f.write(json.dumps({
+                    'date': day,
+                    'total': totals[day],
+                    'breakdown': breakdowns.get(day, {}),
+                }, ensure_ascii=False, separators=(',', ':')) + '\n')
+            f.writelines(invalid_lines)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(temp_path, summary_path)
+        return True
+    except OSError as e:
+        logger.error(f"Nie udało się zapisać podsumowania rotacji {summary_path}: {e}")
+        if temp_path and os.path.exists(temp_path):
+            os.unlink(temp_path)
+        return False
+
+
+def rotate_jsonl_log(file_path, days_to_keep=30, max_summary_days=365):
+    """Keep recent JSONL records; aggregate older records by day and category."""
+    summary_path = file_path[:-len('.jsonl')] + '_summary.jsonl' if file_path.endswith('.jsonl') \
+        else file_path + '.summary.jsonl'
     if not os.path.exists(file_path):
-        return
+        return _write_rotation_summaries(summary_path, {}, max_summary_days)
+
     cutoff = datetime.now(pytz.utc) - timedelta(days=days_to_keep)
-    kept = []
+    kept_lines = []
     old_by_day = {}
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                line = line.strip()
+            for raw_line in f:
+                line = raw_line.strip()
                 if not line:
                     continue
                 try:
-                    rec = json.loads(line)
+                    record = json.loads(line)
                 except json.JSONDecodeError:
+                    kept_lines.append(raw_line if raw_line.endswith('\n') else raw_line + '\n')
                     continue
-                ts = rec.get('timestamp')
+                timestamp = record.get('timestamp') if isinstance(record, dict) else None
                 try:
-                    dt = datetime.fromisoformat(ts)
-                except (TypeError, ValueError):
-                    kept.append(rec)  # brak/zły timestamp - nie wywalaj po cichu, zostaw
+                    record_time = datetime.fromisoformat(timestamp)
+                    if record_time.tzinfo is None:
+                        record_time = pytz.utc.localize(record_time)
+                    else:
+                        record_time = record_time.astimezone(pytz.utc)
+                except (TypeError, ValueError, OverflowError):
+                    kept_lines.append(raw_line if raw_line.endswith('\n') else raw_line + '\n')
                     continue
-                if dt >= cutoff:
-                    kept.append(rec)
+                if record_time >= cutoff:
+                    kept_lines.append(raw_line if raw_line.endswith('\n') else raw_line + '\n')
                 else:
-                    day = dt.strftime('%Y-%m-%d')
-                    old_by_day.setdefault(day, []).append(rec)
-    except Exception as e:
+                    day = record_time.date().isoformat()
+                    categories = old_by_day.setdefault(day, {})
+                    category = _rotation_breakdown_key(file_path, record)
+                    categories[category] = categories.get(category, 0) + 1
+    except OSError as e:
         logger.error(f"Nie udało się przeczytać {file_path} do rotacji: {e}")
+        return False
+
+    if old_by_day and not _write_rotation_summaries(summary_path, old_by_day, max_summary_days):
+        return False
+
+    if old_by_day:
+        temp_path = None
+        try:
+            directory = os.path.dirname(os.path.abspath(file_path))
+            with tempfile.NamedTemporaryFile(
+                mode='w', encoding='utf-8', dir=directory,
+                prefix='.log-rotation-', suffix='.tmp', delete=False,
+            ) as f:
+                temp_path = f.name
+                f.writelines(kept_lines)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(temp_path, file_path)
+        except OSError as e:
+            logger.error(f"Nie udało się nadpisać {file_path} po rotacji: {e}")
+            if temp_path and os.path.exists(temp_path):
+                os.unlink(temp_path)
+            return False
+        collapsed = sum(sum(categories.values()) for categories in old_by_day.values())
+        logger.info(f"Rotacja {file_path}: zachowano {len(kept_lines)} wpisów, "
+                    f"zwinięto {collapsed} starszych do {summary_path}.")
+    return True
+
+
+def maintain_runtime_logs():
+    """Run log retention once daily, independent of market hours or weekends."""
+    today = datetime.now(pytz.utc).date().isoformat()
+    try:
+        with open(LOG_MAINTENANCE_STATE_FILE, 'r', encoding='utf-8') as f:
+            if json.load(f).get('last_maintenance_date') == today:
+                return
+    except FileNotFoundError:
+        pass
+    except (OSError, json.JSONDecodeError, AttributeError) as e:
+        logger.warning(f"Nie udało się odczytać {LOG_MAINTENANCE_STATE_FILE}: {e}")
+
+    log_files = (
+        NEAR_MISS_LOG_FILE,
+        SHADOW_NEAR_MISS_LOG_FILE,
+        DATA_FETCH_ERRORS_FILE,
+        SHADOW_LOG_FILE,
+    )
+    if not all(rotate_jsonl_log(path, days_to_keep=30, max_summary_days=365)
+               for path in log_files):
         return
 
-    if not old_by_day:
-        return  # nic starszego niż days_to_keep - nie ma czego zwijać
-
-    summary_path = file_path[:-len('.jsonl')] + '_summary.jsonl' if file_path.endswith('.jsonl') \
-        else file_path + '.summary.jsonl'
+    temp_path = None
     try:
-        with open(summary_path, 'a', encoding='utf-8') as f:
-            for day, recs in sorted(old_by_day.items()):
-                breakdown = {}
-                for r in recs:
-                    key = r.get('reason') or r.get('source') or r.get('stage') or '?'
-                    breakdown[key] = breakdown.get(key, 0) + 1
-                f.write(json.dumps({'date': day, 'total': len(recs), 'breakdown': breakdown},
-                                    ensure_ascii=False) + '\n')
-    except Exception as e:
-        logger.error(f"Nie udało się zapisać podsumowania rotacji do {summary_path}: {e}")
-        return  # nie ucinaj oryginału, jeśli podsumowanie się nie zapisało - wolimy duplikat niż utratę danych
-
-    n_collapsed = sum(len(v) for v in old_by_day.values())
-    try:
-        with open(file_path, 'w', encoding='utf-8') as f:
-            for rec in kept:
-                f.write(json.dumps(rec, ensure_ascii=False) + '\n')
-    except Exception as e:
-        logger.error(f"Nie udało się nadpisać {file_path} po rotacji: {e}")
-        return
-
-    logger.info(f"Rotacja {file_path}: zachowano {len(kept)} wpisów z ostatnich {days_to_keep} dni, "
-                f"zwinięto {n_collapsed} starszych do {summary_path}.")
+        with tempfile.NamedTemporaryFile(
+            mode='w', encoding='utf-8', dir=os.path.dirname(os.path.abspath(LOG_MAINTENANCE_STATE_FILE)),
+            prefix='.log-maintenance-', suffix='.tmp', delete=False,
+        ) as f:
+            temp_path = f.name
+            json.dump({'last_maintenance_date': today}, f, separators=(',', ':'))
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(temp_path, LOG_MAINTENANCE_STATE_FILE)
+    except OSError as e:
+        logger.error(f"Nie udało się zapisać {LOG_MAINTENANCE_STATE_FILE}: {e}")
+        if temp_path and os.path.exists(temp_path):
+            os.unlink(temp_path)
 
 
 def send_daily_near_miss_report():
@@ -1894,6 +2294,54 @@ def send_telegram(message, add_disclaimer=True):
 # Actions, nie do naprawienia bez zmiany regionu hostowania.
 CRYPTOCOMPARE_BASE_URL = "https://min-api.cryptocompare.com/data/v2"
 CRYPTOCOMPARE_API_KEY = os.environ.get('CRYPTOCOMPARE_API_KEY', '')  # wymagane od pewnego czasu nawet do danych historycznych
+CRYPTOCOMPARE_CACHE_FILE = 'cryptocompare_cache.json'
+CRYPTOCOMPARE_CACHE_MAX_AGE_HOURS = {
+    '5m': 0.25, '15m': 0.5, '60m': 2.0, '1d': 48.0,
+}
+
+
+def _load_cryptocompare_cache():
+    try:
+        with open(CRYPTOCOMPARE_CACHE_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+    except (OSError, ValueError) as e:
+        logger.warning(f"Nie udało się wczytać {CRYPTOCOMPARE_CACHE_FILE}: {e}")
+        return {}
+
+
+def _save_cryptocompare_cache(cache):
+    temp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode='w', encoding='utf-8', dir=os.path.dirname(os.path.abspath(CRYPTOCOMPARE_CACHE_FILE)),
+            prefix='.cryptocompare-', suffix='.tmp', delete=False,
+        ) as f:
+            temp_path = f.name
+            json.dump(cache, f, ensure_ascii=False)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(temp_path, CRYPTOCOMPARE_CACHE_FILE)
+    except OSError as e:
+        logger.error(f"Nie udało się zapisać {CRYPTOCOMPARE_CACHE_FILE}: {e}")
+        if temp_path and os.path.exists(temp_path):
+            os.unlink(temp_path)
+
+
+def _get_cryptocompare_cached(name, interval):
+    cached = _load_cryptocompare_cache().get(name, {}).get(interval)
+    if not cached:
+        return None
+    try:
+        age_hours = (
+            datetime.now(pytz.utc) - _as_utc_datetime(cached['cached_at'])
+        ).total_seconds() / 3600
+    except (KeyError, TypeError, ValueError, OverflowError):
+        return None
+    if 0 <= age_hours <= CRYPTOCOMPARE_CACHE_MAX_AGE_HOURS.get(interval, 1.0):
+        return cached.get('data')
+    return None
 
 
 def _cryptocompare_params(interval):
@@ -1924,8 +2372,10 @@ def fetch_cryptocompare_data(name, interval='15m', range_period='1d'):
     if not fsym:
         return None
     if not CRYPTOCOMPARE_API_KEY:
-        log_data_error('cryptocompare', name, fsym, 'brak CRYPTOCOMPARE_API_KEY')
-        return None
+        _log_missing_api_key_once(
+            'cryptocompare', name, fsym, 'CRYPTOCOMPARE_API_KEY'
+        )
+        return _get_cryptocompare_cached(name, interval)
     endpoint, aggregate, limit = _cryptocompare_params(interval)
     if endpoint is None:
         log_data_error('cryptocompare', name, fsym, f'nieznany interwał {interval}')
@@ -1937,28 +2387,39 @@ def fetch_cryptocompare_data(name, interval='15m', range_period='1d'):
     resp, err = http_get_with_retry(url, params=params, headers=headers, timeout=10, retries=2)
     if resp is None:
         log_data_error('cryptocompare', name, fsym, err)
-        return None
+        return _get_cryptocompare_cached(name, interval)
     try:
         payload = resp.json()
         if payload.get('Response') != 'Success':
             log_data_error('cryptocompare', name, fsym,
                             f"API zwróciło błąd: {payload.get('Message', payload)}")
-            return None
+            return _get_cryptocompare_cached(name, interval)
         rows = payload.get('Data', {}).get('Data', [])
-        opens, highs, lows, closes, volumes = [], [], [], [], []
+        opens, highs, lows, closes, volumes, timestamps = [], [], [], [], [], []
         for r in rows:
             o, h, l, c = r.get('open'), r.get('high'), r.get('low'), r.get('close')
             if None in (o, h, l, c) or (o == 0 and h == 0 and l == 0 and c == 0):
                 continue  # CryptoCompare czasem zwraca zerowe wypełniacze na początku okna
             opens.append(o); highs.append(h); lows.append(l); closes.append(c)
             volumes.append(r.get('volumeto', 0) or 0)
+            timestamps.append(r.get('time'))
         if len(closes) < 10:
             log_data_error('cryptocompare', name, fsym, f'za mało świec w odpowiedzi ({len(closes)})')
-            return None
-        return {'prices': closes, 'highs': highs, 'lows': lows, 'volumes': volumes, 'opens': opens}
+            return _get_cryptocompare_cached(name, interval)
+        result = {
+            'prices': closes, 'highs': highs, 'lows': lows, 'volumes': volumes,
+            'opens': opens, 'timestamps': timestamps,
+        }
+        cache = _load_cryptocompare_cache()
+        cache.setdefault(name, {})[interval] = {
+            'cached_at': datetime.now(pytz.utc).isoformat(),
+            'data': result,
+        }
+        _save_cryptocompare_cache(cache)
+        return result
     except (ValueError, KeyError, TypeError, json.JSONDecodeError) as e:
         log_data_error('cryptocompare', name, fsym, f'błąd parsowania: {e}')
-        return None
+        return _get_cryptocompare_cached(name, interval)
 
 
 # ============================================
@@ -1978,7 +2439,7 @@ TWELVEDATA_INTERVAL_MAP = {'5m': '5min', '15m': '15min', '60m': '1h', '1d': '1da
 TWELVEDATA_OUTPUTSIZE = {'5m': 100, '15m': 100, '60m': 200, '1d': 120}
 TWELVEDATA_BASE_URL = "https://api.twelvedata.com/time_series"
 TWELVEDATA_CACHE_FILE = 'twelvedata_cache.json'
-TWELVEDATA_CACHE_MAX_AGE_HOURS = 30  # dane starsze niż to są traktowane jak brak cache (zbyt nieaktualne)
+TWELVEDATA_CACHE_MAX_AGE_HOURS = {'5m': 0.25, '15m': 0.75, '60m': 3.0, '1d': 48.0}
 
 
 def _cycle_index_for_now(now=None):
@@ -2038,6 +2499,22 @@ def _save_twelvedata_cache(cache):
         logger.error(f"Nie udało się zapisać {TWELVEDATA_CACHE_FILE}: {e}")
 
 
+def _get_twelvedata_cached(market_cache, name, symbol, interval):
+    cached_entry = market_cache.get(interval)
+    if not cached_entry:
+        return None
+    try:
+        age_hours = (
+            datetime.now(pytz.utc) - _as_utc_datetime(cached_entry['cached_at'])
+        ).total_seconds() / 3600
+    except (KeyError, TypeError, ValueError, OverflowError):
+        age_hours = float('inf')
+    if 0 <= age_hours <= TWELVEDATA_CACHE_MAX_AGE_HOURS.get(interval, 1.0):
+        return cached_entry.get('data')
+    log_data_error('twelvedata', name, symbol, f'cache dla {interval} zbyt stary ({age_hours:.1f}h)')
+    return None
+
+
 def fetch_twelvedata_data(name, interval='15m', range_period='1d'):
     """GŁÓWNE źródło cen dla 6 par forex. Pobiera z Twelve Data TYLKO gdy
     dany interwał jest "w kolejce" w tym cyklu (patrz forex_intervals_for_now)
@@ -2049,19 +2526,19 @@ def fetch_twelvedata_data(name, interval='15m', range_period='1d'):
     symbol = FOREX_SYMBOLS.get(name)
     if not symbol:
         return None
-    if not TWELVEDATA_API_KEY:
-        log_data_error('twelvedata', name, symbol, 'brak TWELVEDATA_API_KEY')
-        return None
-
     cache = _load_twelvedata_cache()
     market_cache = cache.get(name, {})
+    if not TWELVEDATA_API_KEY:
+        _log_missing_api_key_once('twelvedata', name, symbol, 'TWELVEDATA_API_KEY')
+        return _get_twelvedata_cached(market_cache, name, symbol, interval)
+
     due_intervals = forex_intervals_for_now()
 
     if interval in due_intervals:
         td_interval = TWELVEDATA_INTERVAL_MAP.get(interval)
         outputsize = TWELVEDATA_OUTPUTSIZE.get(interval, 100)
         params = {'symbol': symbol, 'interval': td_interval, 'outputsize': outputsize,
-                   'apikey': TWELVEDATA_API_KEY}
+                   'apikey': TWELVEDATA_API_KEY, 'timezone': 'UTC'}
         resp, err = http_get_with_retry(TWELVEDATA_BASE_URL, params=params, timeout=10, retries=2)
         data = None
         if resp is not None:
@@ -2074,17 +2551,21 @@ def fetch_twelvedata_data(name, interval='15m', range_period='1d'):
                     # Twelve Data zwraca od najnowszej do najstarszej - odwracamy
                     # do kolejności chronologicznej, tak jak reszta źródeł w kodzie.
                     values = list(reversed(values))
-                    opens, highs, lows, closes, volumes = [], [], [], [], []
+                    opens, highs, lows, closes, volumes, timestamps = [], [], [], [], [], []
                     for v in values:
                         try:
-                            opens.append(float(v['open'])); highs.append(float(v['high']))
-                            lows.append(float(v['low'])); closes.append(float(v['close']))
-                            volumes.append(float(v.get('volume', 0) or 0))
-                        except (KeyError, ValueError, TypeError):
+                            row = (
+                                float(v['open']), float(v['high']), float(v['low']),
+                                float(v['close']), float(v.get('volume', 0) or 0),
+                                _as_utc_datetime(v['datetime']).timestamp(),
+                            )
+                        except (KeyError, ValueError, TypeError, OverflowError):
                             continue
+                        opens.append(row[0]); highs.append(row[1]); lows.append(row[2])
+                        closes.append(row[3]); volumes.append(row[4]); timestamps.append(row[5])
                     if len(closes) >= 10:
                         data = {'prices': closes, 'highs': highs, 'lows': lows,
-                                'volumes': volumes, 'opens': opens}
+                                'volumes': volumes, 'opens': opens, 'timestamps': timestamps}
                     else:
                         log_data_error('twelvedata', name, symbol, f'za mało świec w odpowiedzi ({len(closes)})')
             except (ValueError, KeyError, json.JSONDecodeError) as e:
@@ -2100,20 +2581,10 @@ def fetch_twelvedata_data(name, interval='15m', range_period='1d'):
         # Świeże pobranie zawiodło mimo że była "kolej" - spadamy do cache poniżej,
         # zamiast od razu oddawać sprawę Yahoo (cache może być całkiem świeży).
 
-    cached_entry = market_cache.get(interval)
-    if cached_entry:
-        try:
-            age_hours = (datetime.now(pytz.utc) - datetime.fromisoformat(cached_entry['cached_at'])).total_seconds() / 3600
-        except Exception:
-            age_hours = 999
-        if age_hours <= TWELVEDATA_CACHE_MAX_AGE_HOURS:
-            return cached_entry['data']
-        log_data_error('twelvedata', name, symbol, f'cache dla {interval} zbyt stary ({age_hours:.1f}h)')
-
-    return None
+    return _get_twelvedata_cached(market_cache, name, symbol, interval)
 
 
-def get_price_data(name, symbol, interval='15m', range_period='1d'):
+def get_price_data(name, symbol, interval='15m', range_period='5d'):
     """Punkt wejścia do pobierania świec, routing wg kategorii rynku:
     - krypto (BITCOIN/ETHEREUM/SOLANA): CryptoCompare (główne) -> Yahoo
       (fallback, ostatnia deska ratunku).
@@ -2121,10 +2592,9 @@ def get_price_data(name, symbol, interval='15m', range_period='1d'):
       harmonogramu + cache - patrz fetch_twelvedata_data) -> Yahoo (fallback).
     - pozostałe (indeksy/surowce/akcje): Yahoo bezpośrednio.
 
-    Investing.com zostało CAŁKOWICIE USUNIĘTE z kodu - patrz komentarz przy
-    CRYPTO_SYMBOLS wyżej. Binance zostało CAŁKOWICIE USUNIĘTE - potwierdzona
-    trwała blokada geograficzna (HTTP 451) z IP GitHub Actions. Zwraca
-    (data, source)."""
+    Investing.com i Binance nie są źródłami cen (Investing RSS nadal dostarcza
+    newsy). Binance zwracało trwałą blokadę geograficzną HTTP 451 z GitHub
+    Actions. Zwraca (data, source)."""
     if name in CRYPTO_SYMBOLS:
         data = fetch_cryptocompare_data(name, interval, range_period)
         if data:
@@ -2152,10 +2622,10 @@ def get_price_data(name, symbol, interval='15m', range_period='1d'):
     return None, None
 
 
-def fetch_yahoo_data(symbol, interval='15m', range_period='1d'):
+def fetch_yahoo_data(symbol, interval='15m', range_period='5d'):
     """
-    Fallback: Yahoo Finance. Używane, gdy Investing.com nie zwróci danych
-    (patrz get_price_data). NAPRAWIONE: wcześniej close/high/low/volume/open
+    Yahoo Finance: główne źródło dla części rynków i fallback dla pozostałych.
+    NAPRAWIONE: wcześniej close/high/low/volume/open
     filtrowane były osobno, więc przy różnych pozycjach None w poszczególnych
     polach indeksy przestawały się zgadzać między tablicami (świeca closes[i]
     mogła nie odpowiadać highs[i]). Teraz wiersze są wyrównywane RAZEM i
@@ -2177,25 +2647,27 @@ def fetch_yahoo_data(symbol, interval='15m', range_period='1d'):
         lows = quotes.get('low', []) or []
         volumes = quotes.get('volume', []) or []
         opens = quotes.get('open', []) or []
+        timestamps = result.get('timestamp', []) or []
 
-        n = min(len(closes), len(highs), len(lows), len(volumes), len(opens))
+        n = min(len(timestamps), len(closes), len(highs), len(lows), len(volumes), len(opens))
         aligned = []
         for i in range(n):
             row = (opens[i], highs[i], lows[i], closes[i], volumes[i])
-            if None not in row:
-                aligned.append(row)
+            if timestamps[i] is not None and None not in row:
+                aligned.append((timestamps[i], *row))
 
         if len(aligned) < 10:
             log_data_error('yahoo', symbol, symbol, f'za mało wyrównanych świec ({len(aligned)})')
             return None
 
-        opens_a, highs_a, lows_a, closes_a, volumes_a = zip(*aligned)
+        timestamps_a, opens_a, highs_a, lows_a, closes_a, volumes_a = zip(*aligned)
         return {
             'prices': list(closes_a),
             'highs': list(highs_a),
             'lows': list(lows_a),
             'volumes': list(volumes_a),
             'opens': list(opens_a),
+            'timestamps': list(timestamps_a),
         }
     except (KeyError, IndexError, TypeError) as e:
         log_data_error('yahoo', symbol, symbol, f'błąd parsowania: {e}')
@@ -2348,8 +2820,8 @@ def analyze_timeframes(name, symbol, timeframe_weights, price_cache=None):
 
     price_cache: opcjonalny dict {(interval, range): data} z danymi
     pobranymi wcześniej przez wywołującego (patrz analyze_market/
-    fetch_price_cache) - używany, żeby '15m/1d' (potrzebne też jako
-    main_data do głównego scoringu) nie było pobierane drugi raz. Gdy None
+    fetch_price_cache) - używany, żeby dane 1h dla głównego scoringu oraz
+    świeże dane 15m dla ceny wejścia nie były pobierane drugi raz. Gdy None
     (np. przy użyciu tej funkcji samodzielnie), funkcja pobiera wszystko
     sama jak dawniej."""
     timeframe_results = {}
@@ -3003,19 +3475,22 @@ def calculate_position_size_kelly(confidence, performance_stats, entry, stop_los
 # ============================================
 
 def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=None,
-                    feature_weights=None, adaptive_threshold=None, performance_stats=None):
+                    feature_weights=None, adaptive_threshold=None, performance_stats=None,
+                    near_miss_tracker=None):
     session = market_info.get('session', '24_7')
     if not is_session_active(session):
         return None
 
-    main_data, price_source = get_price_data(name, market_info['symbol'], '15m', '1d')
+    main_data, price_source = get_price_data(name, market_info['symbol'], '60m', '1mo')
     if not main_data:
-        log_near_miss(name, stage='no_data', reason='brak danych cenowych z żadnego źródła')
+        log_near_miss(name, stage='no_data', reason='brak danych cenowych z żadnego źródła',
+                      tracker=near_miss_tracker)
         return None
 
     ind = calculate_full_indicators(main_data)
     if not ind:
-        log_near_miss(name, stage='bad_indicators', reason='za mało danych do policzenia wskaźników')
+        log_near_miss(name, stage='bad_indicators', reason='za mało danych do policzenia wskaźników',
+                      tracker=near_miss_tracker)
         return None
 
     market_type = market_info['type']
@@ -3030,38 +3505,48 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
     )
     if not spread_ok:
         logger.info(f"❌ {name}: spread zbyt wysoki (źródło: {spread_source}, wartość: {spread_value})")
-        log_near_miss(name, stage='filtered_spread', reason=f'spread {spread_value} ({spread_source})')
+        log_near_miss(name, stage='filtered_spread', reason=f'spread {spread_value} ({spread_source})',
+                      tracker=near_miss_tracker)
         return None
     if not check_extreme_volatility(atr_percent, market_type):
         logger.info(f"❌ {name}: ekstremalna zmienność (ATR: {atr_percent:.2f}%)")
-        log_near_miss(name, stage='filtered_volatility', reason=f'ATR% {atr_percent:.2f}')
+        log_near_miss(name, stage='filtered_volatility', reason=f'ATR% {atr_percent:.2f}',
+                      tracker=near_miss_tracker)
         return None
     if not check_liquidity(avg_volume, market_type):
         logger.info(f"❌ {name}: za mała płynność (wolumen: {avg_volume:.0f})")
-        log_near_miss(name, stage='filtered_liquidity', reason=f'wolumen {avg_volume:.0f}')
+        log_near_miss(name, stage='filtered_liquidity', reason=f'wolumen {avg_volume:.0f}',
+                      tracker=near_miss_tracker)
         return None
 
+    entry_data, entry_source = get_price_data(
+        name, market_info['symbol'], '15m', '5d'
+    )
+    price_cache = {('60m', '1mo'): main_data}
+    if entry_data:
+        price_cache[('15m', '5d')] = entry_data
     timeframe_results = analyze_timeframes(
         name, market_info['symbol'], timeframe_weights,
-        # NAPRAWIONE: '15m/1d' zostało już pobrane wyżej jako main_data -
-        # zasilamy tym samym wynikiem cache MTF zamiast pobierać to samo
-        # drugi raz. Reszta kombinacji (5m, 60m, 1d/3mo) i tak jest pobierana
-        # dopiero TERAZ (po filtrach spread/zmienność/płynność), więc rynek
-        # odrzucony przez filtry nadal kosztuje tylko 1 zapytanie, nie 6.
-        price_cache={('15m', '1d'): main_data},
+        price_cache=price_cache,
     )
     if not timeframe_results:
-        log_near_miss(name, stage='no_timeframe_data', reason='brak danych MTF')
+        log_near_miss(name, stage='no_timeframe_data', reason='brak danych MTF',
+                      tracker=near_miss_tracker)
         return None
+    timeframe_results = {
+        tf: result for tf, result in timeframe_results.items()
+        if tf in DECISION_TIMEFRAMES
+    }
 
     combined = combine_timeframe_analysis(timeframe_results)
     if not combined:
-        log_near_miss(name, stage='no_combined', reason='combine_timeframe_analysis zwróciło None')
+        log_near_miss(name, stage='no_combined', reason='combine_timeframe_analysis zwróciło None',
+                      tracker=near_miss_tracker)
         return None
 
     divergences = detect_divergences(timeframe_results)
 
-    # --- Reżim rynku (punkt B): TREND vs RANGE, na bazie ADX z danych 15m ---
+    # --- Reżim rynku (punkt B): TREND vs RANGE, na bazie ADX z danych 1h ---
     regime, adx_value = detect_market_regime(main_data['highs'], main_data['lows'], main_data['prices'])
 
     articles = fetch_market_news(name)
@@ -3083,7 +3568,9 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
     # ostatniego (delikatnie opóźnionego) zamknięcia z Yahoo do entry/SL/TP.
     # UWAGA: to wciąż jest odpytywanie request/response raz na cykl, nie
     # prawdziwy streaming - patrz zastrzeżenie w opisie funkcji fetch_xtb_spreads. ---
-    p = ind['price']
+    p = entry_data['prices'][-1] if entry_data and entry_data.get('prices') else ind['price']
+    if entry_source:
+        price_source = entry_source
     if xtb_info and xtb_info.get('bid') is not None and xtb_info.get('ask') is not None:
         p = (xtb_info['bid'] + xtb_info['ask']) / 2
 
@@ -3226,69 +3713,93 @@ def analyze_market(name, market_info, ai_memory, timeframe_weights, xtb_spreads=
     confidence_for_log = max(long_conf, short_conf)
     direction_for_log = 'LONG' if long_conf >= short_conf else 'SHORT'
 
-    # --- Near-miss (punkt D): logujemy KAŻDĄ próbę scoringu, niezależnie od
-    # tego, czy przekroczyła próg - z pełnym wektorem cech, żeby dało się
-    # to później ewaluować względem rzeczywistego ruchu ceny (patrz
-    # evaluate_near_misses) i dokarmić FeatureWeights próbkami "co by było
-    # gdyby", z niższą wagą niż prawdziwe sygnały. ---
+    if confidence_for_log < threshold:
+        log_near_miss(
+            name, stage='scored', reason='ponizej progu',
+            long_conf=long_conf, short_conf=short_conf, direction=direction_for_log,
+            confidence=confidence_for_log, threshold=threshold, entry=p, atr=ind['atr'],
+            features=features, price_source=price_source, regime=regime,
+            tracker=near_miss_tracker,
+        )
+        return None
+
+    direction = 'LONG' if long_conf >= short_conf else 'SHORT'
+    confidence = max(long_conf, short_conf)
+    stop_distance = STOP_ATR_MULTIPLIER * ind['atr']
+    target_distance = TAKE_PROFIT_ATR_MULTIPLIER * ind['atr']
+    spread_abs = (
+        xtb_info.get('spread_abs')
+        if xtb_info and xtb_info.get('spread_abs') is not None
+        else (spread_value or 0.0) * p
+    )
+    if not passes_spread_cost_filters(stop_distance, target_distance, spread_abs):
+        log_near_miss(
+            name, stage='filtered_cost',
+            reason=(
+                f"stop {stop_distance:.6g} / TP {target_distance:.6g} "
+                f"nie spełnia limitów spreadu {spread_abs!r}"
+            ),
+            direction=direction, confidence=confidence, threshold=threshold,
+            entry=p, atr=ind['atr'], features=features,
+            price_source=price_source, regime=regime,
+            tracker=near_miss_tracker,
+        )
+        return None
+
     log_near_miss(
-        name, stage='scored',
-        reason='ponizej progu' if confidence_for_log < threshold else 'wyslany',
-        long_conf=long_conf, short_conf=short_conf, direction=direction_for_log,
-        confidence=confidence_for_log, threshold=threshold, entry=p, atr=ind['atr'],
+        name, stage='scored', reason='kwalifikuje_sie',
+        long_conf=long_conf, short_conf=short_conf, direction=direction,
+        confidence=confidence, threshold=threshold, entry=p, atr=ind['atr'],
         features=features, price_source=price_source, regime=regime,
+        tracker=near_miss_tracker,
     )
 
-    if long_conf >= threshold or short_conf >= threshold:
-        direction = 'LONG' if long_conf >= short_conf else 'SHORT'
-        confidence = max(long_conf, short_conf)
+    stop_loss = p - stop_distance if direction == 'LONG' else p + stop_distance
+    take_profit = p + target_distance if direction == 'LONG' else p - target_distance
 
-        stop_loss = p - 1.5 * ind['atr'] if direction == 'LONG' else p + 1.5 * ind['atr']
-        take_profit = p + 2.5 * ind['atr'] if direction == 'LONG' else p - 2.5 * ind['atr']
+    position_size, risk_amount, sizing_method = calculate_position_size_kelly(
+        confidence, performance_stats, p, stop_loss
+    )
 
-        position_size, risk_amount, sizing_method = calculate_position_size_kelly(
-            confidence, performance_stats, p, stop_loss
-        )
-
-        return {
-            'name': name,
-            'direction': direction,
-            'entry': p,
-            'stop_loss': stop_loss,
-            'take_profit': take_profit,
-            'position_size': position_size,
-            'risk_amount': risk_amount,
-            'sizing_method': sizing_method,
-            'confidence': confidence,
-            'threshold_used': threshold,
-            'regime': regime,
-            'adx': adx_value,
-            'model_used': model_used,
-            'features': features,
-            'rsi': ind['rsi'],
-            'vwap': ind['vwap'],
-            'support': ind['support'],
-            'resistance': ind['resistance'],
-            'candlestick_patterns': ind['candlestick_patterns'],
-            'order_flow_delta': ind['order_flow']['delta_percent'] if ind['order_flow'] else 0,
-            'volume_profile_poc': ind['volume_profile']['poc'] if ind['volume_profile'] else None,
-            'news_sentiment': news_analysis.get('sentiment', 0),
-            'news_impact': news_analysis.get('impact', 'low'),
-            'news_reasoning': news_analysis.get('reasoning', ''),
-            'timeframe_alignment': combined['trend_score'],
-            'timeframe_trends': {tf: r.get('trend') for tf, r in timeframe_results.items()},
-            'divergences': divergences,
-            'heatmap': create_heatmap(timeframe_results),
-            'spread_source': spread_source,
-            'spread_value': spread_value,
-            'price_source': price_source,
-            'macro_sentiment': macro_sentiment,
-            'macro_impact': macro_analysis.get('impact', 'low') if macro_analysis else 'low',
-            'chart_ai_sentiment': chart_ai_sentiment,
-            'chart_ai_impact': chart_ai_impact,
-            'chart_ai_reasoning': chart_ai_analysis.get('reasoning', '') if chart_ai_analysis else '',
-        }
-    return None
+    return {
+        'name': name,
+        'direction': direction,
+        'entry': p,
+        'stop_loss': stop_loss,
+        'take_profit': take_profit,
+        'position_size': position_size,
+        'risk_amount': risk_amount,
+        'sizing_method': sizing_method,
+        'confidence': confidence,
+        'threshold_used': threshold,
+        'regime': regime,
+        'adx': adx_value,
+        'model_used': model_used,
+        'features': features,
+        'rsi': ind['rsi'],
+        'vwap': ind['vwap'],
+        'support': ind['support'],
+        'resistance': ind['resistance'],
+        'candlestick_patterns': ind['candlestick_patterns'],
+        'order_flow_delta': ind['order_flow']['delta_percent'] if ind['order_flow'] else 0,
+        'volume_profile_poc': ind['volume_profile']['poc'] if ind['volume_profile'] else None,
+        'news_sentiment': news_analysis.get('sentiment', 0),
+        'news_impact': news_analysis.get('impact', 'low'),
+        'news_reasoning': news_analysis.get('reasoning', ''),
+        'timeframe_alignment': combined['trend_score'],
+        'timeframe_trends': {tf: r.get('trend') for tf, r in timeframe_results.items()},
+        'divergences': divergences,
+        'heatmap': create_heatmap(timeframe_results),
+        'spread_source': spread_source,
+        'spread_value': spread_value,
+        'spread_abs_estimate': spread_abs,
+        'price_source': price_source,
+        'macro_sentiment': macro_sentiment,
+        'macro_impact': macro_analysis.get('impact', 'low') if macro_analysis else 'low',
+        'chart_ai_sentiment': chart_ai_sentiment,
+        'chart_ai_impact': chart_ai_impact,
+        'chart_ai_reasoning': chart_ai_analysis.get('reasoning', '') if chart_ai_analysis else '',
+    }
 
 # ============================================
 # RAPORTY
@@ -3321,7 +3832,7 @@ def analyze_market_sentiment():
 
 
 def generate_weekly_report():
-    sm = SignalManager()
+    sm = _signal_manager_for_mode()
     current_week = datetime.now(TIMEZONE).strftime('%Y-W%V')
     week_signals = []
     wins = losses = 0
@@ -3347,7 +3858,7 @@ def generate_weekly_report():
 
 
 def generate_monthly_report():
-    sm = SignalManager()
+    sm = _signal_manager_for_mode()
     wins = sum(1 for s in sm.signals.values() if s.get('outcome') == 'win')
     losses = sum(1 for s in sm.signals.values() if s.get('outcome') == 'loss')
     prompt = (
@@ -3362,11 +3873,11 @@ def generate_monthly_report():
 # GŁÓWNA PĘTLA
 # ============================================
 
-def apply_cluster_limits(signals, max_per_cluster=MAX_PER_CLUSTER):
+def apply_cluster_limits(signals, max_per_cluster=MAX_PER_CLUSTER, existing_counts=None):
     """Limituje liczbę jednoczesnych sygnałów w tym samym klastrze
     korelacji (np. max 2 z 'tech_stocks' naraz), żeby nie otwierać
     de facto tej samej skorelowanej ekspozycji wielokrotnie."""
-    cluster_counts = {}
+    cluster_counts = dict(existing_counts or {})
     result = []
     for s in signals:
         cluster = CORRELATION_CLUSTERS.get(s['name'], 'other')
@@ -3378,11 +3889,41 @@ def apply_cluster_limits(signals, max_per_cluster=MAX_PER_CLUSTER):
     return result
 
 
-def main():
-    if is_weekend():
-        logger.info("Weekend - agent nie pracuje.")
-        return
+def _open_signal_cluster_counts(signals):
+    counts = {}
+    for signal in signals.values():
+        if signal.get('status') != 'open':
+            continue
+        cluster = CORRELATION_CLUSTERS.get(signal.get('name'), 'other')
+        counts[cluster] = counts.get(cluster, 0) + 1
+    return counts
 
+
+def initialize_shadow_learning_state():
+    """Seed shadow models from existing production state without sharing files."""
+    for source, target in (
+        (TIMEFRAME_WEIGHTS_FILE, SHADOW_TIMEFRAME_WEIGHTS_FILE),
+        (FEATURE_WEIGHTS_FILE, SHADOW_FEATURE_WEIGHTS_FILE),
+        (ADAPTIVE_THRESHOLD_FILE, SHADOW_ADAPTIVE_THRESHOLD_FILE),
+    ):
+        if os.path.exists(target) or not os.path.exists(source):
+            continue
+        try:
+            shutil.copyfile(source, target)
+        except OSError as e:
+            logger.error(f"Nie udało się skopiować stanu shadow {source} -> {target}: {e}")
+
+
+def _signal_manager_for_mode():
+    if AGENT_MODE == RunMode.SHADOW:
+        return SignalManager(
+            file_path=SHADOW_SIGNALS_FILE,
+            archive_path=SHADOW_SIGNAL_ARCHIVE_FILE,
+        )
+    return SignalManager()
+
+
+def main():
     if AGENT_MODE == RunMode.BACKTEST:
         logger.warning(
             "AGENT_MODE=backtest, ale main() nie jest przeznaczone do symulacji historycznej - "
@@ -3390,24 +3931,61 @@ def main():
         )
         return
 
-    logger.info(f"Tryb pracy: {AGENT_MODE.value}{' (bez wpływu na wagi/próg/statystyki)' if AGENT_MODE == RunMode.SHADOW else ''}")
+    is_shadow = AGENT_MODE == RunMode.SHADOW
+    logger.info(
+        f"Tryb pracy: {AGENT_MODE.value}"
+        f"{' (uczenie na odizolowanych danych shadow)' if is_shadow else ''}"
+    )
+    maintain_runtime_logs()
+    if is_shadow:
+        initialize_shadow_learning_state()
+    near_miss_tracker = NearMissTracker()
+    if near_miss_tracker.dirty:
+        near_miss_tracker.save()
+    sm = _signal_manager_for_mode()
+    tf_weights = TimeframeWeights(
+        SHADOW_TIMEFRAME_WEIGHTS_FILE if is_shadow else TIMEFRAME_WEIGHTS_FILE
+    )
+    feature_weights = FeatureWeights(
+        SHADOW_FEATURE_WEIGHTS_FILE if is_shadow else FEATURE_WEIGHTS_FILE
+    )
+    adaptive_threshold = AdaptiveThreshold(
+        SHADOW_ADAPTIVE_THRESHOLD_FILE if is_shadow else ADAPTIVE_THRESHOLD_FILE
+    )
+    performance_stats = PerformanceStats(
+        SHADOW_PERFORMANCE_STATS_FILE if is_shadow else PERFORMANCE_STATS_FILE
+    )
+    circuit_breaker = CircuitBreaker(
+        SHADOW_CIRCUIT_BREAKER_FILE if is_shadow else CIRCUIT_BREAKER_FILE
+    )
+    sm.evaluate_open_signals(tf_weights, feature_weights, adaptive_threshold,
+                              performance_stats, circuit_breaker)
+    if should_update_weights():
+        evaluate_near_misses(feature_weights, near_miss_tracker)
+
+    if is_weekend():
+        logger.info("Weekend - pomijam nowe sygnały, ale otwarte pozycje zostały sprawdzone.")
+        near_miss_tracker.save()
+        return
 
     if is_monthly_report_time():
         generate_monthly_report()
+        near_miss_tracker.save()
         return
 
     if is_friday_evening():
         generate_weekly_report()
+        near_miss_tracker.save()
         return
 
     if is_morning_sentiment_time():
         analyze_market_sentiment()
+        near_miss_tracker.save()
         return
 
     if is_evening_summary_time():
         send_daily_near_miss_report()
-        rotate_jsonl_log(NEAR_MISS_LOG_FILE, days_to_keep=30)
-        rotate_jsonl_log(DATA_FETCH_ERRORS_FILE, days_to_keep=30)
+        near_miss_tracker.save()
         return
 
     # Dane makro: max 3x dziennie (rano / przed otwarciem / po zamknięciu
@@ -3428,29 +4006,11 @@ def main():
     if not is_within_trading_window():
         logger.info(f"Poza oknem {TRADING_WINDOW_START[0]}:{TRADING_WINDOW_START[1]:02d}-"
                      f"{TRADING_WINDOW_END[0]}:{TRADING_WINDOW_END[1]:02d} - pomijam analizę rynków w tym cyklu.")
+        near_miss_tracker.save()
         return
 
     logger.info(f"Analiza rynków: {datetime.now(TIMEZONE)}")
-    sm = SignalManager()
-    ai_memory = AIMemory()
-    tf_weights = TimeframeWeights()
-    feature_weights = FeatureWeights()
-    adaptive_threshold = AdaptiveThreshold()
-    performance_stats = PerformanceStats()
-    circuit_breaker = CircuitBreaker()
-
-    # Najpierw ocena wcześniej wysłanych, wciąż otwartych sygnałów - to jest to,
-    # co realnie zasila naukę wag interwałów, wag cech, progu i statystyk Kelly
-    # (a w trybie SHADOW/BACKTEST te aktualizacje są wyłączone - patrz gating
-    # w evaluate_open_signals przez should_update_weights/should_update_threshold/
-    # should_record_stats z modes.py).
-    sm.evaluate_open_signals(tf_weights, feature_weights, adaptive_threshold,
-                              performance_stats, circuit_breaker)
-
-    # Near-miss (punkt D): dojrzałe próbki "co by było gdyby" (odrzucone przez
-    # próg) trafiają do FeatureWeights z obniżoną wagą - też tylko gdy tryb na to pozwala.
-    if should_update_weights():
-        evaluate_near_misses(feature_weights)
+    ai_memory = AIMemory(SHADOW_AI_MEMORY_FILE if is_shadow else AI_MEMORY_FILE)
 
     # --- Circuit breaker (punkt B): jeśli dzienny/tygodniowy limit strat
     # w R jest przekroczony, NIE generujemy nowych sygnałów w tym cyklu.
@@ -3460,6 +4020,7 @@ def main():
         logger.warning(f"⛔ Circuit breaker aktywny: {reason}. Pomijam generowanie nowych sygnałów.")
         if should_send_notifications():
             send_telegram(get_notification_message(f"⛔ *CIRCUIT BREAKER*\n\n{reason}\n\nNowe sygnały wstrzymane do końca okresu."))
+        near_miss_tracker.save()
         return
 
     # Jedno logowanie do XTB na cały cykl (nie per rynek) - taniej i szybciej.
@@ -3472,15 +4033,26 @@ def main():
         logger.warning("Dane logowania XTB ustawione, ale nie udało się pobrać spreadów - fallback na proxy")
 
     potential = []
-    for name, info in MARKETS.items():
-        signal = analyze_market(name, info, ai_memory, tf_weights.get_weights(), xtb_spreads,
-                                 feature_weights, adaptive_threshold, performance_stats)
-        if signal and sm.should_send_signal(signal):
-            potential.append(signal)
+    try:
+        for name, info in MARKETS.items():
+            signal = analyze_market(name, info, ai_memory, tf_weights.get_weights(), xtb_spreads,
+                                    feature_weights, adaptive_threshold, performance_stats,
+                                    near_miss_tracker)
+            if signal and sm.should_send_signal(signal):
+                potential.append(signal)
+    finally:
+        near_miss_tracker.save()
 
     if potential:
         sorted_sigs = sorted(potential, key=lambda x: x['confidence'], reverse=True)
-        final_sigs = apply_cluster_limits(sorted_sigs)[:10]
+        existing_counts = _open_signal_cluster_counts(sm.signals)
+        candidates = apply_cluster_limits(
+            sorted_sigs, existing_counts=existing_counts
+        )[:10]
+        final_sigs = candidates
+        if not final_sigs:
+            logger.info("Brak sygnałów po limitach klastrów.")
+            return
 
         msg = "🚨 *TOP SYGNAŁY*\n\n"
         for i, s in enumerate(final_sigs, 1):
@@ -3516,9 +4088,16 @@ def main():
                 msg += f"   ⚠️ Dywergencje: {len(s['divergences'])}\n"
             msg += f"\n{s['heatmap']}\n\n"
 
-        if should_send_notifications():
-            send_telegram(get_notification_message(msg))
-        ai_memory.add_lesson(f"Wysłano {len(final_sigs)} sygnałów")
+        if not should_send_notifications() or not send_telegram(get_notification_message(msg)):
+            logger.warning("Nie wysłano sygnałów; pomijam ich rejestrację jako otwartych pozycji.")
+            return
+        stored_sigs = [signal for signal in final_sigs if sm.store_signal(signal)]
+        if len(stored_sigs) != len(final_sigs):
+            logger.error(
+                f"Telegram otrzymał {len(final_sigs)} sygnałów, ale zapisano "
+                f"{len(stored_sigs)} z nich."
+            )
+        ai_memory.add_lesson(f"Wysłano {len(stored_sigs)} sygnałów")
     else:
         logger.info("Brak sygnałów.")
 

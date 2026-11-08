@@ -21,7 +21,7 @@ Tryb wybiera zmienna `AGENT_MODE`; domyślnie jest to `shadow`.
 
 | Tryb | Działanie |
 |---|---|
-| `shadow` | Pobiera dane, analizuje rynek i może wysyłać na Telegram powiadomienia z oznaczeniem SHADOW. Zapisuje obserwacje, ale nie aktualizuje wag, statystyk wyników ani adaptacyjnego progu. |
+| `shadow` | Pobiera dane, analizuje rynek i może wysyłać na Telegram powiadomienia z oznaczeniem SHADOW. Zbiera wyniki i uczy osobne kopie wag oraz progu; nie zmienia stanu używanego przez `live`. |
 | `live` | Wysyła normalne powiadomienia i włącza aktualizację wag, statystyk oraz progu na podstawie zapisanych wyników. **Nie składa zleceń u brokera** — funkcja wykonania transakcji nie jest zaimplementowana. |
 | `backtest` | Tryb zarezerwowany dla logiki testowej; `python agent.py` w tym trybie celowo kończy działanie. Do backtestów używaj osobnych modułów. |
 
@@ -95,7 +95,7 @@ Sekrety i ustawienia przekazuj przez zmienne środowiskowe. Nie wpisuj kluczy an
 | `TELEGRAM_CHAT_ID` | Nie | — | Odbiorca powiadomień Telegram. |
 | `GROQ_API_KEY` | Nie | — | Analiza newsów, makro i wykresów przez Groq. |
 | `TWELVEDATA_API_KEY` | Nie | — | Główne źródło danych dla forexu; bez niego używany jest fallback. |
-| `CRYPTOCOMPARE_API_KEY` | Nie | — | Dostęp do danych CryptoCompare; w razie niepowodzenia kod próbuje Yahoo Finance. |
+| `CRYPTOCOMPARE_API_KEY` | Nie | — | Dostęp do danych CryptoCompare; bez klucza używany jest świeży cache lub fallback Yahoo Finance. |
 | `XTB_LOGIN` / `XTB_PASSWORD` | Nie | — | Logowanie XTB wyłącznie po spread i/lub dane historyczne do backtestu. |
 | `XTB_ACCOUNT_TYPE` | Nie | `demo` | Typ połączenia XTB: `demo` lub `real`; nie włącza handlu. |
 | `ACCOUNT_SIZE` | Nie | `10000` | Kapitał używany do obliczeń wielkości pozycji. |
@@ -103,17 +103,19 @@ Sekrety i ustawienia przekazuj przez zmienne środowiskowe. Nie wpisuj kluczy an
 | `MAX_RISK_PERCENT_CAP` | Nie | `2.0` | Górny limit ryzyka dla obliczeń Kelly'ego. |
 | `MAX_PER_CLUSTER` | Nie | `2` | Maksymalna liczba sygnałów z jednego klastra korelacji. |
 | `SIGNAL_TIMEOUT_HOURS` | Nie | `48` | Limit czasu dla monitorowanych sygnałów. |
+| `MIN_SAMPLES_FOR_ADAPTIVE_THRESHOLD` | Nie | `15` | Minimalna liczba zamkniętych wyników R przed adaptacją progu na podstawie expectancy. |
+| `SIGNAL_COOLDOWN_HOURS` | Nie | `2` | Czas po zamknięciu sygnału, przez który agent nie emituje kolejnego sygnału na tym samym rynku. |
 | `CONFIDENCE_THRESHOLD` | Nie | `0.60` | Bazowy próg pewności. |
 
 Wartości progów MTF i uczenia są konfigurowane w `config.py`; wśród ustawień środowiskowych znajdują się m.in. `MTF_BULLISH_THRESHOLD`, `MTF_BEARISH_THRESHOLD`, `NEAR_MISS_SAMPLE_WEIGHT`, `NEAR_MISS_MIN_AGE_HOURS` i `NEAR_MISS_MAX_AGE_HOURS`. Dodatkowe limity ryzyka, circuit breakera i minimalne liczby próbek są ustawiane w `agent.py`.
 
 ## GitHub Actions
 
-Workflow [`.github/workflows/agent.yml`](.github/workflows/agent.yml) uruchamia `agent.py` co 15 minut w dni robocze, w szerokim oknie 04:00–21:59 UTC. Kod dodatkowo kontroluje okno handlu 06:00–22:00 w strefie `Europe/Warsaw`. Możliwe jest też uruchomienie ręczne (`workflow_dispatch`) z wyborem trybu `shadow` lub `live`.
+Workflow [`.github/workflows/agent.yml`](.github/workflows/agent.yml) uruchamia `agent.py` co 15 minut przez całą dobę, również w weekendy, aby monitorować otwarte sygnały kryptowalutowe poza zwykłymi godzinami analizy. Nowe rynki są analizowane tylko w dni robocze i w oknie 06:00–22:00 `Europe/Warsaw`. Możliwe jest też uruchomienie ręczne (`workflow_dispatch`) z wyborem trybu `shadow` lub `live`.
 
-W ustawieniach repozytorium dodaj wymagane dla wybranych funkcji sekrety Actions: `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`, `GROQ_API_KEY`, `TWELVEDATA_API_KEY`; opcjonalnie także `XTB_LOGIN` i `XTB_PASSWORD`. Klucz `CRYPTOCOMPARE_API_KEY` jest odczytywany przez kod, ale obecnie nie jest przekazywany przez workflow — dodaj go do sekcji `env` workflow, jeśli ma być używany w Actions.
+W ustawieniach repozytorium dodaj wymagane dla wybranych funkcji sekrety Actions: `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`, `GROQ_API_KEY`, `TWELVEDATA_API_KEY`; opcjonalnie także `CRYPTOCOMPARE_API_KEY`, `XTB_LOGIN` i `XTB_PASSWORD`.
 
-Workflow zapisuje zmiany danych po każdym uruchomieniu (`git add -A` i commit). Oznacza to, że może wersjonować również wygenerowane pliki stanu i cache. Przed zmianą tego zachowania sprawdź, które pliki runtime powinny być przechowywane między uruchomieniami — agent korzysta z lokalnych plików JSON/JSONL jako pamięci.
+Workflow zapisuje zmiany danych po każdym uruchomieniu (`git add -A` i commit); błędy commita lub `push` kończą uruchomienie niepowodzeniem, zamiast być maskowane. Cache Pythona jest ignorowany przez Git, natomiast pliki stanu JSON/JSONL pozostają wersjonowane, ponieważ agent wykorzystuje je jako pamięć między uruchomieniami.
 
 ## Backtesty i testowanie
 
@@ -140,7 +142,7 @@ Backtesty są symulacją historyczną, a nie dowodem przyszłej skuteczności. Z
 | `requirements.txt` | Zależności Pythona. |
 | `.github/workflows/agent.yml` | Harmonogram i ręczne uruchamianie agenta w GitHub Actions. |
 
-Pliki JSON i JSONL w katalogu głównym przechowują m.in. historię sygnałów, cache danych, pamięć agenta, wagi modelu, wyniki i logi. To stan runtime, od którego zależą niektóre funkcje uczenia i monitorowania.
+Pliki JSON i JSONL w katalogu głównym przechowują m.in. aktywną historię sygnałów (`signals_history.json`), archiwum zdarzeń sygnałów (`signal_archive.jsonl`), cache danych, pamięć agenta, wagi modelu, wyniki i logi. W `shadow` rejestr pozycji, archiwum, pamięć AI, magazyn cech, wyniki, wagi, próg, circuit breaker oraz logi i kolejka near-miss są odseparowane (m.in. `shadow_signals_history.json`, `shadow_signal_archive.jsonl`, `shadow_performance_stats.json` oraz pliki `shadow_*`); kopie wag są inicjalizowane z istniejącego stanu produkcyjnego, a próg uczy się według expectancy netto w R, nie samego win-rate. Kierunek sygnału wynika z interwałów 1h/4h/1d, a 1h ATR wyznacza SL/TP. Kandydat jest odrzucany, jeśli TP jest krótsze niż 3× szacowanego spreadu albo SL krótsze niż 4× spreadu. Przy zamknięciu od wyniku brutto odejmowany jest jeden pełny szacowany spread; gdy XTB nie dostarcza spreadu, agent używa proxy zmienności, które nie jest rzeczywistym kosztem transakcyjnym. Near-miss jest czyszczony po 48 godzinach, ograniczony do 5000 wpisów i zapisywany wsadowo raz na cykl w zwartym JSON. Szczegółowe logi błędów, near-miss i shadow scoring są archiwizowane jako artefakt każdego uruchomienia GitHub Actions z retencją 30 dni, a nie commitowane do repozytorium. Przy pracy na trwałym checkoutcie szczegóły starsze niż 30 dni są agregowane dziennie (błędy według źródła i rodzaju, scoring według kierunku/modelu) do plików `*_summary.jsonl`; podsumowania starsze niż 365 dni są usuwane. Rotacja działa raz dziennie na starcie agenta, również w weekendy i poza godzinami rynku.
 
 ## Licencja
 
