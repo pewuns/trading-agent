@@ -1,0 +1,16 @@
+{
+  "weights": {
+    "sma20": -0.025,
+    "sma50": -0.025,
+    "rsi": -0.0020175743866365004,
+    "vwap": -0.025,
+    "support_resistance": 0.0125,
+    "pattern": 0.0,
+    "order_flow": -0.001113058211004069,
+    "poc": -0.025,
+    "mtf_trend": -0.014166666666666668,
+    "news_sentiment": 0.0
+  },
+  "bias": -0.025,
+  "n_samples": 1
+}
