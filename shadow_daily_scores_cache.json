@@ -15,6 +15,36 @@
       "confidence": 0.55,
       "direction": "SHORT",
       "threshold": 0.6
+    },
+    "S&P500": {
+      "confidence": 0.375,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "GBP/USD": {
+      "confidence": 0.5,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "BITCOIN": {
+      "confidence": 0.475,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "ETHEREUM": {
+      "confidence": 0.5,
+      "direction": "SHORT",
+      "threshold": 0.6
+    },
+    "APPLE": {
+      "confidence": 0.525,
+      "direction": "LONG",
+      "threshold": 0.6
+    },
+    "MICROSOFT": {
+      "confidence": 0.525,
+      "direction": "LONG",
+      "threshold": 0.6
     }
   }
 }
