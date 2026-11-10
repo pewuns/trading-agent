@@ -1,8 +1,8 @@
 {
-  "last_run": "2026-11-05 01",
+  "last_run": "2026-11-10 04",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-11-05T00:00:51.667776+00:00",
+      "analyzed_at": "2026-11-10T03:08:13.512936+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "up",
@@ -11,9 +11,9 @@
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest silne wzrostowe impetowanie, które zakończyło się formacją doji, co sugeruje chwilowe wyczerpanie sił kupujących i konsolidację. Wyższe interwały (1h, 1d) potwierdzają silny trend wzrostowy, co wskazuje, że obecna konsolidacja jest prawdopodobnie tylko korektą wewnątrz trendu."
+        "prediction_30min": "up",
+        "confidence": 0.75,
+        "reasoning": "Na wykresie 15-minutowym widoczna jest silna tendencja wzrostowa z wyraźnymi wyższymi dnami i szczytami, co potwierdza kierunek na wyższych interwałach. Obecność świecy typu doji na szczycie sugeruje chwilowe wyczerpanie, ale nie odwrócenie trendu, więc przewidywany jest dalszy ruch wzrostowy."
       }
     },
     "AMAZON": {
@@ -63,19 +63,18 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-10-23T18:01:35.618544+00:00",
+      "analyzed_at": "2026-11-10T03:09:11.560731+00:00",
       "result": {
-        "trend_15m": "neutral",
+        "trend_15m": "up",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
-          "doji",
           "młot"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
+        "prediction_30min": "up",
         "confidence": 0.65,
-        "reasoning": "Na wykresie 15-minutowym widać formację doji po spadkach, co sugeruje krótkoterminowe wyczerpanie podaży i konsolidację. Wyższe interwały (1h i 1d) utrzymują silny trend spadkowy, co uniemożliwia oczekiwanie na silny wzrost w najbliższym czasie, wskazując raczej na dalszą konsolidację lub kontynuację spadków."
+        "reasoning": "Na wykresie 15-minutowym widać wyraźny ruch wzrostowy po dołku, co sugeruje krótkoterminowy odbicie, mimo że trend na wyższych interwałach (1h i 1d) pozostaje spadkowy."
       }
     },
     "MICROSOFT": {
