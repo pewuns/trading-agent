@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-11-10 12",
+  "last_run": "2026-11-11 04",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-11-10T11:08:31.006609+00:00",
+      "analyzed_at": "2026-11-11T03:05:23.172617+00:00",
       "result": {
-        "trend_15m": "up",
-        "trend_1h": "up",
+        "trend_15m": "down",
+        "trend_1h": "down",
         "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "up",
+        "prediction_30min": "down",
         "confidence": 0.8,
-        "reasoning": "Na wykresie 15-minutowym widoczne jest silne odbicie po spadku, potwierdzone przez ostatnią dużą świecę hossy, co wskazuje na kontynuację wzrostów. Wyższe interwały (1h i 1d) również utrzymują trend wzrostowy, co wspiera scenariusz dalszego ruchu w górę."
+        "reasoning": "Wykres 15-minutowy i 1-godzinny wyraźnie pokazują silny trend spadkowy z serią świec czerwonych, co sugeruje kontynuację ruchu w dół w najbliższym czasie, mimo ogólnego trendu wzrostowego na wykresie dziennym."
       }
     },
     "AMAZON": {
@@ -63,18 +63,18 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-11-10T11:09:27.891924+00:00",
+      "analyzed_at": "2026-11-11T03:06:21.951042+00:00",
       "result": {
-        "trend_15m": "up",
+        "trend_15m": "neutral",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
-          "młot"
+          "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "up",
+        "prediction_30min": "neutral",
         "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać wyraźną serię świec wzrostowych po korekcie, co sugeruje krótkoterminowy odbicie, mimo że wyższe interwały (1h i 1d) pozostają w silnym trendzie spadkowym."
+        "reasoning": "Na wykresie 15-minutowym widać konsolidację po spadkach (doji), co sugeruje chwilowy brak kierunku, podczas gdy wyższe interwały (1h, 1d) pozostają w wyraźnym trendzie spadkowym."
       }
     },
     "MICROSOFT": {
