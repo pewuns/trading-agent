@@ -1,18 +1,13 @@
 {
-  "date": "2026-11-12",
+  "date": "2026-11-13",
   "scores": {
-    "USD/CAD": {
-      "confidence": 0.5,
+    "DAX": {
+      "confidence": 0.425,
       "direction": "LONG",
       "threshold": 0.6
     },
-    "BITCOIN": {
-      "confidence": 0.575,
-      "direction": "SHORT",
-      "threshold": 0.6
-    },
-    "ETHEREUM": {
-      "confidence": 0.575,
+    "GOLD": {
+      "confidence": 0.5,
       "direction": "SHORT",
       "threshold": 0.6
     }
