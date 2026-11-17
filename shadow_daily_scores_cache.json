@@ -1,18 +1,13 @@
 {
-  "date": "2026-11-16",
+  "date": "2026-11-17",
   "scores": {
-    "GBP/USD": {
-      "confidence": 0.375,
+    "DAX": {
+      "confidence": 0.3,
       "direction": "SHORT",
       "threshold": 0.6
     },
-    "USD/CAD": {
-      "confidence": 0.55,
-      "direction": "LONG",
-      "threshold": 0.6
-    },
-    "OIL WTI": {
-      "confidence": 0.4,
+    "GOLD": {
+      "confidence": 0.375,
       "direction": "SHORT",
       "threshold": 0.6
     },
@@ -22,13 +17,13 @@
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.575,
-      "direction": "SHORT",
+      "confidence": 0.4,
+      "direction": "LONG",
       "threshold": 0.6
     },
     "SOLANA": {
-      "confidence": 0.575,
-      "direction": "SHORT",
+      "confidence": 0.3,
+      "direction": "LONG",
       "threshold": 0.6
     }
   }
