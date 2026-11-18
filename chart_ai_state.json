@@ -1,19 +1,19 @@
 {
-  "last_run": "2026-11-16 17",
+  "last_run": "2026-11-19 00",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-11-16T00:09:08.878894+00:00",
+      "analyzed_at": "2026-11-18T23:14:57.195666+00:00",
       "result": {
-        "trend_15m": "neutral",
-        "trend_1h": "neutral",
+        "trend_15m": "down",
+        "trend_1h": "down",
         "trend_1d": "up",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.55,
-        "reasoning": "Na wykresie dziennym widoczny jest wyraźny trend wzrostowy, jednak na interwałach 15-minutowym i godzinowym rynek wszedł w konsolidację (konsolidację boczną) po wcześniejszym ruchu, co sugeruje brak wyraźnego kierunku w najbliższym czasie."
+        "prediction_30min": "down",
+        "confidence": 0.8,
+        "reasoning": "Wykresy 15-minutowy i 1-godzinowy wyraźnie pokazują silny trend spadkowy z dominacją świec czerwonych, co sugeruje kontynuację ruchów w dół mimo długoterminowego trendu wzrostowego na wykresie dziennym."
       }
     },
     "AMAZON": {
@@ -63,18 +63,18 @@
       }
     },
     "NVIDIA": {
-      "analyzed_at": "2026-11-11T03:06:21.951042+00:00",
+      "analyzed_at": "2026-11-18T23:15:54.925225+00:00",
       "result": {
-        "trend_15m": "neutral",
+        "trend_15m": "down",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "neutral",
-        "confidence": 0.6,
-        "reasoning": "Na wykresie 15-minutowym widać konsolidację po spadkach (doji), co sugeruje chwilowy brak kierunku, podczas gdy wyższe interwały (1h, 1d) pozostają w wyraźnym trendzie spadkowym."
+        "prediction_30min": "down",
+        "confidence": 0.85,
+        "reasoning": "Wykresy na wszystkich interwałach (15m, 1h, 1d) wyraźnie wskazują silny trend spadkowy, a obecne formacje (doji) sugerują jedynie chwilową konsolidację, nie odwrócenie trendu."
       }
     },
     "MICROSOFT": {
