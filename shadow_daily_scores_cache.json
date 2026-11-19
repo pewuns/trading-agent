@@ -1,18 +1,18 @@
 {
-  "date": "2026-11-18",
+  "date": "2026-11-19",
   "scores": {
-    "EUR/USD": {
-      "confidence": 0.5,
+    "DAX": {
+      "confidence": 0.45,
       "direction": "SHORT",
       "threshold": 0.6
     },
-    "GBP/USD": {
+    "USD/JPY": {
       "confidence": 0.425,
-      "direction": "SHORT",
+      "direction": "LONG",
       "threshold": 0.6
     },
     "BITCOIN": {
-      "confidence": 0.575,
+      "confidence": 0.475,
       "direction": "SHORT",
       "threshold": 0.6
     },
