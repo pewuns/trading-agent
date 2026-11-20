@@ -1,29 +1,14 @@
 {
-  "date": "2026-11-19",
+  "date": "2026-11-20",
   "scores": {
-    "DAX": {
-      "confidence": 0.45,
-      "direction": "SHORT",
-      "threshold": 0.6
-    },
-    "USD/JPY": {
-      "confidence": 0.425,
-      "direction": "LONG",
-      "threshold": 0.6
-    },
     "BITCOIN": {
-      "confidence": 0.475,
+      "confidence": 0.55,
       "direction": "SHORT",
       "threshold": 0.6
     },
     "ETHEREUM": {
-      "confidence": 0.375,
+      "confidence": 0.55,
       "direction": "SHORT",
-      "threshold": 0.6
-    },
-    "SOLANA": {
-      "confidence": 0.3,
-      "direction": "LONG",
       "threshold": 0.6
     }
   }
