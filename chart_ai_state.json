@@ -1,19 +1,20 @@
 {
-  "last_run": "2026-11-26 04",
+  "last_run": "2026-11-27 23",
   "markets": {
     "DAX": {
-      "analyzed_at": "2026-11-26T03:08:13.396276+00:00",
+      "analyzed_at": "2026-11-27T22:13:42.111279+00:00",
       "result": {
-        "trend_15m": "down",
+        "trend_15m": "up",
         "trend_1h": "down",
         "trend_1d": "down",
         "patterns_detected": [
+          "młot",
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "down",
-        "confidence": 0.85,
-        "reasoning": "Wykresy na wszystkich interwałach (15m, 1h, 1d) pokazują wyraźny trend spadkowy z serią świec czerwonych. Ostatnie świece na wykresie 15-minutowym tworzą doji, co sugeruje chwilowe wyczerpanie, ale brak silnych sygnałów odwrócenia trendu."
+        "prediction_30min": "up",
+        "confidence": 0.6,
+        "reasoning": "Na wykresie 15-minutowym widoczne jest silne odbicie od wsparcia (ok. 25300) z formacją młota, co sugeruje krótkoterminowy ruch wzrostowy, mimo że wyższe interwały (1h, 1d) pozostają w trendzie spadkowym."
       }
     },
     "AMAZON": {
@@ -32,7 +33,7 @@
       }
     },
     "TESLA": {
-      "analyzed_at": "2026-10-27T20:11:04.787991+00:00",
+      "analyzed_at": "2026-11-27T22:14:39.270238+00:00",
       "result": {
         "trend_15m": "up",
         "trend_1h": "up",
@@ -41,9 +42,9 @@
           "doji"
         ],
         "reversal_expected": false,
-        "prediction_30min": "up",
-        "confidence": 0.75,
-        "reasoning": "Wykresy na wszystkich interwałach (15m, 1h, 1d) wykazują wyraźny trend wzrostowy z serią świec byczych. Ostatnie świece na wykresie 15-minutowym sugerują krótkotrwałe konsolidowanie się ceny (doji), co przy silnym trendzie wzrostowym wskazuje na kontynuację ruchu w górę."
+        "prediction_30min": "neutral",
+        "confidence": 0.6,
+        "reasoning": "Wykres 15-minutowy pokazuje silny wzrost połączony z konsolidacją na szczycie (ok. 400), co sugeruje krótkoterminowe wyczerpanie popytu, ale brak sygnału odwrócenia. Wyższe interwały (1h, 1d) potwierdzają silny trend wzrostowy, co utrudnia przewidywanie spadku w najbliższych 30 minutach."
       }
     },
     "APPLE": {
